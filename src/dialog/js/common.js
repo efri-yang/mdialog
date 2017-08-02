@@ -108,3 +108,46 @@
         afterHide: function() {}
     }
 })(window.jQuery || window.Zepto, window, document)
+
+
+
+;(function($, window, document, undefined){
+    var mDialog={
+        v: '0.0.1',
+        defaults:{
+            title:"",
+            autoClose:true,
+            pause:2000,
+            shade:true,
+            shadeClose:true,
+            context:"mDialog 是一款专为移动端而定制的弹框插件！",
+            closeBtn:true,
+            buttons:{},
+            beforeShow:function(){},
+            afterShow:function(){},
+            beforeHide:function(){},
+            afterHide:function(){}
+        }
+    }
+    var createClass=function(options){
+        this.opts=$.extend(true,mDialog.defaults,options);
+        this.init();
+    }
+    createClass.prototype.init=function(){
+        alert("xxx")
+    }
+    mDialog.open=function(options){
+
+        var o=new createClass(options);
+        return o;
+    }
+    
+    mDialog.close=function(index){
+
+    };
+    mDialog.update=function(options){
+
+    };
+    
+    window.mDialog=mDialog;
+})(window.jQuery || window.Zepto, window, document)

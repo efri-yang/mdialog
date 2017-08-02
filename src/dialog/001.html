@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script type="text/javascript" src="js/zepto.js"></script>
+    <script type="text/javascript" src="js/flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	
+	<script type="text/javascript">
+		$(function(){
+				var a1={
+					a:10,
+					b:{
+						age:20
+					}
+				}
+				var b1={
+					b:{
+						age:30
+					}
+				}
+				
+				var o1=$.extend({},a1,{});
+				var o2=$.extend({},a1,{b:{age:40}});
+				console.dir(o1);
+				console.dir(o2)
+			})
+	</script>
+</body>
+</html>

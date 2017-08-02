@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script type="text/javascript" src="js/zepto.js"></script>
+    <script type="text/javascript" src="js/flexible.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/zepto-mvalidate.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+	
+	<button id="J_btn" style="margin:50px 0 0 150px;">按钮</button>
+	<div class="bm-dia-box" id="J_bm-dia-box">
+		<div class="tip-pic"></div>
+		<p class="txt-1">报名成功</p>
+		<p class="txt-2">请耐心等待工作人员与您联系</p>
+		<a href="#" class="close" data-roler='close'>确 定</a>
+	</div>
+
+
+	<script type="text/javascript">
+	$(function(){
+		 var $BMDia=$("#J_bm-dia-box").dialogs();
+		 
+        $("#J_btn").on("click",function(){
+        	$BMDia.show();
+        });
+
+
+        mDialog.open();
+	})
+	</script>
+</body>
+</html>
