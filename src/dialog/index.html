@@ -22,15 +22,24 @@
 
 	<script type="text/javascript">
 	$(function(){
-		 var $BMDia=$("#J_bm-dia-box").dialogs();
+		 // var $BMDia=$("#J_bm-dia-box").dialogs();
 		 
-        $("#J_btn").on("click",function(){
-        	$BMDia.show();
+   //      $("#J_btn").on("click",function(){
+   //      	$BMDia.show();
+   //      });
+
+
+        mDialog.open({
+        	content:{}
         });
-
-
-        mDialog.open();
 	})
 	</script>
 </body>
 </html>
+
+<div class="mDialog-shade"></div>
+<div class="mDialog-layer">
+  <div class="mDialog-layer-title"></div>
+  <div class="mDialog-layer-main"></div>
+  <div class="mDialog-layer-btn"></div>
+</div>

@@ -1,33 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>首页</title>
-    <script type="text/javascript" src="js/zepto.js"></script>
-    <script type="text/javascript" src="js/flexible.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <title></title>
 </head>
+
 <body>
-	
-	<script type="text/javascript">
-		$(function(){
-				var a1={
-					a:10,
-					b:{
-						age:20
-					}
-				}
-				var b1={
-					b:{
-						age:30
-					}
-				}
-				
-				var o1=$.extend({},a1,{});
-				var o2=$.extend({},a1,{b:{age:40}});
-				console.dir(o1);
-				console.dir(o2)
-			})
-	</script>
+    <script type="text/javascript" src="js/zepto.js"></script>
+    <script type="text/javascript">
+    </script>
+    <button id="x1">按钮</button>
+    <script type="text/javascript">
+    $(function() {
+        var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+
+         function colorToRgba(colorStr,opacity) {
+        colorStr=!!colorStr ? colorStr : "#000";
+        var sColor = colorStr.toLowerCase();
+        //没有传递，那么默认的是
+        var sOpacity=(opacity === 0 || !!opacity) ? ((opacity > 1) ? 1 : ((opacity < 0) ? 0 : opacity)) : 0.8;
+        if (sColor && reg.test(sColor)) {
+            if (sColor.length === 4) {
+                var sColorNew = "#";
+                for (var i = 1; i < 4; i += 1) {
+                    sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+                }
+                sColor = sColorNew;
+            }
+            //处理六位的颜色值  
+            var sColorChange = [];
+            for (var i = 1; i < 7; i += 2) {
+                sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
+            }
+            return "RGB(" + sColorChange.join(",") + "," + sColor + ")";
+        } else {
+            return sColor;
+        }
+    }
+   
+
+    sHex = "#bb36e6";
+    var sRgbColor = colorToRgba(sHex);
+
+    var opacity;
+    var a = (opacity === 0 || !!opacity) ? ((opacity > 1) ? 1 : ((opacity < 0) ? 0 : opacity)) : 0.8;
+   
+
+   alert(a)
+ })
+    </script>
 </body>
+
 </html>
