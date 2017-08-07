@@ -136,15 +136,17 @@
         _shadeIdArr = [],
         _dialogIdArr = [];
 
+    mDialog.stack={};
+
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
 
     var ExtraFunc = {
-        colorToRgba: function() {
+        colorToRgba: function(colorStr,opacity) {
             colorStr = !!colorStr ? colorStr : "#000";
             var sColor = colorStr.toLowerCase();
             //没有传递，那么默认的是
             var sOpacity = (opacity === 0 || !!opacity) ? ((opacity > 1) ? 1 : ((opacity < 0) ? 0 : opacity)) : 0.8;
-            if (sColor && reg.test(sColor)) {
+            if (sColor && colorRgbReg.test(sColor)) {
                 if (sColor.length === 4) {
                     var sColorNew = "#";
                     for (var i = 1; i < 4; i += 1) {
@@ -157,10 +159,23 @@
                 for (var i = 1; i < 7; i += 2) {
                     sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
                 }
-                return "RGB(" + sColorChange.join(",") + "," + sColor + ")";
+                return "rgba(" + sColorChange.join(",") + "," + sOpacity + ")";
             } else {
                 return sColor;
             }
+        },
+        uuid:function(){
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23] = "-";
+         
+            var uuid = s.join("");
+            return uuid;
         }
     };
     var createClass = function(options) {
@@ -169,19 +184,49 @@
     }
     createClass.prototype._init = function() {
         //如果是{} new Object 对象
+        this.opts.uid=ExtraFunc.uuid();
+        mDialog.stack[this.opts.uid]=[];
         if (!!this.opts.content) {
             if ($.isPlainObject(this.opts.content)) {
-
+                    console.dir("isPlainObject")
+            }else{
+                console.dir("isNotPlainObject")
             }
+        }else{
+
+            alert("content没有内容！")
         }
+        this._shade();
     }
 
     createClass.prototype._shade = function() {
-        if (this.opts.shade) {
+        // false  
+        if (!!this.opts.shade) {
+            //opts.shade=true
+            var defaultOpacity=0.8,
+                defaultColor="#000",
+                stylesColor;
             this.$shade = $('<div class="mDialog-shade"></div>');
+            if ($.isPlainObject(this.opts.shade)) {
+
+                //如果是{color:"",opacity:""} 
+                ropacity=!!this.opts.shade.opacity ? this.opts.shade.opacity : defaultOpacity;
+                rcolor=!!this.opts.shade.defaultColor ?  this.opts.shade.defaultColor : defaultColor;
+                stylesColor=ExtraFunc.colorToRgba(rcolor,ropacity);
+                this.$shade.css("backgroundColor",stylesColor);
+            }
+            this.$shade.appendTo($("body"));
+
+            if(this.opts.shadeClose){
+                //如果需要点击关闭遮罩层, 遮罩要关闭，主题要关闭
+                    
+            }
+
+            mDialog.stack[this.opts.uid].push(this.$shade);
+            console.dir(mDialog.stack)
         }
     }
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     createClass.prototype.close = function() {
 
     }
