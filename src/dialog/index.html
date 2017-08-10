@@ -24,20 +24,18 @@
 	$(function(){
 		 // var $BMDia=$("#J_bm-dia-box").dialogs();
 		 
-   //      $("#J_btn").on("click",function(){
-   //      	$BMDia.show();
-   //      });
-
-
-        mDialog.open({
-        	content:{},
-          shade:{}
+        $("#J_btn").on("click",function(){
+          	mDialog.open({
+            duration:500,
+            content:{},
+            shade:{"opacity":0.8}
+          });
         });
 
-         mDialog.open({
-          content:{},
-          shade:{"opacity":0.5}
-        });
+
+        
+
+         
 	})
 	</script>
 </body>
@@ -49,3 +47,26 @@
   <div class="mDialog-layer-main"></div>
   <div class="mDialog-layer-btn"></div>
 </div> -->
+
+<!-- msg -->
+
+<!-- <div class="mDialog-shade"></div>
+<div class="mDialog-layer">
+  
+  <div class="mDialog-layer-main">
+      <div class="mDialog-msg-box">sdfasdfasd</div>
+  </div>
+ 
+</div> -->
+
+
+<!-- confirm -->
+
+<div class="mDialog-shade"></div>
+<div class="mDialog-layer">
+  
+  <div class="mDialog-layer-main">
+      <div class="mDialog-msg-box">sdfasdfasd</div>
+  </div>
+ 
+</div>

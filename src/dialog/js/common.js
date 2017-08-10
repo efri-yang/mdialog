@@ -110,16 +110,19 @@
     }
 })(window.jQuery || window.Zepto, window, document)
 
-
+var test="window";
 
 ;
 (function($, window, document, undefined) {
     var mDialog = {
         v: '0.0.1',
+        stack:{},
+        zIndex:100000,
         defaults: {
-            title: "",
+            title: "mDialog标题",
             autoClose: true,
             pause: 2000,
+            duration:250,
             shade: true,
             shadeClose: true,
             content: "mDialog 是一款专为移动端而定制的弹框插件！",
@@ -131,13 +134,6 @@
             afterHide: function() {}
         }
     }
-
-    var _uuidArr = [],
-        _shadeIdArr = [],
-        _dialogIdArr = [];
-
-    mDialog.stack={};
-
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
 
     var ExtraFunc = {
@@ -164,6 +160,24 @@
                 return sColor;
             }
         },
+        dealCssEvent(eventNameArr, callback) {
+            var events = eventNameArr,
+                i, dom = this; // jshint ignore:line
+
+            function fireCallBack(e) {
+                /*jshint validthis:true */
+                if (e.target !== this) return;
+                callback.call(this, e);
+                for (i = 0; i < events.length; i++) {
+                    dom.off(events[i], fireCallBack);
+                }
+            }
+            if (callback) {
+                for (i = 0; i < events.length; i++) {
+                    dom.on(events[i], fireCallBack);
+                }
+            }
+        },
         uuid:function(){
             var s = [];
             var hexDigits = "0123456789abcdef";
@@ -178,60 +192,101 @@
             return uuid;
         }
     };
-    var createClass = function(options) {
+    $.fn.AnimationEnd = function(callback) {
+        ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
+        return this;
+    };
+    $.fn.TransitionEnd = function(callback) {
+        ExtraFunc.dealCssEvent.call(this, ['webkitTransitionEnd', 'transitionend'], callback);
+        return this;
+    };
+    var createClass = function(options,type) {
         this.opts = $.extend(true, mDialog.defaults, options);
-        this._init();
+        this._init(type);
     }
-    createClass.prototype._init = function() {
+    createClass.prototype.test=100;
+    createClass.prototype._init = function(type) {
+
+
         //如果是{} new Object 对象
         this.opts.uid=ExtraFunc.uuid();
         mDialog.stack[this.opts.uid]=[];
-        if (!!this.opts.content) {
-            if ($.isPlainObject(this.opts.content)) {
-                    console.dir("isPlainObject")
-            }else{
-                console.dir("isNotPlainObject")
-            }
-        }else{
 
-            alert("content没有内容！")
-        }
-        this._shade();
-    }
 
-    createClass.prototype._shade = function() {
-        // false  
+
+        
+           
         if (!!this.opts.shade) {
-            //opts.shade=true
+            this._shade();
+        }
+        
+    }
+    createClass.prototype._content=function(){
+
+    }
+    createClass.prototype._shade = function() {
+            //opts.shade=true 如果需要遮罩
             var defaultOpacity=0.8,
                 defaultColor="#000",
-                stylesColor;
-            this.$shade = $('<div class="mDialog-shade"></div>');
+                _this=this,
+                closeFunc=$.noop();
+                styles={
+                    "animation-duration":this.opts.duration+"ms",
+                    "zIndex":mDialog.zIndex
+                };
+            this.$shade = $('<div class="mDialog-shade in"></div>');
             if ($.isPlainObject(this.opts.shade)) {
 
-                //如果是{color:"",opacity:""} 
+                //如果是{color:"",opacity:""} 传入的是颜色和透明值
                 ropacity=!!this.opts.shade.opacity ? this.opts.shade.opacity : defaultOpacity;
                 rcolor=!!this.opts.shade.defaultColor ?  this.opts.shade.defaultColor : defaultColor;
-                stylesColor=ExtraFunc.colorToRgba(rcolor,ropacity);
-                this.$shade.css("backgroundColor",stylesColor);
+                styles["background-color"]=ExtraFunc.colorToRgba(rcolor,ropacity);
             }
-            this.$shade.appendTo($("body"));
 
             if(this.opts.shadeClose){
-                //如果需要点击关闭遮罩层, 遮罩要关闭，主题要关闭
-                    
+                //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
+                closeFunc=function(){
+                    !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
+                    _this.$shade.AnimationEnd(function(){
+                        _this.$shade.remove();
+                    })
+
+                }
+                this.$shade.on("click touchstart",function(){
+                    _this.close();
+                })
+            }else{
+                this.$shade.on("click touchstart",function(event){
+                    event.preventDefault();
+                })
             }
-
+            this.$shade.css(styles);
+            this.$shade.removeSelf=closeFunc;
+            this.$shade.appendTo($("body"));
             mDialog.stack[this.opts.uid].push(this.$shade);
-            console.dir(mDialog.stack)
-        }
+            console.group(mDialog.stack)
     }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-    createClass.prototype.close = function() {
+    createClass.prototype._shadeClose=function(){
+        
+    }
+    /**
+     * *
+     * 通过调用 mDialog.close() 来关闭
+     */
+    createClass.prototype.close = function(index) {
+        var index=!!index ? index : this.opts.uid;
+        $.each(mDialog.stack[index], function(index, obj) {
+            obj.removeSelf();
+        });
+    }
 
-    }
-    mDialog.open = function(options) {
-        var o = new createClass(options);
+
+
+
+
+    mDialog.open = function(options,type) {
+        mDialog.zIndex++;
+        var o = new createClass(options,type);
         return o;
     }
 

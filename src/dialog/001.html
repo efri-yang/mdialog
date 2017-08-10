@@ -10,6 +10,8 @@
     <script type="text/javascript">
     </script>
     <button id="x1">按钮</button>
+
+    <div><div><button id="x2">sdfasdf</button></div></div>
     <script type="text/javascript">
     $(function() {
         var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
@@ -63,7 +65,11 @@
             return uuid;
         }
 
-        alert(uuid())
+        $("#x2").on("click",function(){
+            for(var i=0;i<2;i++){
+                $("#x2").unwrap()
+            }
+        })
     })
     </script>
 </body>
