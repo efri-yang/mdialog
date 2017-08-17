@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>首页</title>
     <script type="text/javascript" src="js/zepto.js"></script>
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
     <script type="text/javascript" src="js/flexible.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
-    <script type="text/javascript" src="js/zepto-mvalidate.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -26,9 +27,9 @@
 		 
         $("#J_btn").on("click",function(){
           	mDialog.open({
-            duration:500,
+            duration:250,
             content:{},
-            shade:{"opacity":0.8}
+            shade:{"opacity":0.6}
           });
         });
 
@@ -41,13 +42,26 @@
 </body>
 </html>
 
-<!-- <div class="mDialog-shade"></div>
+<!-- <div class="mDialog-shade"></div> -->
+
 <div class="mDialog-layer">
   <div class="mDialog-layer-title"></div>
-  <div class="mDialog-layer-main"></div>
+  <div class="mDialog-layer-main">
+      <div class="box1" id="box1">
+          <p>幸福了吗哈哈哈</p>
+          <p>啊手动阀手动阀啊手动阀阿三地方阿三地方</p>
+      </div>
+  </div>
   <div class="mDialog-layer-btn"></div>
-</div> -->
-
+</div>
+<script type="text/javascript">
+    $(function(){
+       mDialog.open({
+          content:$("#box1")
+       })
+      
+    })
+</script>
 <!-- msg -->
 
 <!-- <div class="mDialog-shade"></div>
@@ -62,11 +76,11 @@
 
 <!-- confirm -->
 
-<div class="mDialog-shade"></div>
+<!-- <div class="mDialog-shade"></div>
 <div class="mDialog-layer">
   
   <div class="mDialog-layer-main">
       <div class="mDialog-msg-box">sdfasdfasd</div>
   </div>
  
-</div>
+</div> -->

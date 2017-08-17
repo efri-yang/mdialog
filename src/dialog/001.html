@@ -12,6 +12,8 @@
     <button id="x1">按钮</button>
 
     <div><div><button id="x2">sdfasdf</button></div></div>
+
+    <button id="x3">sdfasdf</button>
     <script type="text/javascript">
     $(function() {
         var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
@@ -65,11 +67,16 @@
             return uuid;
         }
 
-        $("#x2").on("click",function(){
-            for(var i=0;i<2;i++){
-                $("#x2").unwrap()
-            }
-        })
+        // $("#x2").on("click",function(){
+        //     for(var i=0;i<2;i++){
+        //         $("#x2").unwrap()
+        //     }
+        // })
+        // 
+        var $content=($('<div></div>'));
+        var $tit=$('')
+        $content.append($tit);
+        $content.appendTo($("body"))
     })
     </script>
 </body>

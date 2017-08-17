@@ -378,6 +378,20 @@ body{
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * 
  */
@@ -399,6 +413,56 @@ body{
     opacity: 0;
   }
 }
+
+@keyframes mDialogZoomIn {
+    from {
+        opacity: 0;
+        transform: scale3d(.3, .3, .3);
+      }
+
+      50% {
+        opacity: 1;
+      }
+}
+@keyframes mDialogZoomOut {
+  from {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+
+@keyframes mDialogBigIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate(-50%, -50%) scale(1.2, 1.2);
+        transform: translate(-50%, -50%) scale(1.2, 1.2);
+      }
+      100% {
+        opacity: 1;
+        -webkit-transform: translate(-50%, -50%) scale(1, 1);
+        transform: translate(-50%, -50%) scale(1, 1);
+      }
+}
+@keyframes mDialogBigOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translate(-50%, -50%) scale(0.8, 0.8);
+  }
+}
+
+
 .mDialog-shade{
     position:fixed;
     left:0;
@@ -414,6 +478,21 @@ body{
     &.out{
         animation-name:mDialogFadeOut;
     }
+}
+
+ .box1{
+      background:#fff;
+      width:400px;
+      height:px2rem(600px);
+      padding:px2rem(15px);
+      border:px2rem(10px) solid #000;
+      box-sizing:border-box;
+      margin:30px;
+     
+    }
+.mDialog-layer{
+    position:fixed;
+    left:0;
 }
 
 

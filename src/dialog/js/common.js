@@ -112,8 +112,8 @@
 
 var test="window";
 
-;
-(function($, window, document, undefined) {
+
+;(function($, window, document, undefined) {
     var mDialog = {
         v: '0.0.1',
         stack:{},
@@ -128,10 +128,10 @@ var test="window";
             content: "mDialog 是一款专为移动端而定制的弹框插件！",
             closeBtn: true,
             buttons: {},
-            beforeShow: function() {},
-            afterShow: function() {},
-            beforeHide: function() {},
-            afterHide: function() {}
+            onBeforeShow: function() {},
+            onShow: function() {},
+            onBeforeClose: function() {},
+            onClose: function() {}
         }
     }
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
@@ -192,26 +192,54 @@ var test="window";
             return uuid;
         }
     };
-    $.fn.AnimationEnd = function(callback) {
-        ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
-        return this;
-    };
-    $.fn.TransitionEnd = function(callback) {
-        ExtraFunc.dealCssEvent.call(this, ['webkitTransitionEnd', 'transitionend'], callback);
-        return this;
-    };
+
+    if(!$.fn.AnimationEnd){
+        $.fn.AnimationEnd = function(callback) {
+            ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
+            return this;
+        };
+    }
+    if(!$.fn.TransitionEnd){
+        $.fn.TransitionEnd = function(callback) {
+            ExtraFunc.dealCssEvent.call(this, ['webkitTransitionEnd', 'transitionend'], callback);
+            return this;
+        };
+    }
+    if(!$.fn.outerWidth){
+        ['width', 'height'].forEach(function(dimension) {
+            var  Dimension = dimension.replace(/./, function(m) {
+                return m[0].toUpperCase();
+            });
+            $.fn['outer' + Dimension] = function(margin) {
+                var elem = this;
+                if (elem) {
+                    var size = elem[dimension]();
+                    var sides = {
+                        'width': ['left', 'right'],
+                        'height': ['top', 'bottom']
+                    };
+                    sides[dimension].forEach(function(side) {
+                        if (margin) size += parseInt(elem.css('margin-' + side), 10);
+                    });
+                    return size;
+                } else {
+                    return null;
+                }
+            };
+        });
+    }
     var createClass = function(options,type) {
         this.opts = $.extend(true, mDialog.defaults, options);
         this._init(type);
     }
     createClass.prototype.test=100;
     createClass.prototype._init = function(type) {
-
+        // type confirm   toast  msg  load
 
         //如果是{} new Object 对象
         this.opts.uid=ExtraFunc.uuid();
         mDialog.stack[this.opts.uid]=[];
-
+        this._renderContainer();
 
 
         
@@ -221,12 +249,41 @@ var test="window";
         }
         
     }
+    createClass.prototype._renderContainer=function(){
+        /**
+         * <div class="mDialog-layer">
+  <div class="mDialog-layer-title"></div>
+  <div class="mDialog-layer-main">
+      <div class="box1" id="box1">
+          <p>幸福了吗哈哈哈</p>
+          <p>啊手动阀手动阀啊手动阀阿三地方阿三地方</p>
+      </div>
+  </div>
+  <div class="mDialog-layer-btn"></div>
+</div>
+         */
+        this.$container=$('<div class="mDialog-layer"></div>')
+        if(!this.opts._type){
+            //如果没有type参数,那么说明 调用的方式是open() 判断 content的内容
+            if(this.opts.content instanceof $ || $.zepto.isZ(this.opts.content)){
+                //如果内容是jquery 或者zepto 对象，实行把容器包起来
+                this.opts.content
+            }
+
+        }
+    };
+    createClass.prototype._title=function(){
+
+    };
     createClass.prototype._content=function(){
 
-    }
+    };
+    createClass.prototype._footer=function(){
+
+    };
     createClass.prototype._shade = function() {
             //opts.shade=true 如果需要遮罩
-            var defaultOpacity=0.8,
+            var defaultOpacity=0.5,
                 defaultColor="#000",
                 _this=this,
                 closeFunc=$.noop();
@@ -252,12 +309,15 @@ var test="window";
                     })
 
                 }
-                this.$shade.on("click touchstart",function(){
+                this.$shade.on("click touchstart",function(event){
+                    event.preventDefault();
+                    event.stopPropagation();
                     _this.close();
                 })
             }else{
                 this.$shade.on("click touchstart",function(event){
                     event.preventDefault();
+                    event.stopPropagation();
                 })
             }
             this.$shade.css(styles);
@@ -265,10 +325,8 @@ var test="window";
             this.$shade.appendTo($("body"));
             mDialog.stack[this.opts.uid].push(this.$shade);
             console.group(mDialog.stack)
-    }
-    createClass.prototype._shadeClose=function(){
-        
-    }
+    };
+    
     /**
      * *
      * 通过调用 mDialog.close() 来关闭
@@ -278,7 +336,7 @@ var test="window";
         $.each(mDialog.stack[index], function(index, obj) {
             obj.removeSelf();
         });
-    }
+    };
 
 
 
@@ -288,7 +346,7 @@ var test="window";
         mDialog.zIndex++;
         var o = new createClass(options,type);
         return o;
-    }
+    };
 
     mDialog.close = function(index) {
 
