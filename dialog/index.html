@@ -26,11 +26,12 @@
 		 // var $BMDia=$("#J_bm-dia-box").dialogs();
 		 
         $("#J_btn").on("click",function(){
-          	mDialog.open({
+          	var dia=mDialog.open({
             duration:250,
             content:{},
             shade:{"opacity":0.6}
           });
+          console.dir(dia)
         });
 
 
