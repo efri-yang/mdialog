@@ -119,10 +119,11 @@ var test="window";
     }
     var createClass = function(options,type) {
         this.opts = $.extend(true, mDialog.defaults, options);
-        this._init(type);
+        this.opts._type=type;
+        this._init();
     }
     createClass.prototype.test=100;
-    createClass.prototype._init = function(type) {
+    createClass.prototype._init = function() {
         // type confirm   toast  msg  load
 
         //如果是{} new Object 对象
@@ -151,16 +152,25 @@ var test="window";
   <div class="mDialog-layer-btn"></div>
 </div>
          */
-        this.$container=$('<div class="mDialog-layer"></div>')
+        var contentStr="";
+        this.$container=$('<div class="mDialog-layer"></div>');
+        this.$container.css({"zIndex":mDialog.zIndex+1})
         if(!this.opts._type){
             //如果没有type参数,那么说明 调用的方式是open() 判断 content的内容
             if(this.opts.content instanceof $ || $.zepto.isZ(this.opts.content)){
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                this.opts.content.wrap('<div class="mDialog-layer"><div class="mDialog-layer-main"></div></div>')
-                this.$content=this.opts.content.parent();    
+                this.opts.content.wrap('<div class="mDialog-layer-main"></div>')
+                this.$content=this.opts.content.parent();
+                this.$content.wrap(this.$container); 
             }
-        }else{
-            
+        }else if(this.opts._type=="load"){
+            //加载提示
+             this.$content=$('<div class="mDialog-loading-section no-text"><div class="loading-icon"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>');
+
+             this.$content.appendTo(this.$container);
+             this.$container.addClass('mDialog-center');
+             this.$container.appendTo($("body"));
+
         }
     };
     createClass.prototype._title=function(){
@@ -237,6 +247,14 @@ var test="window";
         mDialog.zIndex++;
         var o = new createClass(options,type);
         return o;
+    };
+
+    mDialog.load=function(opts){
+        var options=!!$.isPlainObject(opts) ? opts :{};
+        options.title=false;
+        options.closeBtn=false;
+        options.buttons=false;
+        mDialog.open(options,"load")
     };
 
     mDialog.close = function(index) {
