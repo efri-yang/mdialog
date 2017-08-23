@@ -21,25 +21,33 @@ var test="window";
             content: "",
             closeBtn: true,
             buttons: {},
-            onBeforeShow: function() {},
-            onShow: function() {},
-            onBeforeClose: function() {},
-            onClose: function() {}
+            onBeforeShow: function() {
+                console.dir("onBeforeShow");
+            },
+            onShow: function() {
+                console.dir("oShow");
+            },
+            onBeforeClose: function() {
+                console.dir("onBeforeClose");
+            },
+            onClose: function() {
+                console.dir("onClose");
+            }
         }
     }
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
-    var stylesObj={
+    var stylesContentShow={
         visibility:"visible",
         display:"block",
         clear:"both",
         float:"left"
         
-    }
-    var stylesHide={
+    };
+    var styleContentsHide={
         visibility:"hidden",
         display:"none",
         float:"none"
-    }
+    };
 
    
     var ExtraFunc = {
@@ -147,19 +155,21 @@ var test="window";
         this.opts.uid=ExtraFunc.uuid();
         mDialog.stack[this.opts.uid]=[];
 
+        if(!this.opts.duration){
+            this.opts.animIn=this.opts.animOut=false;
+        }
         this._renderContainer(this.opts);
-
-
         if (!!this.opts.shade) {
-            this._shade();
+            this._renderShade();
         }
         
     }
-    createClass.prototype._renderContainer=function(opts){
-        var containerStr="";
-        var content="";
-        var _this=this;
-        var closeObjHandle;
+    createClass.prototype._renderContainer=function(){
+        var _this=this,
+            containerStr="",
+            content="",
+            containerCloseHandle,
+            contentObjHandle;
 
         this.$container=null;
 
@@ -170,18 +180,16 @@ var test="window";
             this.$container=$('<div class="mDialog-layer-container"></div>')
             if(this.opts.content instanceof $ || $.zepto.isZ(this.opts.content)){
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                this.opts.content.css(stylesObj)
+                this.opts.content.css(stylesContentShow)
                 this.opts.content.wrap('<div class="mDialog-layer-main"></div>')
                 this.$main=this.opts.content.parent();
                 this.$main.wrap(this.$container);
-
-                closeObjHandle=function(){
-                    this.opts.content.css(stylesHide);
+                contentObjHandle=function(){
+                    _this.opts.content.css(styleContentsHide);
                     for(var i=0;i<2;i++){
-                        this.opts.content.unwrap();
+                        _this.opts.content.unwrap();
                     }
                 }
-                
             }else{
                 //如果内容是其他的文本
                 content='<div class="mDialog-default-main">'+this.opts.content+'</div>'
@@ -227,29 +235,68 @@ var test="window";
                       '</div>';
 
 
+
+
+
+
         if(!this.$container){
             this.$container=$(containerStr);
             this.$container.appendTo($('body'));
+           
         }
+
+        containerCloseHandle=function(){
+            !!_this.opts.onBeforeClose && _this.opts.onBeforeClose();
+            
+            if(_this.opts.animOut){
+
+                    _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"out",function(){
+                        !!contentObjHandle && contentObjHandle();
+                        _this.$container.remove();
+                        _this.opts.onClose();
+                    });
+            }else{
+                setTimeout(function(){
+                    !!contentObjHandle && contentObjHandle();
+                    _this.$container.remove();
+                    _this.opts.onClose();
+                })
+            }
+            
+        }
+            
+        
+
+       
+
+
         this._setElemPos(this.$container);
+
+        !!this.opts.onBeforeShow && this.opts.onBeforeShow();
          
         this.$container.css({"zIndex":mDialog.zIndex+1,"visibility":"visible"});
-
-        
-        // this._setAnim(this.$container,this.opts.animIn,this.opts.animOut,this.opts.duration,"in");
-        
-        var containerClose=function(){
-            _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"out");
-            _this.$container.AnimationEnd(function(){
-                    !!closeObjHandle && closeObjHandle.call(_this);
-                    _this.$container.remove();
-                    alert("AnimationEnd")
-               
+        if(this.opts.animIn){
+            _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"in",_this.opts.onShow);
+        }else{
+            setTimeout(function(){
+                !!_this.opts.onShow && _this.opts.onShow();
             })
         }
 
-        this.$container.removeSelf=containerClose;
-        mDialog.stack[this.opts.uid].push(this.$container);         
+
+        this.$container.removeSelf=containerCloseHandle;
+        mDialog.stack[this.opts.uid].push(this.$container);  
+        
+       
+
+
+        
+
+        
+            
+        
+
+               
         
     };
     createClass.prototype._title=function(){
@@ -262,32 +309,37 @@ var test="window";
     createClass.prototype._footer=function(){
 
     };
-    createClass.prototype._shade = function() {
+    createClass.prototype._renderShade = function() {
             //opts.shade=true 如果需要遮罩
-            var defaultOpacity=0.5,
+            var _this=this,
+                defaultOpacity=0.5,
                 defaultColor="#000",
-                _this=this,
-                closeFunc=$.noop();
+                shadeCloseHandle=$.noop();
                 styles={
                     "animation-duration":this.opts.duration+"ms",
-                    "zIndex":mDialog.zIndex
+                    "zIndex":mDialog.zIndex,
                 };
             this.$shade = $('<div class="mDialog-shade in"></div>');
-            if ($.isPlainObject(this.opts.shade)) {
-
+            
                 //如果是{color:"",opacity:""} 传入的是颜色和透明值
-                ropacity=!!this.opts.shade.opacity ? this.opts.shade.opacity : defaultOpacity;
-                rcolor=!!this.opts.shade.defaultColor ?  this.opts.shade.defaultColor : defaultColor;
-                styles["background-color"]=ExtraFunc.colorToRgba(rcolor,ropacity);
-            }
+            ropacity=!!this.opts.shade.opacity ? this.opts.shade.opacity : defaultOpacity;
+            rcolor=!!this.opts.shade.defaultColor ?  this.opts.shade.defaultColor : defaultColor;
+            styles["background-color"]=ExtraFunc.colorToRgba(rcolor,ropacity);
+           
 
             if(this.opts.shadeClose){
                 //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
-                closeFunc=function(){
-                    !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
-                    _this.$shade.AnimationEnd(function(){
+                shadeCloseHandle=function(){
+                    if(!!_this.opts.duration){
+                        !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
+                         _this.$shade.AnimationEnd(function(){
+                            _this.$shade.remove();
+                        })
+                    }else{
                         _this.$shade.remove();
-                    })
+                    }
+                    
+                   
 
                 }
                 this.$shade.on("click touchstart",function(event){
@@ -302,10 +354,9 @@ var test="window";
                 })
             }
             this.$shade.css(styles);
-            this.$shade.removeSelf=closeFunc;
+            this.$shade.removeSelf=shadeCloseHandle;
             this.$shade.appendTo($("body"));
             mDialog.stack[this.opts.uid].push(this.$shade);
-            console.group(mDialog.stack)
     };
 
     
@@ -320,6 +371,8 @@ var test="window";
         })
     }
     createClass.prototype._setAnim=function($elem,animInClass,animOutClass,duration,type,callback){
+        animInClass=!!animInClass ? animInClass :"";
+        animOutClass=!!animOutClass ? animOutClass :"";
         switch(type){
             case "in":
                $elem.css({"animation-duration":duration+"ms"}).removeClass(animOutClass).addClass(animInClass);
@@ -340,10 +393,14 @@ var test="window";
      * 通过调用 mDialog.close() 来关闭
      */
     createClass.prototype.close = function(index) {
-        var index=!!index ? index : this.opts.uid;
-        $.each(mDialog.stack[index], function(index, obj) {
+        var sindex=!!index ? index : this.opts.uid;
+        $.each(mDialog.stack[sindex], function(index, obj) {
             obj.removeSelf();
+            if(index==mDialog.stack[sindex].length-1){
+               delete mDialog.stack[sindex];
+            }
         });
+
     };
 
 
@@ -383,3 +440,5 @@ var test="window";
 /**
  * 
  */
+
+

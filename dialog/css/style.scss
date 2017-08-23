@@ -285,8 +285,8 @@ body {
 
 
 .bm-dia-box1{
-    background-color:rgba(0,0,0,0.8);
-    border-radius: px2rem(20px);
+    background:#fff;
+    
     width: px2rem(600px);
     .tip-pic {
         width: px2rem(133px);
@@ -394,9 +394,6 @@ body {
 
 
 
-
-
-
 /**
  * 
  */
@@ -411,7 +408,7 @@ body {
 }
 
 .mDialogFadeIn{
-    animation-name: mDialogZoomIn;
+    animation-name: mDialogFadeIn;
     animation-timing-function:ease-out; 
 }
 @keyframes mDialogFadeOut {
@@ -631,19 +628,91 @@ body {
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
     animation-timing-function: ease-out;
-    &.in {
-        animation-name: mDialogFadeIn;
-    }
-    &.out {
-        animation-name: mDialogFadeOut;
-    }
 }
+.mDialog-shade.in{
+    animation-name: mDialogFadeIn;
+}
+
+.mDialog-shade.out{
+    animation-name: mDialogFadeOut;
+}
+
+
+
+
 
 .mDialog-layer-container{
     visibility: hidden;
+    overflow:hidden;
     position: fixed;
+    border-radius:px2rem(20px)
+}
+
+
+.mDialog-layer-main{
+    border-radius:0 0 px2rem(20px) px2rem(20px);
+}
+.mDialog-layer-main:after{
+    content:"";
+    display:table;
+    clear:both;
+}
+.mDialog-default-box{
+    padding:0 px2rem(60px);
+     background:#fff;
+    padding:px2rem(30px);
+    overflow:hidden;
+    @include font-dpr(16px);
+    border-radius:px2rem(20px);
 
 }
+
+
+.mDialog-layer-title{
+    border-radius:px2rem(20px) px2rem(20px) 0 0;
+    background:#F5f5f5;
+    border-bottom:1px solid #d5d5d5;
+    padding:px2rem(20px);
+    @include font-dpr(16px);
+}
+
+.mDialog-close{
+    position: absolute;
+    width: px2rem(65px);
+    height:px2rem(65px);
+    overflow: hidden;  
+    right:0;
+    top:0;
+    border-radius:100%;
+    background:#000;
+    
+}
+.mDialog-close:before{
+    transform: rotate(45deg);
+    content: '';
+    position: absolute;
+    top: 50%;
+    left:px2rem(10px);
+    right:px2rem(10px);
+    background: #fff;
+    height:px2rem(6px);
+    margin-top:px2rem(-6px/2);
+    border-radius:px2rem(8px); 
+}
+.mDialog-close:after{
+    transform: rotate(-45deg);
+    content: '';
+    position: absolute;
+    top: 50%;
+    left:px2rem(10px);
+    right:px2rem(10px);
+    background: #fff;
+    height:px2rem(6px);
+    margin-top:px2rem(-6px/2);
+    border-radius:px2rem(8px); 
+}
+
+    
 
 
 /**
