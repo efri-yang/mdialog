@@ -282,79 +282,12 @@ body {
     animation-duration: .18s;
 }
 
-@-webkit-keyframes fieldTipBounceIn {
-    0% {
-        opacity: 0;
-        -webkit-transform: scale3d(.3, .3, .3);
-        transform: scale3d(.3, .3, .3);
-    }
-    100% {
-        opacity: 1;
-        -webkit-transform: scale3d(1, 1, 1);
-        transform: scale3d(1, 1, 1);
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
-.coms-dialog-shadow {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 998;
-    background-color: rgba(0, 0, 0, 0.8);
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    animation-duration: .25s;
-    animation-timing-function: ease-out;
-    &.in {
-        animation-name: fadeIn;
-    }
-    &.out {
-        animation-name: fadeOut;
-    }
-}
-
-.bm-dia-box {
-    position: fixed;
 
 
-    top:40%;
-    padding: px2rem(40px) 0;
-    z-index: 9999;
-    width: px2rem(520px);
-    left: 50%;
-    margin-left: px2rem(-260px);
-    transition: all 0.20s ease-out;
-
-    background: #fff;
-    border-radius: px2rem(20px); // transform: scale3d(.3, .3, .3);
-    // opacity: 0;
-    // visibility:hidden;
-    &.dia-in {
-        visibility: visible;
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
-    }
+.bm-dia-box1{
+    background-color:rgba(0,0,0,0.8);
+    border-radius: px2rem(20px);
+    width: px2rem(600px);
     .tip-pic {
         width: px2rem(133px);
         height: px2rem(133px);
@@ -389,6 +322,47 @@ body {
         color: #fff;
     }
 }
+
+.bm-dia-box2{
+    background-color:rgba(0,0,0,0.8);
+    border-radius: px2rem(20px);
+    width:px2rem(400px);
+    height: px2rem(600px); 
+    .tip-pic {
+        width: px2rem(133px);
+        height: px2rem(133px);
+        overflow: hidden;
+        background: url("../images/dia_success_tip.png") no-repeat top center;
+        background-size: 100% 100%;
+        margin: 0 auto;
+    }
+    .txt-1 {
+        text-align: center;
+        @include font-dpr(20px);
+        color: #333333;
+        margin-top: px2rem(50px);
+    }
+    .txt-2 {
+        text-align: center;
+        @include font-dpr(16px);
+        color: #666666;
+        margin-top: px2rem(20px);
+    }
+    .close {
+        width: px2rem(380px);
+        height: px2rem(88px);
+        line-height: px2rem(88px);
+        overflow: hidden;
+        background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, from(#A622E3), to(#D922BA), color-stop(0.5, #D922BA));
+        border-radius: px2rem(50px);
+        display: block;
+        margin: px2rem(30px) auto 0;
+        text-align: center;
+        @include font-dpr(20px);
+        color: #fff;
+    }
+}
+
 
 
 .classFixed {
@@ -436,6 +410,10 @@ body {
     }
 }
 
+.mDialogFadeIn{
+    animation-name: mDialogZoomIn;
+    animation-timing-function:ease-out; 
+}
 @keyframes mDialogFadeOut {
     from {
         opacity: 1;
@@ -444,6 +422,11 @@ body {
     to {
         opacity: 0;
     }
+}
+
+.mDialogFadeOut{
+    animation-name: mDialogFadeOut;
+    animation-timing-function:ease-out;
 }
 
 @keyframes mDialogZoomIn {
@@ -455,6 +438,11 @@ body {
     50% {
         opacity: 1;
     }
+}
+
+.mDialogZoomIn{
+    animation-name: mDialogZoomIn;
+    animation-timing-function:ease-out;
 }
 
 @keyframes mDialogZoomOut {
@@ -472,6 +460,10 @@ body {
     }
 }
 
+.mDialogZoomOut{
+    animation-name: mDialogZoomOut;
+    animation-timing-function:ease-out;
+}
 
 /**************************************************************************
  * 加载层  start
@@ -595,12 +587,8 @@ body {
             }
         }
     }
-
-    &.no-text{
+    &.loading-notext{
         padding:px2rem(60px);
-        .loading-txt{
-            display:none;
-        }
     }
 }
 
@@ -651,17 +639,37 @@ body {
     }
 }
 
-.mDialog-layer {
+.mDialog-layer-container{
+    visibility: hidden;
     position: fixed;
-    left: 0;
+
 }
+
+
 /**
  * 垂直水平居中
  */
-.mDialog-center{
+.mDialog-cc{
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%,-50%);
     -ms-transform: translate(-50%,-50%);
     -moz-transform: translate(-50%,-50%);
+}
+
+.mDialog-tc{
+    left: 50%;
+    top:px2rem(50px);
+    -webkit-transform: translate(-50%,0);
+    -ms-transform: translate(-50%,0);
+    -moz-transform: translate(-50%,0);
+}
+
+
+.mDialog-bc{
+    left: 50%;
+    bottom:px2rem(20px);
+    -webkit-transform: translate(-50%,0);
+    -ms-transform: translate(-50%,0);
+    -moz-transform: translate(-50%,0);
 }

@@ -21,18 +21,10 @@ var test="window";
             content: "",
             closeBtn: true,
             buttons: {},
-            onBeforeShow: function() {
-                console.dir("onBeforeShow");
-            },
-            onShow: function() {
-                console.dir("oShow");
-            },
-            onBeforeClose: function() {
-                console.dir("onBeforeClose");
-            },
-            onClose: function() {
-                console.dir("onClose");
-            }
+            onBeforeShow: function() {},
+            onShow: function() {},
+            onBeforeClose: function() {},
+            onClose: function() {}
         }
     }
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
@@ -167,8 +159,7 @@ var test="window";
         var containerStr="";
         var content="";
         var _this=this;
-        var containerCloseHandle;
-        var contentObjHandle;
+        var closeObjHandle;
 
         this.$container=null;
 
@@ -183,13 +174,14 @@ var test="window";
                 this.opts.content.wrap('<div class="mDialog-layer-main"></div>')
                 this.$main=this.opts.content.parent();
                 this.$main.wrap(this.$container);
-                contentObjHandle=function(){
-                   
-                    _this.opts.content.css(stylesHide);
+
+                closeObjHandle=function(){
+                    this.opts.content.css(stylesHide);
                     for(var i=0;i<2;i++){
-                        _this.opts.content.unwrap();
+                        this.opts.content.unwrap();
                     }
                 }
+                
             }else{
                 //如果内容是其他的文本
                 content='<div class="mDialog-default-main">'+this.opts.content+'</div>'
@@ -235,66 +227,29 @@ var test="window";
                       '</div>';
 
 
-
-
-
-
         if(!this.$container){
             this.$container=$(containerStr);
             this.$container.appendTo($('body'));
-           
         }
-
-        containerCloseHandle=function(){
-            !!_this.opts.onBeforeClose && _this.opts.onBeforeClose();
-            
-            if(_this.opts.animOut){
-                    _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"out",function(){
-                        !!contentObjHandle && contentObjHandle();
-                        _this.$container.remove();
-                        _this.opts.onHide();
-                    });
-            }else{
-                setTimeout(function(){
-                    !!contentObjHandle && contentObjHandle();
-                    _this.$container.remove();
-                })
-            }
-            
-        }
-            
-        
-
-       
-
-
         this._setElemPos(this.$container);
-
-        !!this.opts.onBeforeShow && this.opts.onBeforeShow();
          
         this.$container.css({"zIndex":mDialog.zIndex+1,"visibility":"visible"});
-        if(this.opts.animIn){
-            _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"in",_this.opts.onShow);
-        }else{
-            setTimeout(function(){
-                !!_this.opts.onShow && _this.opts.onShow();
+
+        
+        // this._setAnim(this.$container,this.opts.animIn,this.opts.animOut,this.opts.duration,"in");
+        
+        var containerClose=function(){
+            _this._setAnim(_this.$container,_this.opts.animIn,_this.opts.animOut,_this.opts.duration,"out");
+            _this.$container.AnimationEnd(function(){
+                    !!closeObjHandle && closeObjHandle.call(_this);
+                    _this.$container.remove();
+                    alert("AnimationEnd")
+               
             })
         }
 
-
-        this.$container.removeSelf=containerCloseHandle;
-        mDialog.stack[this.opts.uid].push(this.$container);  
-        
-       
-
-
-        
-
-        
-            
-        
-
-               
+        this.$container.removeSelf=containerClose;
+        mDialog.stack[this.opts.uid].push(this.$container);         
         
     };
     createClass.prototype._title=function(){
@@ -312,7 +267,7 @@ var test="window";
             var defaultOpacity=0.5,
                 defaultColor="#000",
                 _this=this,
-                shadeCloseHandle=$.noop();
+                closeFunc=$.noop();
                 styles={
                     "animation-duration":this.opts.duration+"ms",
                     "zIndex":mDialog.zIndex
@@ -328,7 +283,7 @@ var test="window";
 
             if(this.opts.shadeClose){
                 //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
-                shadeCloseHandle=function(){
+                closeFunc=function(){
                     !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
                     _this.$shade.AnimationEnd(function(){
                         _this.$shade.remove();
@@ -347,7 +302,7 @@ var test="window";
                 })
             }
             this.$shade.css(styles);
-            this.$shade.removeSelf=shadeCloseHandle;
+            this.$shade.removeSelf=closeFunc;
             this.$shade.appendTo($("body"));
             mDialog.stack[this.opts.uid].push(this.$shade);
             console.group(mDialog.stack)
@@ -365,8 +320,6 @@ var test="window";
         })
     }
     createClass.prototype._setAnim=function($elem,animInClass,animOutClass,duration,type,callback){
-        animInClass=!!animInClass ? animInClass :"";
-        animOutClass=!!animOutClass ? animOutClass :"";
         switch(type){
             case "in":
                $elem.css({"animation-duration":duration+"ms"}).removeClass(animOutClass).addClass(animInClass);
@@ -387,14 +340,10 @@ var test="window";
      * 通过调用 mDialog.close() 来关闭
      */
     createClass.prototype.close = function(index) {
-        var sindex=!!index ? index : this.opts.uid;
-        $.each(mDialog.stack[sindex], function(index, obj) {
+        var index=!!index ? index : this.opts.uid;
+        $.each(mDialog.stack[index], function(index, obj) {
             obj.removeSelf();
-            if(index==mDialog.stack[sindex].length-1){
-               delete mDialog.stack[sindex];
-            }
         });
-
     };
 
 
