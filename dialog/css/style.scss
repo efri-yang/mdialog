@@ -287,7 +287,7 @@ body {
 .bm-dia-box1{
     background:#fff;
     
-    width: px2rem(600px);
+    width: px2rem(300px);
     .tip-pic {
         width: px2rem(133px);
         height: px2rem(133px);
@@ -639,18 +639,40 @@ body {
 
 
 
-
+.mDialog-layer-btn{
+    clear:both; 
+    height:px2rem(75px);
+    background:#f60;  
+}
 
 .mDialog-layer-container{
     visibility: hidden;
-    overflow:hidden;
     position: fixed;
-    border-radius:px2rem(20px)
+    
+}
+.mDialog-layer-box{
+    height: 100%;
+    position: relative;
+    border-radius:px2rem(20px);
+    overflow:hidden;
 }
 
 
 .mDialog-layer-main{
     border-radius:0 0 px2rem(20px) px2rem(20px);
+    padding:px2rem(30px);
+    word-break:break-all;
+    word-wrap:break-word;
+    
+}
+.mDialog-layer-main.mDialog-layer-main-full{
+    background:#fff;
+    overflow:hidden;
+
+}
+.mDialog-layer-main-full >div{
+    height: 100%;
+    overflow: hidden;
 }
 .mDialog-layer-main:after{
     content:"";
@@ -658,19 +680,15 @@ body {
     clear:both;
 }
 .mDialog-default-box{
-    padding:0 px2rem(60px);
-     background:#fff;
-    padding:px2rem(30px);
-    overflow:hidden;
+    background:#fff;
     @include font-dpr(16px);
-    border-radius:px2rem(20px);
-
 }
 
 
 .mDialog-layer-title{
     border-radius:px2rem(20px) px2rem(20px) 0 0;
     background:#F5f5f5;
+    clear:both; 
     border-bottom:1px solid #d5d5d5;
     padding:px2rem(20px);
     @include font-dpr(16px);
@@ -683,8 +701,10 @@ body {
     overflow: hidden;  
     right:0;
     top:0;
+    margin-top:px2rem(-65px/2);
+    margin-right:px2rem(-65px/2);  
     border-radius:100%;
-    background:#000;
+    background-color:rgba(0,0,0,1);
     
 }
 .mDialog-close:before{

@@ -7,14 +7,18 @@ var test = "window";
         v: '0.0.1',
         stack: {},
         zIndex: 100000,
+        baseViewWidth:750,
+        baseFontSize:75,
         defaults: {
-            title: "mDialog标题",
+            title: "",
             autoClose: false,
             pause: 2000,
             duration: 250,
             shade: true,
             width: "auto",
             height: "auto",
+            maxWidth:"90%",
+            maxHeight:"90%",
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
             shadeClose: true,
@@ -36,6 +40,7 @@ var test = "window";
         }
     }
     var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
+    var percentReg = /^((\d+\.?\d*)|(\d*\.\d+))\%$/;
     var stylesContentShow = {
         visibility: "visible",
         display: "block",
@@ -177,6 +182,7 @@ var test = "window";
         var $main;
 
         this.$container = null;
+        this.$containerInner=null;
         title=this._title(opts);
 
 
@@ -185,15 +191,17 @@ var test = "window";
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                this.$container = $('<div class="mDialog-layer-container"></div>')
+                this.$container = $('<div class="mDialog-layer-container"></div>');
+                this.$title=$(title);
                 opts.content.css(stylesContentShow)
                 opts.content.wrap('<div class="mDialog-layer-main"></div>')
-                $main = opts.content.parent();
-                $main.wrap(this.$container);
+                this.$main = opts.content.parent();
+                this.$main.wrap(this.$container);
+               
 
-                !!title && this.$container.prepend($(title))
+                !!title && this.$container.prepend(this.$title)
                 contentObjHandle = function() {
-                    $main.siblings().remove();
+                    _this.$main.siblings().remove();
                     opts.content.css(styleContentsHide);
                     for (var i = 0; i < 2; i++) {
                         opts.content.unwrap();
@@ -238,17 +246,22 @@ var test = "window";
 
         containerStr = '<div class="mDialog-layer-container">' +
             
+            title+
             '<div class="mDialog-layer-main">' +
             content +
             '</div>' +
             '<div class="mDialog-layer-btn"></div>' +
-            '<div class="mDialog-close"></div>'
+            '<div class="mDialog-close"></div>'+
+           
             '</div>';
 
         if (!this.$container) {
             this.$container = $(containerStr);
-            this.$container.appendTo($('body'));
-            
+            this.$containerInner=this.$container.children().eq(0);
+            this.$container.appendTo($('body')); 
+            this.$title=this.$container.children('.mDialog-layer-title');
+            this.$footer=this.$container.children('.mDialog-layer-btn');
+            this.$main=this.$container.children('.mDialog-layer-main');  
         }
         containerCloseHandle = function() {
 
@@ -278,7 +291,7 @@ var test = "window";
 
 
 
-        this._setElemPos(this.$container);
+        this._setElemPos(this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,this.$title,this.$main,this.$footer);
 
         !!opts.onBeforeShow && opts.onBeforeShow();
 
@@ -293,6 +306,9 @@ var test = "window";
         this.$container.removeSelf = containerCloseHandle;
         mDialog.stack[this.opts.uid].push(this.$container);
     };
+
+
+    
     createClass.prototype._title = function(opts) {
         var title="";
         if(!!opts.title){
@@ -360,23 +376,84 @@ var test = "window";
     };
 
 
-    createClass.prototype._setElemPos = function($elem,width,height) {
-        //传递进来的是百分号 后者是 像素 或者是不传递
+    createClass.prototype._setElemPos = function($elem,width,height,maxWidth,maxHeight,$title,$main,$footer) {
+        //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
+        //width、height  传递进来的值可能是  auto  80%  400px  8rem;
+        width=!!width ? width : "auto";
+        height=!!height ? height : "auto"; 
+        maxWidth=!!maxWidth ? maxWidth : "90%";
+        maxHeight=!!maxHeight ? maxHeight :"90%";
 
-       if(document.documentElement.style.fontSize && document.body.style.fontSize){
 
-       }else{
+        var elemW,elemH,winW,winH,titleH=0,contentH=0,footerH=0,
+            standardPixRadio;//flexible 基准缩放比
+        var isFlexible=!!(document.documentElement.style.fontSize && document.body.style.fontSize);
+        var unitRemPx=isFlexible ? "rem" :"px";
 
-       }
-        var width = $elem.outerWidth();
-        var height = $elem.outerHeight();
+       
+
+        winW=parseInt($(window).width());
+        winH=parseInt($(window).height());
+        elemW=parseInt($elem.outerWidth());
+        elemH=parseInt($elem.outerHeight());
+
+        //有定义的width 以定义的width 为标准  没有的话那么就应该以container 的自身宽高为准
+        width=(width=="auto") ? elemW : width;
+        height=(height=="auto") ? elemH : height;
+        standardPixRadio=mDialog.baseViewWidth/winW
+       
+
+
+        
+        //百分比的时候 换算成 px;
+        maxW=percentReg.test(maxWidth) ? winW*parseInt(maxWidth)/100 : parseInt(maxWidth);
+        maxH=percentReg.test(maxHeight) ? winH*parseInt(maxHeight)/100 : parseInt(maxHeight);
+        width=percentReg.test(width) ? winW*parseInt(width)/100 : parseInt(width);
+        height=percentReg.test(height) ? winW*parseInt(height)/100 : parseInt(height);
+
+        titleH=!!$title && $title.length && parseInt($title.height());
+        footerH=!!$footer && $footer.length && parseInt($footer.height());
+
+        if(isFlexible){
+
+            width=width/mDialog.baseFontSize*standardPixRadio;
+            height=height/mDialog.baseFontSize*standardPixRadio;
+            maxW=maxW/mDialog.baseFontSize*standardPixRadio;
+            maxH=maxH/mDialog.baseFontSize*standardPixRadio;
+        }
+
+
+
+
+        width=(width > maxW) ? maxW :width;
+
+        if(height > maxH){
+            height=maxH;
+
+            if(!!titleH){
+                titleH=isFlexible ? (titleH/mDialog.baseFontSize)*standardPixRadio : titleH;
+            }
+            
+            if(!!footerH){
+                footerH=isFlexible ? (footerH/mDialog.baseFontSize)*standardPixRadio : footerH;
+            }
+            $main.addClass('mDialog-layer-main-full').css({height:(height-titleH-footerH)+unitRemPx})
+        }
+
+       
+
+    
         $elem.css({
             left: "50%",
             top: "50%",
-            "marginLeft": -width / 2 + "px",
-            "marginTop": -height / 2 + "px"
+            width:width+unitRemPx,
+            height:height+unitRemPx,
+            "marginLeft": -width / 2 + unitRemPx,
+            "marginTop": -height / 2 + unitRemPx
         })
     }
+
+
     createClass.prototype._setAnim = function($elem, animInClass, animOutClass, duration, type, callback) {
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";

@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title></title>
+	<script type="text/javascript" src="js/zepto.js"></script>
 	
 </head>
 <body>
@@ -222,7 +223,15 @@ to {
 <div class="animate-container">
     <span class="sa-line sa-tip animateSuccessTip"></span>
     <span class="sa-line sa-long animateSuccessLong"></span>
-   
+   <script type="text/javascript">
+   		$(function(){
+   			var patt=/^((\d+\.?\d*)|(\d*\.\d+))\%$/;
+   			alert(patt.test("83"));
+
+   			alert(parseInt("83.333%"))
+   		})
+
+   </script>
 </div>
 </body>
 </html>
