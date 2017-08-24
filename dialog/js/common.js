@@ -257,12 +257,14 @@ var test = "window";
 
         if (!this.$container) {
             this.$container = $(containerStr);
-            this.$containerInner=this.$container.children().eq(0);
             this.$container.appendTo($('body')); 
-            this.$title=this.$container.children('.mDialog-layer-title');
+            this.$title=this.$container.children('.mDialog-layer-title').eq(0);
+
             this.$footer=this.$container.children('.mDialog-layer-btn');
             this.$main=this.$container.children('.mDialog-layer-main');  
         }
+        console.dir(this.$title.height())
+
         containerCloseHandle = function() {
 
             !!opts.onBeforeClose && opts.onBeforeClose();
@@ -290,8 +292,9 @@ var test = "window";
 
 
 
-
-        this._setElemPos(this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,this.$title,this.$main,this.$footer);
+       
+            this._setElemPos(_this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,_this.$title,_this.$main,_this.$footer);
+        
 
         !!opts.onBeforeShow && opts.onBeforeShow();
 
@@ -379,6 +382,10 @@ var test = "window";
     createClass.prototype._setElemPos = function($elem,width,height,maxWidth,maxHeight,$title,$main,$footer) {
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
         //width、height  传递进来的值可能是  auto  80%  400px  8rem;
+     
+console.dir($main.outerWidth())
+           
+       
         width=!!width ? width : "auto";
         height=!!height ? height : "auto"; 
         maxWidth=!!maxWidth ? maxWidth : "90%";
@@ -390,44 +397,57 @@ var test = "window";
         var isFlexible=!!(document.documentElement.style.fontSize && document.body.style.fontSize);
         var unitRemPx=isFlexible ? "rem" :"px";
 
-       
+
 
         winW=parseInt($(window).width());
         winH=parseInt($(window).height());
         elemW=parseInt($elem.outerWidth());
         elemH=parseInt($elem.outerHeight());
 
+alert(winW)
+
         //有定义的width 以定义的width 为标准  没有的话那么就应该以container 的自身宽高为准
         width=(width=="auto") ? elemW : width;
         height=(height=="auto") ? elemH : height;
-        standardPixRadio=mDialog.baseViewWidth/winW
-       
-
-
-        
+      
+        if(window.navigator.appVersion.match(/iphone/gi)){
+            standardPixRadio=mDialog.baseViewWidth/winW
+        }else{
+            standardPixRadio=mDialog.baseViewWidth/mDialog.baseFontSize;
+            (winW >= 750) ?  winW=750 : '';
+        }
         //百分比的时候 换算成 px;
         maxW=percentReg.test(maxWidth) ? winW*parseInt(maxWidth)/100 : parseInt(maxWidth);
         maxH=percentReg.test(maxHeight) ? winH*parseInt(maxHeight)/100 : parseInt(maxHeight);
         width=percentReg.test(width) ? winW*parseInt(width)/100 : parseInt(width);
         height=percentReg.test(height) ? winW*parseInt(height)/100 : parseInt(height);
-
+  alert(width)
         titleH=!!$title && $title.length && parseInt($title.height());
         footerH=!!$footer && $footer.length && parseInt($footer.height());
+       width=(width > maxW) ? maxW :width;
 
-        if(isFlexible){
+        if(isFlexible && window.navigator.appVersion.match(/iphone/gi)){
+                width=width/mDialog.baseFontSize*standardPixRadio;
+                height=height/mDialog.baseFontSize*standardPixRadio;
+                maxW=maxW/mDialog.baseFontSize*standardPixRadio;
+                maxH=maxH/mDialog.baseFontSize*standardPixRadio;
+          
+        }else{
+           
+            width=width*10/winW;
 
-            width=width/mDialog.baseFontSize*standardPixRadio;
-            height=height/mDialog.baseFontSize*standardPixRadio;
-            maxW=maxW/mDialog.baseFontSize*standardPixRadio;
-            maxH=maxH/mDialog.baseFontSize*standardPixRadio;
+            height=height*standardPixRadio/winW;
+            maxW=maxW*winW/mDialog.baseViewWidth;
+            maxH=maxH*standardPixRadio/winW;
         }
 
 
 
 
-        width=(width > maxW) ? maxW :width;
+        
 
         if(height > maxH){
+
             height=maxH;
 
             if(!!titleH){
@@ -440,7 +460,7 @@ var test = "window";
             $main.addClass('mDialog-layer-main-full').css({height:(height-titleH-footerH)+unitRemPx})
         }
 
-       
+
 
     
         $elem.css({

@@ -287,7 +287,7 @@ body {
 .bm-dia-box1{
     background:#fff;
     
-    width: px2rem(300px);
+ 
     .tip-pic {
         width: px2rem(133px);
         height: px2rem(133px);
@@ -660,14 +660,16 @@ body {
 
 .mDialog-layer-main{
     border-radius:0 0 px2rem(20px) px2rem(20px);
-    padding:px2rem(30px);
+    // padding:px2rem(30px);
     word-break:break-all;
     word-wrap:break-word;
+    background:#fff;
+     overflow:hidden;
     
 }
 .mDialog-layer-main.mDialog-layer-main-full{
-    background:#fff;
-    overflow:hidden;
+  
+   
 
 }
 .mDialog-layer-main-full >div{

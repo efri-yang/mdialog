@@ -2,8 +2,9 @@
 <html>
 <head>
 	<title></title>
+	 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<script type="text/javascript" src="js/zepto.js"></script>
-	
+	<script type="text/javascript" src="js/flexible2.js"></script>
 </head>
 <body>
 <style type="text/css">
@@ -220,17 +221,14 @@ to {
 }
 }
 </style>
+
+<div style="width:1rem;height:1rem;background:#000"></div>
 <div class="animate-container">
     <span class="sa-line sa-tip animateSuccessTip"></span>
     <span class="sa-line sa-long animateSuccessLong"></span>
    <script type="text/javascript">
-   		$(function(){
-   			var patt=/^((\d+\.?\d*)|(\d*\.\d+))\%$/;
-   			alert(patt.test("83"));
-
-   			alert(parseInt("83.333%"))
-   		})
-
+   		alert(window.devicePixelRatio);
+   		alert($(window).width())
    </script>
 </div>
 </body>
