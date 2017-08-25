@@ -18,7 +18,7 @@ var test = "window";
             width: "auto",
             height: "auto",
             maxWidth:"90%",
-            maxHeight:"90%",
+            maxHeight:"80%",
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
             shadeClose: true,
@@ -39,8 +39,8 @@ var test = "window";
             }
         }
     }
-    var colorRgbReg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //验证正则
-    var percentReg = /^((\d+\.?\d*)|(\d*\.\d+))\%$/;
+   
+   
     var stylesContentShow = {
         visibility: "visible",
         display: "block",
@@ -61,7 +61,7 @@ var test = "window";
             var sColor = colorStr.toLowerCase();
             //没有传递，那么默认的是
             var sOpacity = (opacity === 0 || !!opacity) ? ((opacity > 1) ? 1 : ((opacity < 0) ? 0 : opacity)) : 0.8;
-            if (sColor && colorRgbReg.test(sColor)) {
+            if (sColor && /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/.test(sColor)) {
                 if (sColor.length === 4) {
                     var sColorNew = "#";
                     for (var i = 1; i < 4; i += 1) {
@@ -109,6 +109,23 @@ var test = "window";
 
             var uuid = s.join("");
             return uuid;
+        },
+        isPercent:function(str){
+            /*return /^((\d+\.?\d*)|(\d*\.\d+))\%$/.test(str);*/
+            return (typeof str =="string") ? ((str.indexOf("%")==-1) ? false : true) : false;
+        },
+        isRem:function(str){
+            // return /^((\d+\.?\d*rem)|(\d*\.\d+))*rem$/.test(str);
+             return (typeof str =="string") ? ((str.indexOf("rem")==-1) ? false : true) : false;
+        },
+        isPx:function(str){
+            return (typeof str =="string") ? ((str.indexOf("px")==-1) ? false : true) : false;
+        },
+        removeAllSpace:function(str){
+            return str.replace(/\s+/g, "");
+        },
+        getNumber:function(str){
+            return str.match(/\d+(\.\d{0,2})?/)[0]
         }
     };
 
@@ -193,6 +210,7 @@ var test = "window";
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
                 this.$container = $('<div class="mDialog-layer-container"></div>');
                 this.$title=$(title);
+                this.$footer=$('<div class="mDialog-layer-btn"></div>');
                 opts.content.css(stylesContentShow)
                 opts.content.wrap('<div class="mDialog-layer-main"></div>')
                 this.$main = opts.content.parent();
@@ -200,6 +218,8 @@ var test = "window";
                
 
                 !!title && this.$container.prepend(this.$title)
+                this.$footer.appendTo(this.$container);
+                this.$footer=this.$container.children('.mDialog-layer-btn');
                 contentObjHandle = function() {
                     _this.$main.siblings().remove();
                     opts.content.css(styleContentsHide);
@@ -257,7 +277,8 @@ var test = "window";
 
         if (!this.$container) {
             this.$container = $(containerStr);
-            this.$container.appendTo($('body')); 
+            this.$container.appendTo($('body'));
+          
             this.$title=this.$container.children('.mDialog-layer-title').eq(0);
 
             this.$footer=this.$container.children('.mDialog-layer-btn');
@@ -379,97 +400,159 @@ var test = "window";
     };
 
 
+
+/******************************************************************/
     createClass.prototype._setElemPos = function($elem,width,height,maxWidth,maxHeight,$title,$main,$footer) {
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
         //width、height  传递进来的值可能是  auto  80%  400px  8rem;
      
-console.dir($main.outerWidth())
-           
-       
-        width=!!width ? width : "auto";
-        height=!!height ? height : "auto"; 
-        maxWidth=!!maxWidth ? maxWidth : "90%";
-        maxHeight=!!maxHeight ? maxHeight :"90%";
-
-
-        var elemW,elemH,winW,winH,titleH=0,contentH=0,footerH=0,
-            standardPixRadio;//flexible 基准缩放比
+        var elemW,elemH,winW,winH,realW,realH,titleH=0,contentH=0,footerH=0,dpr,
+            standardRatio;//flexible 基准缩放比
         var isFlexible=!!(document.documentElement.style.fontSize && document.body.style.fontSize);
         var unitRemPx=isFlexible ? "rem" :"px";
 
+        winW=$(window).width();
+        winH=$(window).height();
 
+        dpr=document.documentElement.getAttribute('data-dpr');
+        if(dpr){
+                if(winW>540 && dpr==1){
 
-        winW=parseInt($(window).width());
-        winH=parseInt($(window).height());
-        elemW=parseInt($elem.outerWidth());
-        elemH=parseInt($elem.outerHeight());
-
-alert(winW)
-
-        //有定义的width 以定义的width 为标准  没有的话那么就应该以container 的自身宽高为准
-        width=(width=="auto") ? elemW : width;
-        height=(height=="auto") ? elemH : height;
-      
-        if(window.navigator.appVersion.match(/iphone/gi)){
-            standardPixRadio=mDialog.baseViewWidth/winW
+                    standardRatio=540;
+                }else{
+                    standardRatio=winW;
+                }
         }else{
-            standardPixRadio=mDialog.baseViewWidth/mDialog.baseFontSize;
-            (winW >= 750) ?  winW=750 : '';
+            standardRatio=winW;
         }
-        //百分比的时候 换算成 px;
-        maxW=percentReg.test(maxWidth) ? winW*parseInt(maxWidth)/100 : parseInt(maxWidth);
-        maxH=percentReg.test(maxHeight) ? winH*parseInt(maxHeight)/100 : parseInt(maxHeight);
-        width=percentReg.test(width) ? winW*parseInt(width)/100 : parseInt(width);
-        height=percentReg.test(height) ? winW*parseInt(height)/100 : parseInt(height);
-  alert(width)
-        titleH=!!$title && $title.length && parseInt($title.height());
-        footerH=!!$footer && $footer.length && parseInt($footer.height());
-       width=(width > maxW) ? maxW :width;
 
-        if(isFlexible && window.navigator.appVersion.match(/iphone/gi)){
-                width=width/mDialog.baseFontSize*standardPixRadio;
-                height=height/mDialog.baseFontSize*standardPixRadio;
-                maxW=maxW/mDialog.baseFontSize*standardPixRadio;
-                maxH=maxH/mDialog.baseFontSize*standardPixRadio;
-          
+
+        elemW=$elem.outerWidth();
+
+        realW=!!width ? ((width=="auto") ? elemW : width) : elemW;
+ 
+        maxW=!!maxWidth ? ((maxWidth=="auto") ? "90%" : maxWidth) : "90%";
+
+        if(ExtraFunc.isPercent(realW)){
+            realW=winW*ExtraFunc.getNumber(realW)/100; //转成 数字类型
+        }else if(ExtraFunc.isPx(realW)){ 
+            realW=ExtraFunc.getNumber(realW); //转成 数字类型
+        }
+
+        if(ExtraFunc.isPercent(maxW)){
+            maxW=winW*ExtraFunc.getNumber(maxW)/100; //转成px
+        }else if(ExtraFunc.isPx(maxW)){
+            maxW=ExtraFunc.getNumber(maxW); //转成px
+        }
+
+        realW=(realW >=maxW) ? maxW : realW;
+
+        if(isFlexible){ //转rem
+            realW=realW/standardRatio*10; 
+        }
+
+        $elem.css({
+            left: "50%",
+            top: "50%",
+            width:realW+unitRemPx,
+            "marginLeft": -realW / 2 + unitRemPx,
+            
+        })
+
+        
+        elemH=$elem.outerHeight();
+        realH=!!height ? ((height=="auto") ? elemH : height) : elemH;
+        maxH=!!maxHeight ?((maxHeight=="auto") ? "80%" : maxHeight) : "80%";
+        if(ExtraFunc.isPercent(realH)){
+            realH=winH*ExtraFunc.getNumber(realH)/100; //转成px
+           
+        }else if(ExtraFunc.isPx(realH)){
+            
+            realH=ExtraFunc.getNumber(realH); //转成px
         }else{
            
-            width=width*10/winW;
-
-            height=height*standardPixRadio/winW;
-            maxW=maxW*winW/mDialog.baseViewWidth;
-            maxH=maxH*standardPixRadio/winW;
         }
 
+        if(ExtraFunc.isPercent(maxH)){
+            maxH=winH*ExtraFunc.getNumber(maxH)/100; //转成px number 类型
+        }else if(ExtraFunc.isPx(maxH)){
+            maxH=ExtraFunc.getNumber(maxH); //转成px
+        }
+
+
+        console.dir("titleH:"+$title.height())
+        console.dir("mainH:"+$main.height())
+        console.dir("footerH:"+$footer.height())
+console.dir("elemH:"+elemH)
+        console.dir("realH:"+realH);
+        
+        
+        
+        
 
 
 
         
 
-        if(height > maxH){
+        
 
-            height=maxH;
 
-            if(!!titleH){
-                titleH=isFlexible ? (titleH/mDialog.baseFontSize)*standardPixRadio : titleH;
+        
+
+        
+
+
+        
+
+
+        if(realH > maxH){
+
+            realH=maxH; //px number
+            if(!!$title && !!$title.length){
+                titleH=$title.outerHeight();
             }
             
-            if(!!footerH){
-                footerH=isFlexible ? (footerH/mDialog.baseFontSize)*standardPixRadio : footerH;
+            if(!!$footer && $footer.length){
+                footerH=$footer.outerHeight();
             }
-            $main.addClass('mDialog-layer-main-full').css({height:(height-titleH-footerH)+unitRemPx})
+
+            $main.addClass('mDialog-layer-main-full').css({height:(isFlexible ? ((realH-titleH-footerH)/standardRatio*10) : (realH-titleH-footerH))+unitRemPx})
         }
+
+console.dir("realH:"+realH);
+
+
+        if(isFlexible){ //转rem
+            
+            realH=realH/standardRatio*10;
+           
+        }
+
+      
+
+console.dir("winH:"+winH);
+console.dir("realH:"+realH);
+console.dir("maxH:" +maxH);
+console.dir("winW:"+winW);
+console.dir("standardRatio:" +standardRatio);
+
+     
+      
+     
+
+
+
+        
+
+       
 
 
 
     
         $elem.css({
-            left: "50%",
-            top: "50%",
-            width:width+unitRemPx,
-            height:height+unitRemPx,
-            "marginLeft": -width / 2 + unitRemPx,
-            "marginTop": -height / 2 + unitRemPx
+          
+            height:realH+unitRemPx,
+            "marginTop": -realH / 2 + unitRemPx
         })
     }
 
