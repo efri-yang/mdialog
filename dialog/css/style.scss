@@ -639,17 +639,53 @@ body {
 
 
 
-.mDialog-layer-btn{
+.mDialog-layer-btns{
     clear:both; 
-    height:px2rem(75px);
-    background:#f60;  
+    height:px2rem(80px);
+    line-height:px2rem(80px);
+    border-top:1px solid #e8e8e8;
+    display: flex;
+    font-size:px2rem(32px);
+    background:#fff;
+    border-radius:0 0 px2rem(20px) px2rem(20px);
+    >.mDialog-btn{
+        flex:1;
+        text-align: center;
+        position:relative; 
+        &:after{
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            border-left: 1px solid #d5d5d5;
+            color: #d5d5d5;
+           
+        }
+        &:first-child{
+            &:after{
+                border-left:0;
+            }
+            
+        }
+    }  
 }
 
 .mDialog-layer-container{
     visibility: hidden;
     position: fixed;
-
-    
+}
+.mDialog-layer-container-full{
+    >.mDialog-layer-title{
+        border-radius:0;
+    }
+    >.mDialog-layer-main{
+        border-radius:0;
+    }
+    >.mDialog-layer-btns{
+        border-radius:0;
+    }
 }
 .mDialog-layer-box{
     height: 100%;
@@ -661,10 +697,9 @@ body {
 
 .mDialog-layer-main{
     
-    padding:px2rem(20px);
+   
     word-break:break-all;
     word-wrap:break-word;
-    background:#fff;
      overflow:hidden;
     
 }
@@ -685,6 +720,7 @@ body {
 .mDialog-default-box{
     background:#fff;
     @include font-dpr(16px);
+     padding:px2rem(20px);
 }
 
 

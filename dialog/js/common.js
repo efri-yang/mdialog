@@ -195,13 +195,14 @@ var test = "window";
             title="",
             content = "",
             containerCloseHandle,
-            contentObjHandle;
+            contentCloseHandle;
         var $main;
 
         this.$container = null;
         this.$containerInner=null;
         title=this._title(opts);
-
+        $close=this._close(opts);
+        $button=this._button(opts);
 
         if (!opts._type) {
             //如果没有type参数,那么说明 调用的方式是open() 
@@ -210,17 +211,16 @@ var test = "window";
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
                 this.$container = $('<div class="mDialog-layer-container"></div>');
                 this.$title=$(title);
-                this.$footer=$('<div class="mDialog-layer-btn"></div>');
                 opts.content.css(stylesContentShow)
                 opts.content.wrap('<div class="mDialog-layer-main"></div>')
                 this.$main = opts.content.parent();
                 this.$main.wrap(this.$container);
                
 
-                !!title && this.$container.prepend(this.$title)
-                this.$footer.appendTo(this.$container);
-                this.$footer=this.$container.children('.mDialog-layer-btn');
-                contentObjHandle = function() {
+                !!title && this.$container.prepend(this.$title);
+
+                
+                contentCloseHandle = function() {
                     _this.$main.siblings().remove();
                     opts.content.css(styleContentsHide);
                     for (var i = 0; i < 2; i++) {
@@ -271,7 +271,6 @@ var test = "window";
             content +
             '</div>' +
             '<div class="mDialog-layer-btn"></div>' +
-            '<div class="mDialog-close"></div>'+
            
             '</div>';
 
@@ -281,11 +280,10 @@ var test = "window";
           
             this.$title=this.$container.children('.mDialog-layer-title').eq(0);
 
-            this.$footer=this.$container.children('.mDialog-layer-btn');
             this.$main=this.$container.children('.mDialog-layer-main');  
         }
-        console.dir(this.$title.height())
-
+       !!$close && $close.appendTo(this.$container);
+       !!$button && $button.appendTo(this.$container);
         containerCloseHandle = function() {
 
             !!opts.onBeforeClose && opts.onBeforeClose();
@@ -295,13 +293,13 @@ var test = "window";
                 this._setAnim(this.$container, opts.animIn, opts.animOut, opts.duration, "out", function() {
                     // this -》 window
 
-                    !!contentObjHandle && contentObjHandle();
+                    !!contentCloseHandle && contentCloseHandle();
                     _this.$container.remove();
                     opts.onClose();
                 });
             } else {
                 setTimeout(function() {
-                    !!contentObjHandle && contentObjHandle();
+                    !!contentCloseHandle && contentCloseHandle();
                     _this.$container.remove();
                     opts.onClose();
                 })
@@ -314,7 +312,7 @@ var test = "window";
 
 
        
-            this._setElemPos(_this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,_this.$title,_this.$main,_this.$footer);
+            this._setElemPos(_this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,_this.$title,_this.$main,$button);
         
 
         !!opts.onBeforeShow && opts.onBeforeShow();
@@ -344,6 +342,36 @@ var test = "window";
         }
         return title; 
     };
+
+    createClass.prototype._close=function(opts){
+        var $close=null,_this=this;
+        if(!!opts.closeBtn){
+            $close=$('<span class="mDialog-close"></span>');
+            $close.on("click touchstart",function(){
+                _this.close();
+            })
+        }
+        return $close;
+
+    };
+
+    createClass.prototype._button=function(opts,type){
+        var $btnContainer=($.isArray(opts.buttons) || type=="confirm") ? $('<div class="mDialog-layer-btns"></div>') : null,
+            _this=this;
+        if($.isArray(opts.buttons) && !!opts.buttons.length){
+            $.each(opts.buttons,function(index, obj) {
+                var $btn=$('<a href="#" class="mDialog-btn '+obj.class+'">'+obj.text+'</a>');
+                if(!!obj.callback){
+                   $btn.on("touchstart",function(event){
+                        event.preventDefault();
+                        obj.callback.call(_this);
+                    })    
+                }
+                $btn.appendTo($btnContainer);
+            });
+        }
+        return $btnContainer;
+    }
 
     createClass.prototype._content = function() {
 
@@ -445,11 +473,17 @@ var test = "window";
             maxW=ExtraFunc.getNumber(maxW); //转成px
         }
 
+
+
+        //宽高都是100%，那么默认的忽略
+
         realW=(realW >=maxW) ? maxW : realW;
 
         if(isFlexible){ //转rem
             realW=realW/standardRatio*10; 
         }
+
+
 
         $elem.css({
             left: "50%",
@@ -469,8 +503,6 @@ var test = "window";
         }else if(ExtraFunc.isPx(realH)){
             
             realH=ExtraFunc.getNumber(realH); //转成px
-        }else{
-           
         }
 
         if(ExtraFunc.isPercent(maxH)){
@@ -483,8 +515,11 @@ var test = "window";
         console.dir("titleH:"+$title.height())
         console.dir("mainH:"+$main.height())
         console.dir("footerH:"+$footer.height())
-console.dir("elemH:"+elemH)
+        console.dir("elemH:"+elemH)
         console.dir("realH:"+realH);
+
+
+        // elemH 大于规定的高度 heiht 那么也要启动 限制
         
         
         
@@ -505,8 +540,8 @@ console.dir("elemH:"+elemH)
         
 
 
-        if(realH > maxH){
-
+        if(realH >=maxH ){
+                alert("Xx")
             realH=maxH; //px number
             if(!!$title && !!$title.length){
                 titleH=$title.outerHeight();
@@ -519,6 +554,11 @@ console.dir("elemH:"+elemH)
             $main.addClass('mDialog-layer-main-full').css({height:(isFlexible ? ((realH-titleH-footerH)/standardRatio*10) : (realH-titleH-footerH))+unitRemPx})
         }
 
+        if(realH==maxH && realH==winH){
+           
+            $elem.addClass('mDialog-layer-container-full')
+        }
+
 console.dir("realH:"+realH);
 
 
@@ -527,6 +567,8 @@ console.dir("realH:"+realH);
             realH=realH/standardRatio*10;
            
         }
+
+        if(realH)
 
       
 
