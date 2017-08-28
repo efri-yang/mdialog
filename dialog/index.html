@@ -16,6 +16,8 @@
 
     <button id="J_btn1" style="margin:10px 0 0 0px;">按钮1(bm-dia-box1)</button>
     <button id="J_btn2" style="margin:50px 0 0 150px;">按钮2(bm-dia-box2)</button>
+
+    <button id="J_btn3" style="margin:50px 0 0 150px;">confirm</button>
     <!-- <div class="mDialog-loading-section no-text mDialog-center classFixed">
         <div class="loading-icon">
             <div></div>
@@ -54,8 +56,7 @@
         $("#J_btn1").on("click", function() {
             var dia = mDialog.open({
                 // duration:0,
-                width:"100%",
-                height:"100px",
+               
                 title:"mDialog弹框标题",
                 
                 
@@ -72,7 +73,7 @@
                     
                     }
                   },
-                  {text:"确认",callback:function(){
+                  {text:"",callback:function(){
                       this.close();
                       mDialog.load()
                   }}
@@ -98,6 +99,15 @@
               //     // animOut:"bounceOutDown",
               //     // shade: { "opacity": 0.6 }
               // });
+        })
+
+        $("#J_btn3").on("click",function(){
+            mDialog.confirm({
+                 content:"<div>撒嗯嗯撒地asdasdf沙发斯蒂芬方</div>",
+                 ok:function(){
+                  this.close();
+                 }
+            });
         })
         
         

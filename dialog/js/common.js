@@ -7,8 +7,8 @@ var test = "window";
         v: '0.0.1',
         stack: {},
         zIndex: 100000,
-        baseViewWidth:750,
-        baseFontSize:75,
+        baseViewWidth: 750,
+        baseFontSize: 75,
         defaults: {
             title: "",
             autoClose: false,
@@ -17,8 +17,8 @@ var test = "window";
             shade: true,
             width: "auto",
             height: "auto",
-            maxWidth:"90%",
-            maxHeight:"80%",
+            maxWidth: "90%",
+            maxHeight: "80%",
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
             shadeClose: true,
@@ -39,8 +39,8 @@ var test = "window";
             }
         }
     }
-   
-   
+
+
     var stylesContentShow = {
         visibility: "visible",
         display: "block",
@@ -110,21 +110,21 @@ var test = "window";
             var uuid = s.join("");
             return uuid;
         },
-        isPercent:function(str){
+        isPercent: function(str) {
             /*return /^((\d+\.?\d*)|(\d*\.\d+))\%$/.test(str);*/
-            return (typeof str =="string") ? ((str.indexOf("%")==-1) ? false : true) : false;
+            return (typeof str == "string") ? ((str.indexOf("%") == -1) ? false : true) : false;
         },
-        isRem:function(str){
+        isRem: function(str) {
             // return /^((\d+\.?\d*rem)|(\d*\.\d+))*rem$/.test(str);
-             return (typeof str =="string") ? ((str.indexOf("rem")==-1) ? false : true) : false;
+            return (typeof str == "string") ? ((str.indexOf("rem") == -1) ? false : true) : false;
         },
-        isPx:function(str){
-            return (typeof str =="string") ? ((str.indexOf("px")==-1) ? false : true) : false;
+        isPx: function(str) {
+            return (typeof str == "string") ? ((str.indexOf("px") == -1) ? false : true) : false;
         },
-        removeAllSpace:function(str){
+        removeAllSpace: function(str) {
             return str.replace(/\s+/g, "");
         },
-        getNumber:function(str){
+        getNumber: function(str) {
             return str.match(/\d+(\.\d{0,2})?/)[0]
         }
     };
@@ -164,16 +164,177 @@ var test = "window";
             };
         });
     }
+    function titleRender(opts){
+        var title = "";
+        if (!!opts.title) {
+            if ($.isPlainObject(opts.title)) {
+                title = '<div class="mDialog-layer-title ' + opts.className + ' style=' + opts.style + '">' + opts.title + '</div>'
+            } else {
+                title = '<div class="mDialog-layer-title">' + opts.title + '</div>';
+            }
+        }
+        return title;
+    }
+
+    function closeBtnRender(opts,indicator) {
+        var $close = null;
+        if (!!opts.closeBtn) {
+            $close = $('<span class="mDialog-close"></span>');
+            $close.on("click touchstart", function() {
+                indicator.close();
+            })
+        }
+        return $close;
+
+    };
+
+    function buttonRender(opts,type,indicator){
+        var $btnContainer = ($.isArray(opts.buttons) || type == "confirm") ? $('<div class="mDialog-layer-btns"></div>') : null,
+            _this = this;
+        if ($.isArray(opts.buttons) && !!opts.buttons.length) {
+            $.each(opts.buttons, function(index, obj) {
+                obj.class= !!obj.class ?  obj.class :"";
+                var $btn = $('<a href="#" class="mDialog-btn ' + obj.class + '">' + obj.text + '</a>');
+                if (!!obj.callback) {
+                    $btn.on("touchstart", function(event) {
+                        event.preventDefault();
+                        obj.callback.call(indicator);
+                    })
+                }
+                $btn.appendTo($btnContainer);
+            });
+        }
+        return $btnContainer;
+    };
+
+    function setElemPos($elem, width, height, maxWidth, maxHeight, $title, $main, $footer) {
+        //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
+        //width、height  传递进来的值可能是  auto  80%  400px  8rem;
+
+        var elemW, elemH, winW, winH, realW, realH, titleH = 0,
+            contentH = 0,
+            footerH = 0,
+            fullClassName="mDialog-layer-main-full",
+            dpr, isFull, mainH,
+            standardRatio, //flexible 基准缩放比
+            isFlexible = !!(document.documentElement.style.fontSize && document.body.style.fontSize),
+            unitRemPx = isFlexible ? "rem" : "px";
+
+        winW = $(window).width();
+        winH = $(window).height();
+        dpr = document.documentElement.getAttribute('data-dpr');
+
+        if (dpr) {
+            if (winW > 540 && dpr == 1) {
+                standardRatio = 540;
+            } else {
+                standardRatio = winW;
+            }
+        } else {
+            standardRatio = winW;
+        }
+
+
+        elemW = $elem.outerWidth();
+        realW = !!width ? ((width == "auto") ? elemW : width) : elemW;
+        maxW = !!maxWidth ? ((maxWidth == "auto") ? "90%" : maxWidth) : "90%";
+
+        if (ExtraFunc.isPercent(realW)) {
+            realW = winW * ExtraFunc.getNumber(realW) / 100; //转成 数字类型
+        } else if (ExtraFunc.isPx(realW)) {
+            realW = ExtraFunc.getNumber(realW); //转成 数字类型
+        }
+
+        if (ExtraFunc.isPercent(maxW)) {
+            maxW = winW * ExtraFunc.getNumber(maxW) / 100; //转成px
+        } else if (ExtraFunc.isPx(maxW)) {
+            maxW = ExtraFunc.getNumber(maxW); //转成px
+        }
+
+        //宽高都是100%，那么默认的忽略\
+        realW = (realW >= maxW) ? maxW : realW;
+        if (isFlexible) { //转rem
+            realW = realW / standardRatio * 10;
+        }
+        $elem.css({
+            left: "50%",
+            top: "50%",
+            width: realW + unitRemPx,
+            "marginLeft": -realW / 2 + unitRemPx
+        })
+
+
+        elemH = $elem.outerHeight();
+        realH = !!height ? ((height == "auto") ? elemH : height) : elemH;
+        maxH = !!maxHeight ? ((maxHeight == "auto") ? "80%" : maxHeight) : "80%";
+        if (ExtraFunc.isPercent(realH)) {
+            realH = winH * ExtraFunc.getNumber(realH) / 100; //转成px
+        } else if (ExtraFunc.isPx(realH)) {
+            realH = ExtraFunc.getNumber(realH); //转成px
+        }
+        if (ExtraFunc.isPercent(maxH)) {
+            maxH = winH * ExtraFunc.getNumber(maxH) / 100; //转成px number 类型
+        } else if (ExtraFunc.isPx(maxH)) {
+            maxH = ExtraFunc.getNumber(maxH); //转成px
+        }
+
+        // elemH 大于规定的高度 heiht 那么也要启动 限制
+        if (realH >= maxH) {
+            realH = maxH;
+            isFull = true;
+        }
+        if (realH <= elemH) {
+            isFull = true;
+        }
+        if (!!isFull) {
+            if (!!$title && !!$title.length) {
+                titleH = $title.outerHeight();
+            }
+            if (!!$footer && $footer.length) {
+                footerH = $footer.outerHeight();
+            }
+            mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
+            $main.addClass(fullClassName).css({ height: (isFlexible ? (mainH / standardRatio * 10) : mainH) + unitRemPx })
+        }
+        if (realH == maxH && realH == winH) {
+            $elem.addClass(fullClassName)
+        }
+
+        if (isFlexible) { //转rem
+            realH = realH / standardRatio * 10;
+        }
+        $elem.css({
+            height: realH + unitRemPx,
+            "marginTop": -realH / 2 + unitRemPx
+        })
+    };
+
+    function setAnim($elem, animInClass, animOutClass, duration, type, callback,indicator) {
+        animInClass = !!animInClass ? animInClass : "";
+        animOutClass = !!animOutClass ? animOutClass : "";
+        switch (type) {
+            case "in":
+                $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
+                break;
+            case "out":
+                $elem.removeClass(animInClass).addClass(animOutClass);
+                break;
+            default:
+                $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
+        }
+        $elem.AnimationEnd(function() {
+            !!callback && callback.call(indicator);
+        })
+    }
+
+
+
     var createClass = function(options, type) {
         this.opts = $.extend({}, mDialog.defaults, options);
         this.opts._type = type;
         this._init();
-    }
-    createClass.prototype.test = 100;
+    };
     createClass.prototype._init = function() {
-        // type confirm   toast  msg  load
-
-        //如果是{} new Object 对象
         this.opts.uid = ExtraFunc.uuid();
         mDialog.stack[this.opts.uid] = [];
 
@@ -187,49 +348,51 @@ var test = "window";
         }
 
     }
+    createClass.prototype.test=100;
     createClass.prototype._renderContainer = function() {
-        console.dir(this.opts)
         var _this = this,
             opts = this.opts,
-            containerStr = "",
-            title="",
-            content = "",
+            containerStr = "",//容器
+            title = "",//标题
+            content = "",//内容
+
+            $container,
+            $main,
+            $closeBtn,
+            $footerButton,
+
+            containerClassName="mDialog-layer-container",
+            mainClassName="mDialog-layer-main",
+            titleClassName="mDialog-layer-title",
+
             containerCloseHandle,
             contentCloseHandle;
-        var $main;
 
-        this.$container = null;
-        this.$containerInner=null;
-        title=this._title(opts);
-        $close=this._close(opts);
-        $button=this._button(opts);
+
+        title = titleRender(opts);
+        $closeBtn = closeBtnRender(opts,this);
+        $footerButton = buttonRender(opts,this.opts,this);
 
         if (!opts._type) {
             //如果没有type参数,那么说明 调用的方式是open() 
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                this.$container = $('<div class="mDialog-layer-container"></div>');
-                this.$title=$(title);
+                $container = $('<div class="'+containerClassName+'"></div>');
+                $title = $(title);
                 opts.content.css(stylesContentShow)
                 opts.content.wrap('<div class="mDialog-layer-main"></div>')
-                this.$main = opts.content.parent();
-                this.$main.wrap(this.$container);
-               
-
-                !!title && this.$container.prepend(this.$title);
-
-                
+                $main = opts.content.parent();
+                $main.wrap($container);
+                !!title && $container.prepend($title);
                 contentCloseHandle = function() {
-                    _this.$main.siblings().remove();
+                    $main.siblings().remove();
                     opts.content.css(styleContentsHide);
                     for (var i = 0; i < 2; i++) {
                         opts.content.unwrap();
                     }
                 }
             } else {
-
-                //如果内容是其他的文本
                 content = '<div class="mDialog-default-box">' + opts.content + '</div>';
 
             }
@@ -259,131 +422,80 @@ var test = "window";
                      */
                     content = '<div class="mDialog-loading-section' + (!opts.text ? ' loading-notext' : '') + '"><div class="loading-icon"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>' + (!!opts.text ? (typeof opts.text == "string" ? '<p class="loading-txt">' + opts.text + '</p>' : '<p class="loading-txt">加载中...</p>') : '') + '</div>';
                     break;
+                case "comfirm":
+
+                    content='<div class="mDialog-confirm-section">'+opts.content+'</div>';
+                    break;
             }
 
         }
 
 
-        containerStr = '<div class="mDialog-layer-container">' +
-            
-            title+
-            '<div class="mDialog-layer-main">' +
-            content +
-            '</div>' +
-            '<div class="mDialog-layer-btn"></div>' +
-           
-            '</div>';
+        containerStr = '<div class="'+containerClassName+'">' +
+                            title +
+                            '<div class="'+mainClassName+'">' +
+                                content +
+                            '</div>' +
+                        '</div>';
 
-        if (!this.$container) {
-            this.$container = $(containerStr);
-            this.$container.appendTo($('body'));
-          
-            this.$title=this.$container.children('.mDialog-layer-title').eq(0);
+        if (!$container) {
+            $container = $(containerStr);
+            $container.appendTo($('body'));
 
-            this.$main=this.$container.children('.mDialog-layer-main');  
+            $title = $container.children('.'+titleClassName);
+            $main = $container.children('.'+mainClassName);
         }
-       !!$close && $close.appendTo(this.$container);
-       !!$button && $button.appendTo(this.$container);
+
+
+        !!$closeBtn && $closeBtn.appendTo($container);
+        !!$footerButton && $footerButton.appendTo($container);
         containerCloseHandle = function() {
-
             !!opts.onBeforeClose && opts.onBeforeClose();
-
             if (opts.animOut) {
-
-                this._setAnim(this.$container, opts.animIn, opts.animOut, opts.duration, "out", function() {
+                setAnim($container, opts.animIn, opts.animOut, opts.duration, "out", function() {
                     // this -》 window
-
                     !!contentCloseHandle && contentCloseHandle();
-                    _this.$container.remove();
+                    $container.remove();
                     opts.onClose();
                 });
             } else {
                 setTimeout(function() {
                     !!contentCloseHandle && contentCloseHandle();
-                    _this.$container.remove();
+                    $container.remove();
                     opts.onClose();
                 })
             }
 
         }
 
-
-
-
-
-       
-            this._setElemPos(_this.$container,opts.width,opts.height,opts.maxWidth,opts.maxHeight,_this.$title,_this.$main,$button);
-        
+        setElemPos($container, opts.width, opts.height, opts.maxWidth, opts.maxHeight,$title,$main, $footerButton);
 
         !!opts.onBeforeShow && opts.onBeforeShow();
 
-        this.$container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
+        $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
-            this._setAnim(this.$container, opts.animIn, opts.animOut, opts.duration, "in", opts.onShow);
+            setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", opts.onShow);
         } else {
             setTimeout(function() {
                 !!opts.onShow && opts.onShow();
             })
         }
-        this.$container.removeSelf = containerCloseHandle;
-        mDialog.stack[this.opts.uid].push(this.$container);
+        $container.removeSelf = containerCloseHandle;
+        mDialog.stack[this.opts.uid].push($container);
     };
 
 
+
+   
+   
     
-    createClass.prototype._title = function(opts) {
-        var title="";
-        if(!!opts.title){
-            if($.isPlainObject(opts.title)){
-                title='<div class="mDialog-layer-title '+opts.className+' style='+opts.style+'">'+opts.title+'</div>'
-            }else{
-                title='<div class="mDialog-layer-title">'+opts.title+'</div>';
-            }        
-        }
-        return title; 
-    };
-
-    createClass.prototype._close=function(opts){
-        var $close=null,_this=this;
-        if(!!opts.closeBtn){
-            $close=$('<span class="mDialog-close"></span>');
-            $close.on("click touchstart",function(){
-                _this.close();
-            })
-        }
-        return $close;
-
-    };
-
-    createClass.prototype._button=function(opts,type){
-        var $btnContainer=($.isArray(opts.buttons) || type=="confirm") ? $('<div class="mDialog-layer-btns"></div>') : null,
-            _this=this;
-        if($.isArray(opts.buttons) && !!opts.buttons.length){
-            $.each(opts.buttons,function(index, obj) {
-                var $btn=$('<a href="#" class="mDialog-btn '+obj.class+'">'+obj.text+'</a>');
-                if(!!obj.callback){
-                   $btn.on("touchstart",function(event){
-                        event.preventDefault();
-                        obj.callback.call(_this);
-                    })    
-                }
-                $btn.appendTo($btnContainer);
-            });
-        }
-        return $btnContainer;
-    }
-
-    createClass.prototype._content = function() {
-
-    };
-    createClass.prototype._footer = function() {
-
-    };
+   
+   
     createClass.prototype._renderShade = function() {
         //opts.shade=true 如果需要遮罩
         var _this = this,
-            opts=this.opts;
-            defaultOpacity = 0.5,
+            opts = this.opts;
+        defaultOpacity = 0.5,
             defaultColor = "#000",
             shadeCloseHandle = $.noop();
         styles = {
@@ -429,193 +541,10 @@ var test = "window";
 
 
 
-/******************************************************************/
-    createClass.prototype._setElemPos = function($elem,width,height,maxWidth,maxHeight,$title,$main,$footer) {
-        //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
-        //width、height  传递进来的值可能是  auto  80%  400px  8rem;
-     
-        var elemW,elemH,winW,winH,realW,realH,titleH=0,contentH=0,footerH=0,dpr,
-            standardRatio;//flexible 基准缩放比
-        var isFlexible=!!(document.documentElement.style.fontSize && document.body.style.fontSize);
-        var unitRemPx=isFlexible ? "rem" :"px";
+    /******************************************************************/
+   
 
-        winW=$(window).width();
-        winH=$(window).height();
-
-        dpr=document.documentElement.getAttribute('data-dpr');
-        if(dpr){
-                if(winW>540 && dpr==1){
-
-                    standardRatio=540;
-                }else{
-                    standardRatio=winW;
-                }
-        }else{
-            standardRatio=winW;
-        }
-
-
-        elemW=$elem.outerWidth();
-
-        realW=!!width ? ((width=="auto") ? elemW : width) : elemW;
- 
-        maxW=!!maxWidth ? ((maxWidth=="auto") ? "90%" : maxWidth) : "90%";
-
-        if(ExtraFunc.isPercent(realW)){
-            realW=winW*ExtraFunc.getNumber(realW)/100; //转成 数字类型
-        }else if(ExtraFunc.isPx(realW)){ 
-            realW=ExtraFunc.getNumber(realW); //转成 数字类型
-        }
-
-        if(ExtraFunc.isPercent(maxW)){
-            maxW=winW*ExtraFunc.getNumber(maxW)/100; //转成px
-        }else if(ExtraFunc.isPx(maxW)){
-            maxW=ExtraFunc.getNumber(maxW); //转成px
-        }
-
-
-
-        //宽高都是100%，那么默认的忽略
-
-        realW=(realW >=maxW) ? maxW : realW;
-
-        if(isFlexible){ //转rem
-            realW=realW/standardRatio*10; 
-        }
-
-
-
-        $elem.css({
-            left: "50%",
-            top: "50%",
-            width:realW+unitRemPx,
-            "marginLeft": -realW / 2 + unitRemPx,
-            
-        })
-
-        
-        elemH=$elem.outerHeight();
-        realH=!!height ? ((height=="auto") ? elemH : height) : elemH;
-        maxH=!!maxHeight ?((maxHeight=="auto") ? "80%" : maxHeight) : "80%";
-        if(ExtraFunc.isPercent(realH)){
-            realH=winH*ExtraFunc.getNumber(realH)/100; //转成px
-           
-        }else if(ExtraFunc.isPx(realH)){
-            
-            realH=ExtraFunc.getNumber(realH); //转成px
-        }
-
-        if(ExtraFunc.isPercent(maxH)){
-            maxH=winH*ExtraFunc.getNumber(maxH)/100; //转成px number 类型
-        }else if(ExtraFunc.isPx(maxH)){
-            maxH=ExtraFunc.getNumber(maxH); //转成px
-        }
-
-
-        console.dir("titleH:"+$title.height())
-        console.dir("mainH:"+$main.height())
-        console.dir("footerH:"+$footer.height())
-        console.dir("elemH:"+elemH)
-        console.dir("realH:"+realH);
-
-
-        // elemH 大于规定的高度 heiht 那么也要启动 限制
-        
-        
-        
-        
-
-
-
-        
-
-        
-
-
-        
-
-        
-
-
-        
-
-
-        if(realH >=maxH ){
-                alert("Xx")
-            realH=maxH; //px number
-            if(!!$title && !!$title.length){
-                titleH=$title.outerHeight();
-            }
-            
-            if(!!$footer && $footer.length){
-                footerH=$footer.outerHeight();
-            }
-
-            $main.addClass('mDialog-layer-main-full').css({height:(isFlexible ? ((realH-titleH-footerH)/standardRatio*10) : (realH-titleH-footerH))+unitRemPx})
-        }
-
-        if(realH==maxH && realH==winH){
-           
-            $elem.addClass('mDialog-layer-container-full')
-        }
-
-console.dir("realH:"+realH);
-
-
-        if(isFlexible){ //转rem
-            
-            realH=realH/standardRatio*10;
-           
-        }
-
-        if(realH)
-
-      
-
-console.dir("winH:"+winH);
-console.dir("realH:"+realH);
-console.dir("maxH:" +maxH);
-console.dir("winW:"+winW);
-console.dir("standardRatio:" +standardRatio);
-
-     
-      
-     
-
-
-
-        
-
-       
-
-
-
-    
-        $elem.css({
-          
-            height:realH+unitRemPx,
-            "marginTop": -realH / 2 + unitRemPx
-        })
-    }
-
-
-    createClass.prototype._setAnim = function($elem, animInClass, animOutClass, duration, type, callback) {
-        animInClass = !!animInClass ? animInClass : "";
-        animOutClass = !!animOutClass ? animOutClass : "";
-        switch (type) {
-            case "in":
-                $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
-                break;
-            case "out":
-                $elem.removeClass(animInClass).addClass(animOutClass);
-                break;
-            default:
-                $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
-        }
-        $elem.AnimationEnd(function() {
-            !!callback && callback.call();
-        })
-    }
+   
 
     /**
      * *
@@ -651,10 +580,28 @@ console.dir("standardRatio:" +standardRatio);
         options.closeBtn = false;
         options.buttons = false;
         options.text = options.text === undefined ? true : (!!options.text ? options.text : false);
-        mDialog.open(options, "load")
+        mDialog.open(options, "load");
     };
     mDialog.confirm = function(opts) {
-
+        var options = !!$.isPlainObject(opts) ? opts : {};
+        options.closeBtn = false;
+        options.animIn=!!opts.animIn ? opts.animIn : "mDialogBigIn";
+        options.animOut=!!opts.animOut ? opts.animOut : "mDialogBigOut";
+        options.duration=!!opts.duration ? opts.duration : 150;
+        options.width=!!opts.width ? opts.width : "80%";　
+        options.buttons=($.isArray(opts.buttons) && !!opts.buttons.length) ? opts.buttons : [
+            {
+                text:"取消",
+                callback:function(){
+                    this.close();
+                }
+            },
+            {
+                text:"确认",
+                callback:!!opts.ok ? opts.ok : function(){}
+            }
+        ]
+        mDialog.open(options, "comfirm")
     }
 
     // mDialog.close = function(index) {

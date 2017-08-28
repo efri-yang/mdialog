@@ -592,20 +592,23 @@ body {
 
 
 /**
- * 加载层  end
+ * confirm 确认提示框 默认动画  start
 **************************************************************************/
 
 @keyframes mDialogBigIn {
     0% {
         opacity: 0;
-        -webkit-transform: translate(-50%, -50%) scale(1.2, 1.2);
-        transform: translate(-50%, -50%) scale(1.2, 1.2);
+        transform: scale(1.2, 1.2);
     }
     100% {
         opacity: 1;
-        -webkit-transform: translate(-50%, -50%) scale(1, 1);
-        transform: translate(-50%, -50%) scale(1, 1);
+        transform:scale(1, 1);
     }
+}
+
+.mDialogBigIn{
+    animation-name: mDialogBigIn;
+    animation-timing-function:ease-out;
 }
 
 @keyframes mDialogBigOut {
@@ -614,8 +617,13 @@ body {
     }
     100% {
         opacity: 0;
-        -webkit-transform: translate(-50%, -50%) scale(0.8, 0.8);
+        transform:scale(1.2, 1.2);
     }
+}
+
+.mDialogBigOut{
+    animation-name: mDialogBigOut;
+    animation-timing-function:ease-out;
 }
 
 
@@ -645,13 +653,15 @@ body {
     line-height:px2rem(80px);
     border-top:1px solid #e8e8e8;
     display: flex;
-    font-size:px2rem(32px);
+   
     background:#fff;
     border-radius:0 0 px2rem(20px) px2rem(20px);
     >.mDialog-btn{
         flex:1;
         text-align: center;
-        position:relative; 
+        position:relative;
+        color:#007aff;  
+        font-size:16px;
         &:after{
             content: "";
             position: absolute;
@@ -800,4 +810,15 @@ body {
     -webkit-transform: translate(-50%,0);
     -ms-transform: translate(-50%,0);
     -moz-transform: translate(-50%,0);
+}
+
+/**
+ * confirm确认框
+ */
+
+.mDialog-confirm-section{
+    background:#fff;
+    padding:px2rem(40px) px2rem(30px);
+    border-radius:px2rem(20px) px2rem(20px) 0 0;
+    font-size:16px;
 }
