@@ -121,6 +121,16 @@ var test = "window";
         }
     };
 
+    var deviceUtil=(function(){
+        var UA = window.navigator.userAgent,
+            isSupportTouch = "ontouchend" in document ? true : false;
+        return {
+            tapEvent: isSupportTouch ? 'touchstart' : 'click'
+        }
+    })();
+
+
+
     if (!$.fn.AnimationEnd) {
         $.fn.AnimationEnd = function(callback) {
             ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
@@ -173,7 +183,7 @@ var test = "window";
         var $close = null;
         if (!!opts.closeBtn) {
             $close = $('<span class="mDialog-close"></span>');
-            $close.on("click touchstart", function() {
+            $close.on(deviceUtil.tapEvent, function() {
                 indicator.close();
             })
         }
@@ -189,7 +199,7 @@ var test = "window";
                 obj.class = !!obj.class ? obj.class : "";
                 var $btn = $('<a href="#" class="mDialog-btn ' + obj.class + '">' + obj.text + '</a>');
                 if (!!obj.callback) {
-                    $btn.on("touchstart", function(event) {
+                    $btn.on(deviceUtil.tapEvent, function(event) {
                         event.preventDefault();
                         obj.callback.call(indicator);
                     })
@@ -522,13 +532,13 @@ var test = "window";
                     this.$shade.remove();
                 }
             }
-            this.$shade.on("click touchstart", function(event) {
+            this.$shade.on(deviceUtil.tapEvent, function(event) {
                 event.preventDefault();
                 event.stopPropagation();
                 _this.close();
             })
         } else {
-            this.$shade.on("click touchstart", function(event) {
+            this.$shade.on(deviceUtil.tapEvent, function(event) {
                 event.preventDefault();
                 event.stopPropagation();
             })
