@@ -7,8 +7,6 @@ var test = "window";
         v: '0.0.1',
         stack: {},
         zIndex: 100000,
-        baseViewWidth: 750,
-        baseFontSize: 75,
         defaults: {
             title: "",
             top: false,
