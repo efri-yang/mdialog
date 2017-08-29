@@ -2,11 +2,11 @@
 <html lang="en">
 
 <head>
-   <!--  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>首页</title>
     <script type="text/javascript" src="js/zepto.js"></script>
     <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
-    <script type="text/javascript" src="js/flexible.js"></script>
+    <script type="text/javascript" src="js/flexible2.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
     <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -44,7 +44,7 @@
     <button id="J_btn5" style="margin:10px 0 0 150px;">loading</button>
 
 
-    <button id="J_btn6" style="margin:10px 0 0 0px;">底部</button>
+   
     <!-- <div class="mDialog-loading-section no-text mDialog-center classFixed">
         <div class="loading-icon">
             <div></div>
@@ -58,10 +58,30 @@
         </div>
         <p class="loading-txt">加载中...</p>
     </div> -->
-      <div class="textarea-box" style="height:100%;vertical-align:top; width: 100%;">
-          
-              <p style="height:100%;vertical-align:top; width: 100%;border:none;background: #f60;"></p>
-          
+      <div  id="box1" style="background:#fff;">
+          <p>11111</p>
+          <p>22222</p>
+          <p>33333</p>
+          <p>44444</p>
+          <p>55555</p>
+
+          <p>11111</p>
+          <p>22222</p>
+          <p>33333</p>
+          <p>44444</p>
+          <p>55555</p>
+
+          <p>11111</p>
+          <p>22222</p>
+          <p>33333</p>
+          <p>44444</p>
+          <p>55555</p>
+
+          <p>11111</p>
+          <p>22222</p>
+          <p>33333</p>
+          <p>44444</p>
+          <p>55555</p>
       </div>
       <div class="bm-dia-box1" id="J_bm-dia-box1">
             <button id="x2">单机</button>
@@ -103,8 +123,9 @@
              })
         })
         $("#x2").on("click",function(){
-            mDialog.close(dia);
-            console.dir(dia)
+             mDialog.open({
+                 content:$("#box1")
+             })
         });
         $("#J_btn1").on("click", function() {
           var myScroll;
@@ -112,10 +133,10 @@
                 // duration:0,
                 title:{text:"mDialog弹框标题",class:"tit-1"},
                 
-                content:'<div id="wrapper"><div id="scroller">啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33111111111111111111<button id="x1">单机</button>11111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒撒</div></div>',
+                
                
-                // content:$("#J_bm-dia-box1"),
-                animIn:"zoomInDown",
+                content:$("#J_bm-dia-box1"),
+                animIn:"mDialogZoomIn",
                 animOut:"fadeOutDown",
                 buttons:[
                   {
@@ -168,21 +189,12 @@
               // });
         })
 
+           
         $("#J_btn3").on("click",function(){
             mDialog.confirm({
-                 content:"<div>撒嗯嗯撒地asdasdf沙发斯蒂芬方</div>",
-                 animOut:false,
-                 ok:function(){
-                  this.close();
-                   mDialog.msg({
-                    duration:250,
-                    shade:true,
-                    content:"asdfsad啊是的发生大"
-                  })
-                 }
-            });
-        });
-
+              content:"asdfsad啊是的发生大"
+            })
+        })
 
         $("#J_btn4").on("click",function(){
             mDialog.msg({

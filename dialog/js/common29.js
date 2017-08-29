@@ -123,12 +123,9 @@ var test = "window";
 
     var deviceUtil=(function(){
         var UA = window.navigator.userAgent,
-            isAndroid = /android|adr/gi.test(UA),
-            isIOS = /iphone|ipod|ipad/gi.test(UA) && !isAndroid,
-            isMobile = isAndroid || isIOS,
             isSupportTouch = "ontouchend" in document ? true : false;
         return {
-            tapEvent: isMobile && isSupportTouch ? 'touchstart' : 'click'
+            tapEvent: isSupportTouch ? 'touchstart' : 'click'
         }
     })();
 
@@ -396,7 +393,6 @@ var test = "window";
             //如果没有type参数,那么说明 调用的方式是open() 
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
-
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
                 $container = $('<div class="' + containerClassName + '"></div>');
                 $title = $(title);
@@ -509,15 +505,15 @@ var test = "window";
     createClass.prototype._renderShade = function() {
         //opts.shade=true 如果需要遮罩
         var _this = this,
-            opts = this.opts,
+            opts = this.opts;
         defaultOpacity = 0.5,
             defaultColor = "#000",
-            shadeCloseHandle = $.noop(),
+            shadeCloseHandle = $.noop();
         styles = {
             "animation-duration": this.opts.duration + "ms",
             "zIndex": mDialog.zIndex,
-        },
-        $shade = $('<div class="mDialog-shade in"></div>');
+        };
+        this.$shade = $('<div class="mDialog-shade"></div>');
         //如果是{color:"",opacity:""} 传入的是颜色和透明值
         ropacity = !!opts.shade.opacity ? opts.shade.opacity : defaultOpacity;
         rcolor = !!opts.shade.defaultColor ? opts.shade.defaultColor : defaultColor;
@@ -528,29 +524,29 @@ var test = "window";
             //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
             shadeCloseHandle = function() {
                 if (!!opts.duration) {
-                    
-                    !!$shade && $shade.removeClass("in").addClass('out');
-                    $shade.AnimationEnd(function() {
-                        $shade.remove();
+                    !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
+                    this.$shade.AnimationEnd(function() {
+                        _this.$shade.remove();
                     })
                 } else {
-                    $shade.remove();
+                    this.$shade.remove();
                 }
             }
-            $shade.on(deviceUtil.tapEvent, function(event) {
-             
+            this.$shade.on(deviceUtil.tapEvent, function(event) {
+                event.preventDefault();
                 event.stopPropagation();
                 _this.close();
             })
         } else {
-            $shade.on(deviceUtil.tapEvent, function(event) {
+            this.$shade.on(deviceUtil.tapEvent, function(event) {
+                event.preventDefault();
                 event.stopPropagation();
             })
         }
-        $shade.css(styles);
-        $shade.removeSelf = shadeCloseHandle;
-        $shade.appendTo($("body"));
-        mDialog.stack[this.opts.uid].push($shade);
+        this.$shade.css(styles);
+        this.$shade.removeSelf = shadeCloseHandle;
+        this.$shade.appendTo($("body"));
+        mDialog.stack[this.opts.uid].push(this.$shade);
     };
 
 
@@ -606,7 +602,6 @@ var test = "window";
         options.buttons = ($.isArray(opts.buttons) && !!opts.buttons.length) ? opts.buttons : [{
                 text: "取消",
                 callback: function() {
-
                     this.close();
                 }
             },
