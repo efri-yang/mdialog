@@ -11,9 +11,12 @@ var test = "window";
         baseFontSize: 75,
         defaults: {
             title: "",
+            top: false,
+            bottom: false,
             autoClose: false,
-            pause: 2000,
+            pause: false,
             duration: 250,
+            isPreventMove: true,
             shade: true,
             width: "auto",
             height: "auto",
@@ -25,18 +28,10 @@ var test = "window";
             content: "",
             closeBtn: true,
             buttons: {},
-            onBeforeShow: function() {
-                console.dir("onBeforeShow");
-            },
-            onShow: function() {
-                console.dir("oShow");
-            },
-            onBeforeClose: function() {
-                console.dir("onBeforeClose");
-            },
-            onClose: function() {
-                console.dir("onClose");
-            }
+            onBeforeShow: function() {},
+            onShow: function() {},
+            onBeforeClose: function() {},
+            onClose: function() {}
         }
     }
 
@@ -44,8 +39,7 @@ var test = "window";
     var stylesContentShow = {
         visibility: "visible",
         display: "block",
-        clear: "both",
-        float: "left"
+        clear: "both"
 
     };
     var styleContentsHide = {
@@ -164,11 +158,12 @@ var test = "window";
             };
         });
     }
-    function titleRender(opts){
+
+    function titleRender(opts) {
         var title = "";
         if (!!opts.title) {
             if ($.isPlainObject(opts.title)) {
-                title = '<div class="mDialog-layer-title ' + opts.className + ' style=' + opts.style + '">' + opts.title + '</div>'
+                title = '<div class="mDialog-layer-title ' + (!!opts.title.className ? opts.title.className : '') + '" style="' + (!!opts.title.style ? opts.title.style : '') + '">' + opts.title.text + '</div>'
             } else {
                 title = '<div class="mDialog-layer-title">' + opts.title + '</div>';
             }
@@ -176,7 +171,7 @@ var test = "window";
         return title;
     }
 
-    function closeBtnRender(opts,indicator) {
+    function closeBtnRender(opts, indicator) {
         var $close = null;
         if (!!opts.closeBtn) {
             $close = $('<span class="mDialog-close"></span>');
@@ -188,12 +183,12 @@ var test = "window";
 
     };
 
-    function buttonRender(opts,type,indicator){
+    function buttonRender(opts, type, indicator) {
         var $btnContainer = ($.isArray(opts.buttons) || type == "confirm") ? $('<div class="mDialog-layer-btns"></div>') : null,
             _this = this;
         if ($.isArray(opts.buttons) && !!opts.buttons.length) {
             $.each(opts.buttons, function(index, obj) {
-                obj.class= !!obj.class ?  obj.class :"";
+                obj.class = !!obj.class ? obj.class : "";
                 var $btn = $('<a href="#" class="mDialog-btn ' + obj.class + '">' + obj.text + '</a>');
                 if (!!obj.callback) {
                     $btn.on("touchstart", function(event) {
@@ -207,14 +202,14 @@ var test = "window";
         return $btnContainer;
     };
 
-    function setElemPos($elem, width, height, maxWidth, maxHeight, $title, $main, $footer) {
+    function setElemPos($elem, opts, $title, $main, $footer) {
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
         //width、height  传递进来的值可能是  auto  80%  400px  8rem;
 
         var elemW, elemH, winW, winH, realW, realH, titleH = 0,
             contentH = 0,
             footerH = 0,
-            fullClassName="mDialog-layer-main-full",
+            fullClassName = "mDialog-layer-main-full",
             dpr, isFull, mainH,
             standardRatio, //flexible 基准缩放比
             isFlexible = !!(document.documentElement.style.fontSize && document.body.style.fontSize),
@@ -236,8 +231,8 @@ var test = "window";
 
 
         elemW = $elem.outerWidth();
-        realW = !!width ? ((width == "auto") ? elemW : width) : elemW;
-        maxW = !!maxWidth ? ((maxWidth == "auto") ? "90%" : maxWidth) : "90%";
+        realW = !!opts.width ? ((opts.width == "auto") ? elemW : opts.width) : elemW;
+        maxW = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "90%" : opts.maxWidth) : "90%";
 
         if (ExtraFunc.isPercent(realW)) {
             realW = winW * ExtraFunc.getNumber(realW) / 100; //转成 数字类型
@@ -258,15 +253,14 @@ var test = "window";
         }
         $elem.css({
             left: "50%",
-            top: "50%",
             width: realW + unitRemPx,
             "marginLeft": -realW / 2 + unitRemPx
         })
 
 
         elemH = $elem.outerHeight();
-        realH = !!height ? ((height == "auto") ? elemH : height) : elemH;
-        maxH = !!maxHeight ? ((maxHeight == "auto") ? "80%" : maxHeight) : "80%";
+        realH = !!opts.height ? ((opts.height == "auto") ? elemH : opts.height) : elemH;
+        maxH = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
         if (ExtraFunc.isPercent(realH)) {
             realH = winH * ExtraFunc.getNumber(realH) / 100; //转成px
         } else if (ExtraFunc.isPx(realH)) {
@@ -279,37 +273,51 @@ var test = "window";
         }
 
         // elemH 大于规定的高度 heiht 那么也要启动 限制
+      
+
         if (realH >= maxH) {
             realH = maxH;
-            isFull = true;
+            $main.addClass(fullClassName);
         }
-        if (realH <= elemH) {
-            isFull = true;
+        if (realH < elemH || realH == winH) {
+            $main.addClass(fullClassName);
         }
-        if (!!isFull) {
-            if (!!$title && !!$title.length) {
-                titleH = $title.outerHeight();
-            }
-            if (!!$footer && $footer.length) {
-                footerH = $footer.outerHeight();
-            }
-            mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
-            $main.addClass(fullClassName).css({ height: (isFlexible ? (mainH / standardRatio * 10) : mainH) + unitRemPx })
-        }
-        if (realH == maxH && realH == winH) {
-            $elem.addClass(fullClassName)
-        }
+       
+        !!$title && !!$title.length && (titleH = $title.outerHeight());
+        !!$footer && !!$footer.length  && (footerH = $footer.outerHeight());
+            
+
+
+        mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
+
+        $main.css({ height: (isFlexible ? (mainH / standardRatio * 10) : mainH) + unitRemPx })
 
         if (isFlexible) { //转rem
             realH = realH / standardRatio * 10;
         }
         $elem.css({
-            height: realH + unitRemPx,
-            "marginTop": -realH / 2 + unitRemPx
-        })
+            height: realH + unitRemPx
+        });
+
+        if (opts.top || parseInt(opts.top) == 0) {
+            $elem.css({
+                top: opts.top,
+            })
+        } else if (opts.bottom || parseInt(opts.bottom) == 0) {
+            $elem.css({
+                bottom: opts.bottom,
+            })
+        } else {
+            $elem.css({
+                top: "50%",
+                "marginTop": -realH / 2 + unitRemPx
+            })
+        }
+
+
     };
 
-    function setAnim($elem, animInClass, animOutClass, duration, type, callback,indicator) {
+    function setAnim($elem, animInClass, animOutClass, duration, type, callback) {
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";
         switch (type) {
@@ -323,7 +331,7 @@ var test = "window";
                 $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
         }
         $elem.AnimationEnd(function() {
-            !!callback && callback.call(indicator);
+            !!callback && callback.call();
         })
     }
 
@@ -348,37 +356,37 @@ var test = "window";
         }
 
     }
-    createClass.prototype.test=100;
+    createClass.prototype.test = 100;
     createClass.prototype._renderContainer = function() {
         var _this = this,
             opts = this.opts,
-            containerStr = "",//容器
-            title = "",//标题
-            content = "",//内容
+            containerStr = "", //容器
+            title = "", //标题
+            content = "", //内容
 
             $container,
             $main,
             $closeBtn,
             $footerButton,
 
-            containerClassName="mDialog-layer-container",
-            mainClassName="mDialog-layer-main",
-            titleClassName="mDialog-layer-title",
+            containerClassName = "mDialog-layer-container",
+            mainClassName = "mDialog-layer-main",
+            titleClassName = "mDialog-layer-title",
 
             containerCloseHandle,
             contentCloseHandle;
 
 
         title = titleRender(opts);
-        $closeBtn = closeBtnRender(opts,this);
-        $footerButton = buttonRender(opts,this.opts,this);
+        $closeBtn = closeBtnRender(opts, this);
+        $footerButton = buttonRender(opts, this.opts, this);
 
         if (!opts._type) {
             //如果没有type参数,那么说明 调用的方式是open() 
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                $container = $('<div class="'+containerClassName+'"></div>');
+                $container = $('<div class="' + containerClassName + '"></div>');
                 $title = $(title);
                 opts.content.css(stylesContentShow)
                 opts.content.wrap('<div class="mDialog-layer-main"></div>')
@@ -393,57 +401,44 @@ var test = "window";
                     }
                 }
             } else {
-                content = '<div class="mDialog-default-box">' + opts.content + '</div>';
+                content = '<div class="mDialog-default-section">' + opts.content + '</div>';
 
             }
         } else {
             switch (opts._type) {
                 case "load":
-                    /**
-                     * 参数 
-                     *     {
-                     *         content:"",
-                     *         text:true,  //显示icon和文字
-                     *         autoClose:false,  //不会自动关闭
-                     *         title:false, //不会显示标题
-                     *         closeButton:false, //不会显示关闭按钮
-                     *         buttons:false, // 不会显示默认的按钮集
-                     *         
-                     *      }  
-                     *     
-                     * 固定 
-                     *     水平垂直居中
-                     * 动态 
-                     *    {
-                     *        text:true, //用户传递文字或者是否显示文字
-                     *        autoClose:false, //是否自动关闭
-                     *        pause: 2000, //停留多长时间后关闭
-                     *    }
-                     */
                     content = '<div class="mDialog-loading-section' + (!opts.text ? ' loading-notext' : '') + '"><div class="loading-icon"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>' + (!!opts.text ? (typeof opts.text == "string" ? '<p class="loading-txt">' + opts.text + '</p>' : '<p class="loading-txt">加载中...</p>') : '') + '</div>';
                     break;
                 case "comfirm":
-
-                    content='<div class="mDialog-confirm-section">'+opts.content+'</div>';
+                    content = '<div class="mDialog-confirm-section">' + opts.content + '</div>';
+                    break;
+                case "msg":
+                    content = '<div class="mDialog-msg-section">00000' + opts.content + '</div>';
                     break;
             }
 
         }
 
 
-        containerStr = '<div class="'+containerClassName+'">' +
-                            title +
-                            '<div class="'+mainClassName+'">' +
-                                content +
-                            '</div>' +
-                        '</div>';
+        containerStr = '<div class="' + containerClassName + '">' +
+            title +
+            '<div class="' + mainClassName + '">' +
+            content +
+            '</div>' +
+            '</div>';
 
         if (!$container) {
             $container = $(containerStr);
             $container.appendTo($('body'));
 
-            $title = $container.children('.'+titleClassName);
-            $main = $container.children('.'+mainClassName);
+            $title = $container.children('.' + titleClassName);
+            $main = $container.children('.' + mainClassName);
+        }
+
+        if (!!opts.isPreventMove) {
+            $container.on("touchmove", function(event) {
+                event.preventDefault();
+            })
         }
 
 
@@ -468,29 +463,37 @@ var test = "window";
 
         }
 
-        setElemPos($container, opts.width, opts.height, opts.maxWidth, opts.maxHeight,$title,$main, $footerButton);
+        setElemPos($container, opts, $title, $main, $footerButton);
 
         !!opts.onBeforeShow && opts.onBeforeShow();
 
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
-            setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", opts.onShow);
+            setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", function() {
+                opts.onShow();
+                !!opts.pause && setTimeout(function() {
+                    _this.close();
+                }, opts.pause)
+                // setTimeout(_this.close,opts.pause) 这里的调用的是偶close 中作用于就指向了window
+            });
         } else {
-            setTimeout(function() {
-                !!opts.onShow && opts.onShow();
-            })
+            !!opts.onShow && opts.onShow();
+            !!opts.pause && setTimeout(function() {
+                _this.close();
+            }, opts.pause)
         }
+
+
         $container.removeSelf = containerCloseHandle;
         mDialog.stack[this.opts.uid].push($container);
     };
 
 
 
-   
-   
-    
-   
-   
+
+
+
+
     createClass.prototype._renderShade = function() {
         //opts.shade=true 如果需要遮罩
         var _this = this,
@@ -502,8 +505,7 @@ var test = "window";
             "animation-duration": this.opts.duration + "ms",
             "zIndex": mDialog.zIndex,
         };
-        this.$shade = $('<div class="mDialog-shade in"></div>');
-
+        this.$shade = $('<div class="mDialog-shade"></div>');
         //如果是{color:"",opacity:""} 传入的是颜色和透明值
         ropacity = !!opts.shade.opacity ? opts.shade.opacity : defaultOpacity;
         rcolor = !!opts.shade.defaultColor ? opts.shade.defaultColor : defaultColor;
@@ -515,11 +517,11 @@ var test = "window";
             shadeCloseHandle = function() {
                 if (!!opts.duration) {
                     !!_this.$shade && _this.$shade.removeClass("in").addClass('out');
-                    _this.$shade.AnimationEnd(function() {
+                    this.$shade.AnimationEnd(function() {
                         _this.$shade.remove();
                     })
                 } else {
-                    _this.$shade.remove();
+                    this.$shade.remove();
                 }
             }
             this.$shade.on("click touchstart", function(event) {
@@ -542,9 +544,9 @@ var test = "window";
 
 
     /******************************************************************/
-   
 
-   
+
+
 
     /**
      * *
@@ -585,32 +587,36 @@ var test = "window";
     mDialog.confirm = function(opts) {
         var options = !!$.isPlainObject(opts) ? opts : {};
         options.closeBtn = false;
-        options.animIn=!!opts.animIn ? opts.animIn : "mDialogBigIn";
-        options.animOut=!!opts.animOut ? opts.animOut : "mDialogBigOut";
-        options.duration=!!opts.duration ? opts.duration : 150;
-        options.width=!!opts.width ? opts.width : "80%";　
-        options.buttons=($.isArray(opts.buttons) && !!opts.buttons.length) ? opts.buttons : [
-            {
-                text:"取消",
-                callback:function(){
+        options.animIn = !!opts.animIn ? opts.animIn : "mDialogBigIn";
+        options.animOut = !!opts.animOut ? opts.animOut : "mDialogBigOut";
+        options.duration = !!opts.duration ? opts.duration : 150;
+        options.width = !!opts.width ? opts.width : "80%";　
+        options.buttons = ($.isArray(opts.buttons) && !!opts.buttons.length) ? opts.buttons : [{
+                text: "取消",
+                callback: function() {
                     this.close();
                 }
             },
             {
-                text:"确认",
-                callback:!!opts.ok ? opts.ok : function(){}
+                text: "确认",
+                callback: !!opts.ok ? opts.ok : function() {}
             }
         ]
         mDialog.open(options, "comfirm")
     }
 
-    // mDialog.close = function(index) {
 
-    // };
-    // mDialog.update = function(options) {
+    mDialog.msg = function(opts) {
+        var options = !!$.isPlainObject(opts) ? opts : {};
+        options.closeBtn = false;
+        options.shade = !!opts.shade ? opts.shade : false;
+        options.pause = !!opts.pause ? opts.pause : 2000;
+        mDialog.open(options, "msg")
+    }
 
-    // };
-
+    mDialog.close = function(obj) {
+        obj.close();
+    }
     window.mDialog = mDialog;
 })(window.jQuery || window.Zepto, window, document);
 

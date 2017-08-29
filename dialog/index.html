@@ -2,14 +2,32 @@
 <html lang="en">
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+   <!--  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"> -->
     <title>首页</title>
     <script type="text/javascript" src="js/zepto.js"></script>
     <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
-    <script type="text/javascript" src="js/flexible2.js"></script>
+    <script type="text/javascript" src="js/flexible.js"></script>
     <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <style type="text/css">
+     #wrapper {
+        position: relative;
+        height:100%;
+        overflow: hidden;
+      }
+      #scroller {
+        position: relative;
+        shape-image-threshold:
+        -webkit-transform: translateZ(0);
+      -moz-transform: translateZ(0);
+      -ms-transform: translateZ(0);
+      -o-transform: translateZ(0);
+      transform: translateZ(0); 
+      }
+    </style>
+
 </head>
 
 <body>
@@ -17,7 +35,16 @@
     <button id="J_btn1" style="margin:10px 0 0 0px;">按钮1(bm-dia-box1)</button>
     <button id="J_btn2" style="margin:50px 0 0 150px;">按钮2(bm-dia-box2)</button>
 
-    <button id="J_btn3" style="margin:50px 0 0 150px;">confirm</button>
+    <button id="J_btn3" style="margin:10px 0 0 150px;">confirm</button>
+
+
+    <button id="J_btn4" style="margin:10px 0 0 150px;">msg</button>
+
+
+    <button id="J_btn5" style="margin:10px 0 0 150px;">loading</button>
+
+
+    <button id="J_btn6" style="margin:10px 0 0 0px;">底部</button>
     <!-- <div class="mDialog-loading-section no-text mDialog-center classFixed">
         <div class="loading-icon">
             <div></div>
@@ -31,16 +58,24 @@
         </div>
         <p class="loading-txt">加载中...</p>
     </div> -->
-    <div class="bm-dia-box1" id="J_bm-dia-box1" style="background:#f60" >
-        <div class="tip-pic"></div>
-        <p class="txt-1">报名成功报名成功报名成功报名成功报名成功报名成功报名成功</p><p class="txt-1">报名成功</p><p class="txt-1">报名成功</p><p class="txt-1">报名成功</p>
-        
-        <a href="#" class="close" data-roler='close' id="J_xxx">确 定</a>
-       
-        <span class="mDialog-close"></span>
-    </div>
+      <div class="textarea-box" style="height:100%;vertical-align:top; width: 100%;">
+          
+              <p style="height:100%;vertical-align:top; width: 100%;border:none;background: #f60;"></p>
+          
+      </div>
+      <div class="bm-dia-box1" id="J_bm-dia-box1">
+            <button id="x2">单机</button>
+            <div class="tip-pic"></div>
+            <p class="txt-1">报名成功报名成功报名成功报名成功报名成功报名成功报名成功</p><p class="txt-1">报名成功</p><p class="txt-1">报名成功</p><p class="txt-1">报名成功</p>
+            
+            <a href="#" class="close" data-roler='close' id="J_xxx">确 定</a>
+           
+            <span class="mDialog-close"></span>
+          
+      </div>
 
 
+   
 
     <div class="bm-dia-box2 undis" id="J_bm-dia-box2">
         <div class="tip-pic"></div>
@@ -51,19 +86,37 @@
     </div>
     <script type="text/javascript">
     $(function() {
-     
-
-        $("#J_btn1").on("click", function() {
-            var dia = mDialog.open({
-                // duration:0,
+      var dia;
+        $("#J_btn6").on("click",function(){
+             mDialog.open({
+                closeBtn:false,
                
-                title:"mDialog弹框标题",
+                duration:200,
+                width:"100%",
+                height:"100px",
+                bottom:0,
+                maxHeight:"100%",
+                maxWidth:"100%",
+                animIn:"slideInUp",
+                shade:{color:"#000",opacity:0.6},
+                content:$(".textarea-box")
+             })
+        })
+        $("#x2").on("click",function(){
+            mDialog.close(dia);
+            console.dir(dia)
+        });
+        $("#J_btn1").on("click", function() {
+          var myScroll;
+            dia = mDialog.open({
+                // duration:0,
+                title:{text:"mDialog弹框标题",class:"tit-1"},
                 
-                
-                content:"啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                content:'<div id="wrapper"><div id="scroller">啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊33111111111111111111<button id="x1">单机</button>11111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒11111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒大啊33啊撒旦法撒旦法撒大啊3311111111111111111111111111111111111111111111111111111111111111111111111111111111撒大啊33啊撒旦法撒旦法撒撒</div></div>',
                
                 // content:$("#J_bm-dia-box1"),
-                animIn:"rotateInDownLeft",
+                animIn:"zoomInDown",
+                animOut:"fadeOutDown",
                 buttons:[
                   {
                     text:"取消",
@@ -73,11 +126,25 @@
                     
                     }
                   },
-                  {text:"",callback:function(){
+                  { 
+                    text:"确认",
+                    callback:function(){
                       this.close();
                       mDialog.load()
-                  }}
-                ]
+                    }
+                  }
+                ],
+                onShow: function() {
+                  var _this
+                  // myScroll = new IScroll('#wrapper');
+                  $("#x1").on("touchstart",function(){
+                        
+                  })
+                },
+                onClose:function(){
+                  // $("#scroller").get(0).style="";
+                  
+                }
                 // animOut:"bounceOutDown",
                 // shade: { "opacity": 0.6 }
             });
@@ -104,10 +171,32 @@
         $("#J_btn3").on("click",function(){
             mDialog.confirm({
                  content:"<div>撒嗯嗯撒地asdasdf沙发斯蒂芬方</div>",
+                 animOut:false,
                  ok:function(){
                   this.close();
+                   mDialog.msg({
+                    duration:250,
+                    shade:true,
+                    content:"asdfsad啊是的发生大"
+                  })
                  }
             });
+        });
+
+
+        $("#J_btn4").on("click",function(){
+            mDialog.msg({
+              duration:0,
+              
+              content:"asdfsad啊是的发生大"
+            })
+        })
+
+
+        $("#J_btn5").on("click",function(){
+            mDialog.load({
+                pause:3000
+            })
         })
         
         

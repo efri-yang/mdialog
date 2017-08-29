@@ -1,3 +1,4 @@
+/*! yyh  email:948061564*/
 @import "./scss/_normalize.scss";
 @import "./scss/_base.scss";
 @import "./scss/_funvar.scss";
@@ -394,10 +395,19 @@ body {
 
 
 
-/**
- * 
+
+
+
+
+
+/******************************************************************
+ * mDialog 默认的动画效果
  */
 
+/**
+ * 淡入效果
+ * shade 默认的样式
+ */
 @keyframes mDialogFadeIn {
     from {
         opacity: 0;
@@ -409,8 +419,13 @@ body {
 
 .mDialogFadeIn{
     animation-name: mDialogFadeIn;
-    animation-timing-function:ease-out; 
 }
+
+
+/**
+ * 淡出效果
+ * shade 默认的样式
+ */
 @keyframes mDialogFadeOut {
     from {
         opacity: 1;
@@ -423,7 +438,6 @@ body {
 
 .mDialogFadeOut{
     animation-name: mDialogFadeOut;
-    animation-timing-function:ease-out;
 }
 
 @keyframes mDialogZoomIn {
@@ -439,7 +453,6 @@ body {
 
 .mDialogZoomIn{
     animation-name: mDialogZoomIn;
-    animation-timing-function:ease-out;
 }
 
 @keyframes mDialogZoomOut {
@@ -459,13 +472,244 @@ body {
 
 .mDialogZoomOut{
     animation-name: mDialogZoomOut;
-    animation-timing-function:ease-out;
 }
 
-/**************************************************************************
- * 加载层  start
+
+@keyframes mDialogBigIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.2, 1.2);
+    }
+    100% {
+        opacity: 1;
+        transform:scale(1, 1);
+    }
+}
+
+.mDialogBigIn{
+    animation-name: mDialogBigIn;
+}
+
+@keyframes mDialogBigOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform:scale(1.2, 1.2);
+    }
+}
+
+.mDialogBigOut{
+    animation-name: mDialogBigOut;
+}
+
+
+
+
+
+
+
+
+/******************************************************************
+ * mDialog container 容器
  */
 
+.mDialog-layer-container{
+    visibility: hidden;
+    position: fixed;
+    animation-timing-function:ease-out;
+    box-sizing:border-box;
+    *{
+        box-sizing:border-box;
+    }
+    //窗口是占满屏幕的时候,那么就不需要圆角
+    &.mDialog-layer-container-full{
+        >.mDialog-layer-title{
+            border-radius:0;
+        }
+        >.mDialog-layer-main{
+            border-radius:0;
+        }
+        >.mDialog-layer-btns{
+            border-radius:0;
+        }
+    }
+}
+
+/******************************************************************
+ * mDialog title 标题
+ */
+.mDialog-layer-title{
+    border-radius:px2rem(20px) px2rem(20px) 0 0;
+    background:#F5f5f5;
+    clear:both; 
+    border-bottom:1px solid #d5d5d5;
+    padding:px2rem(20px);
+    @include font-dpr(18px);
+}
+
+
+/******************************************************************
+ * mDialog main 主题内容
+ */
+.mDialog-layer-main{
+    word-break:break-all;
+    word-wrap:break-word;
+    overflow:hidden;
+    @include font-dpr(16px);
+    &:after{
+        content:"";
+        display:table;
+        clear:both;
+    }
+    &.mDialog-layer-main-full{
+        padding-bottom:px2rem(20px);
+        background:#fff;
+        >div{
+            padding-bottom: 0;
+            height: 100%;
+            overflow: hidden;
+        }  
+    }
+
+    >div{
+        position: relative;
+    }
+}
+
+/******************************************************************
+ * mDialog btns 底部按钮集
+ */
+.mDialog-layer-btns{
+    clear:both; 
+    height:px2rem(80px);
+    line-height:px2rem(80px);
+    border-top:1px solid #e8e8e8;
+    display: flex;
+    background:#fff;
+    border-radius:0 0 px2rem(20px) px2rem(20px);
+    >.mDialog-btn{
+        flex:1;
+        text-align: center;
+        position:relative;
+        color:#007aff;  
+        @include font-dpr(18px);
+        &:after{
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            border-left: 1px solid #d5d5d5;
+            color: #d5d5d5;
+           
+        }
+        &:active{
+            background-color:rgba(0,0,0,0.05);  
+        }
+        &:first-child{
+            &:after{
+                border-left:0;
+            }  
+        }
+    }  
+}
+
+
+/******************************************************************
+ * mDialog close 关闭按钮
+ */
+
+.mDialog-close{
+    position: absolute;
+    width: px2rem(65px);
+    height:px2rem(65px);
+    overflow: hidden;  
+    right:0;
+    top:0;
+    margin-top:px2rem(-65px/2);
+    margin-right:px2rem(-65px/2);  
+    border-radius:100%;
+    background-color:rgba(0,0,0,1);
+    &:before{
+        transform: rotate(45deg);
+        content: '';
+        position: absolute;
+        top: 50%;
+        left:px2rem(10px);
+        right:px2rem(10px);
+        background: #fff;
+        height:px2rem(6px);
+        margin-top:px2rem(-6px/2);
+        border-radius:px2rem(8px); 
+    }
+    &:after{
+        transform: rotate(-45deg);
+        content: '';
+        position: absolute;
+        top: 50%;
+        left:px2rem(10px);
+        right:px2rem(10px);
+        background: #fff;
+        height:px2rem(6px);
+        margin-top:px2rem(-6px/2);
+        border-radius:px2rem(8px); 
+    }   
+}
+
+
+
+/******************************************************************
+ * mDialog 遮罩层
+ */
+.mDialog-shade {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    animation-timing-function: ease-out;
+    &.in{
+        animation-name: mDialogFadeIn;
+    }
+    &.out{
+        animation-name: mDialogFadeOut;
+    }
+}
+
+
+
+
+/******************************************************************
+ * mDialog open方法 content是内容
+ */
+
+.mDialog-default-section{
+    background:#fff;
+    @include font-dpr(16px);
+    padding:px2rem(20px);
+}
+
+
+
+/******************************************************************
+ * mDialog msg 信息提示框
+ */
+
+.mDialog-msg-section{
+    background-color:rgba(0,0,0,0.9);
+    border-radius:px2rem(20px);
+    padding:px2rem(30px);
+    color:#fff; 
+}
+
+/******************************************************************
+ * mDialog 加载提示框 
+ */
 @-webkit-keyframes line-spin-fade-loader {
     50% {
         opacity: 0.3;
@@ -492,10 +736,11 @@ body {
     padding:px2rem(30px) px2rem(60px);
     overflow:hidden;
     .loading-txt{
-        font-size:px2rem(32px);
+        @include font-dpr(16px);
         color:#fff;
         text-align:center;
         margin-top:px2rem(20px);
+        white-space: nowrap;
     }
     .loading-icon {
         position: relative;
@@ -531,8 +776,7 @@ body {
             }
             &:nth-child(3) {
                 top:px2rem(64px);
-                left:px2rem(88px);
-                
+                left:px2rem(88px);       
                 transform-origin:top center; 
                 transform: rotate(-90deg);
                 -webkit-animation: line-spin-fade-loader 1.2s 0.36s infinite ease-in-out;
@@ -589,197 +833,22 @@ body {
     }
 }
 
+/******************************************************************
+ * mDialog confirm 确认框 
+ */
 
-
-/**
- * confirm 确认提示框 默认动画  start
-**************************************************************************/
-
-@keyframes mDialogBigIn {
-    0% {
-        opacity: 0;
-        transform: scale(1.2, 1.2);
-    }
-    100% {
-        opacity: 1;
-        transform:scale(1, 1);
-    }
-}
-
-.mDialogBigIn{
-    animation-name: mDialogBigIn;
-    animation-timing-function:ease-out;
-}
-
-@keyframes mDialogBigOut {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        transform:scale(1.2, 1.2);
-    }
-}
-
-.mDialogBigOut{
-    animation-name: mDialogBigOut;
-    animation-timing-function:ease-out;
-}
-
-
-.mDialog-shade {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    animation-timing-function: ease-out;
-}
-.mDialog-shade.in{
-    animation-name: mDialogFadeIn;
-}
-
-.mDialog-shade.out{
-    animation-name: mDialogFadeOut;
-}
-
-
-
-.mDialog-layer-btns{
-    clear:both; 
-    height:px2rem(80px);
-    line-height:px2rem(80px);
-    border-top:1px solid #e8e8e8;
-    display: flex;
-   
+.mDialog-confirm-section{
     background:#fff;
-    border-radius:0 0 px2rem(20px) px2rem(20px);
-    >.mDialog-btn{
-        flex:1;
-        text-align: center;
-        position:relative;
-        color:#007aff;  
-        font-size:16px;
-        &:after{
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 1px;
-            height: 100%;
-            border-left: 1px solid #d5d5d5;
-            color: #d5d5d5;
-           
-        }
-        &:first-child{
-            &:after{
-                border-left:0;
-            }
-            
-        }
-    }  
-}
-
-.mDialog-layer-container{
-    visibility: hidden;
-    position: fixed;
-}
-.mDialog-layer-container-full{
-    >.mDialog-layer-title{
-        border-radius:0;
-    }
-    >.mDialog-layer-main{
-        border-radius:0;
-    }
-    >.mDialog-layer-btns{
-        border-radius:0;
-    }
-}
-.mDialog-layer-box{
-    height: 100%;
-    position: relative;
-    border-radius:px2rem(20px);
-    overflow:hidden;
-}
-
-
-.mDialog-layer-main{
-    
-   
-    word-break:break-all;
-    word-wrap:break-word;
-     overflow:hidden;
-    
-}
-.mDialog-layer-main.mDialog-layer-main-full{
-  
-   
-
-}
-.mDialog-layer-main-full >div{
-    height: 100%;
-    overflow: hidden;
-}
-.mDialog-layer-main:after{
-    content:"";
-    display:table;
-    clear:both;
-}
-.mDialog-default-box{
-    background:#fff;
-    @include font-dpr(16px);
-     padding:px2rem(20px);
-}
-
-
-.mDialog-layer-title{
+    padding:px2rem(40px) px2rem(30px);
     border-radius:px2rem(20px) px2rem(20px) 0 0;
-    background:#F5f5f5;
-    clear:both; 
-    border-bottom:1px solid #d5d5d5;
-    padding:px2rem(20px);
     @include font-dpr(16px);
 }
 
-.mDialog-close{
-    position: absolute;
-    width: px2rem(65px);
-    height:px2rem(65px);
-    overflow: hidden;  
-    right:0;
-    top:0;
-    margin-top:px2rem(-65px/2);
-    margin-right:px2rem(-65px/2);  
-    border-radius:100%;
-    background-color:rgba(0,0,0,1);
-    
-}
-.mDialog-close:before{
-    transform: rotate(45deg);
-    content: '';
-    position: absolute;
-    top: 50%;
-    left:px2rem(10px);
-    right:px2rem(10px);
-    background: #fff;
-    height:px2rem(6px);
-    margin-top:px2rem(-6px/2);
-    border-radius:px2rem(8px); 
-}
-.mDialog-close:after{
-    transform: rotate(-45deg);
-    content: '';
-    position: absolute;
-    top: 50%;
-    left:px2rem(10px);
-    right:px2rem(10px);
-    background: #fff;
-    height:px2rem(6px);
-    margin-top:px2rem(-6px/2);
-    border-radius:px2rem(8px); 
-}
+
+
+
+
+
 
     
 
@@ -816,9 +885,9 @@ body {
  * confirm确认框
  */
 
-.mDialog-confirm-section{
-    background:#fff;
-    padding:px2rem(40px) px2rem(30px);
-    border-radius:px2rem(20px) px2rem(20px) 0 0;
-    font-size:16px;
-}
+
+
+
+/**
+ * msg 提示框
+ */
