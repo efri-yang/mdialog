@@ -192,7 +192,10 @@
            
         $("#J_btn3").on("click",function(){
             mDialog.confirm({
-              content:"asdfsad啊是的发生大"
+              content:"asdfsad啊是的发生大",
+              yes:function(){
+                alert("xxx")
+              }
             })
         })
 

@@ -568,7 +568,7 @@ var test = "window";
         var _this = this;
         sindex = !!index ? index : this.opts.uid;
         $.each(mDialog.stack[sindex], function(index, obj) {
-            obj.removeSelf.call(_this);
+            obj.removeSelf.call();
             if (index == mDialog.stack[sindex].length - 1) {
                 delete mDialog.stack[sindex];
             }
@@ -612,7 +612,7 @@ var test = "window";
             },
             {
                 text: "确认",
-                callback: !!opts.ok ? opts.ok : function() {}
+                callback: !!opts.yes ? opts.yes : function() {}
             }
         ]
         mDialog.open(options, "comfirm")
