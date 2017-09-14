@@ -1,8 +1,4 @@
-var test = "window";
-
-
-;
-(function($, window, document, undefined) {
+;(function($, window, document, undefined) {
     var mDialog = {
         v: '0.0.1',
         stack: {},
@@ -18,7 +14,7 @@ var test = "window";
             shade: true,
             width: "auto",
             height: "auto",
-            maxWidth: "90%",
+            maxWidth: "85%",
             maxHeight: "80%",
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
@@ -26,6 +22,7 @@ var test = "window";
             content: "",
             closeBtn: true,
             buttons: {},
+            baseViewWidth:750,
             onBeforeShow: function() {},
             onShow: function() {},
             onBeforeClose: function() {},
@@ -122,13 +119,15 @@ var test = "window";
     };
 
     var deviceUtil=(function(){
-        var UA = window.navigator.userAgent,
+        var UA = window.navigator.userAgent,win=window,
             isAndroid = /android|adr/gi.test(UA),
             isIOS = /iphone|ipod|ipad/gi.test(UA) && !isAndroid,
+            isIPhone=win.navigator.appVersion.match(/iphone/gi),
             isMobile = isAndroid || isIOS,
             isSupportTouch = "ontouchend" in document ? true : false;
         return {
-            tapEvent: isMobile && isSupportTouch ? 'touchstart' : 'click'
+            tapEvent: isMobile && isSupportTouch ? 'touchstart' : 'click',
+            isIPhone:isIPhone
         }
     })();
 
@@ -200,7 +199,7 @@ var test = "window";
         if ($.isArray(opts.buttons) && !!opts.buttons.length) {
             $.each(opts.buttons, function(index, obj) {
                 obj.class = !!obj.class ? obj.class : "";
-                var $btn = $('<a href="#" class="mDialog-btn ' + obj.class + '">' + obj.text + '</a>');
+                var $btn = $('<a href="#" class="mDialog-btn ' + obj.className + '">' + obj.text + '</a>');
                 if (!!obj.callback) {
                     $btn.on(deviceUtil.tapEvent, function(event) {
                         event.preventDefault();
@@ -217,7 +216,7 @@ var test = "window";
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
         //width、height  传递进来的值可能是  auto  80%  400px  8rem;
 
-        var elemW, elemH, winW, winH, realW, realH, titleH = 0,
+        var elemW, elemH, winW, winH, realW, realH, maxW,maxH,titleH = 0,
             contentH = 0,
             footerH = 0,
             fullClassName = "mDialog-layer-main-full",
@@ -229,39 +228,76 @@ var test = "window";
         winW = $(window).width();
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
+        dpFontSize=ExtraFunc.getNumber(document.documentElement.style.fontSize);
 
-        if (dpr) {
-            if (winW > 540 && dpr == 1) {
-                standardRatio = 540;
-            } else {
-                standardRatio = winW;
+        /**
+         * 在flexible1 中 当宽度大于540 且dpr=1 的时候 默认的font-size 就是54;
+         *
+         * dpr 影响的是   winW   elemW
+         */
+        if (isFlexible && dpr) { 
+            // flexible1 版本 只对iphone 进行缩放
+            if(winW > 540 && dpr == 1){
+                standardRatio=540;
+            }else if(deviceUtil.isIPhone){
+                standardRatio =opts.baseViewWidth;
+            }else{
+                standardRatio=winW;
             }
-        } else {
-            standardRatio = winW;
-        }
+        } 
+
 
 
         elemW = $elem.outerWidth();
-        realW = !!opts.width ? ((opts.width == "auto") ? elemW : opts.width) : elemW;
-        maxW = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "90%" : opts.maxWidth) : "90%";
 
-        if (ExtraFunc.isPercent(realW)) {
-            realW = winW * ExtraFunc.getNumber(realW) / 100; //转成 数字类型
-        } else if (ExtraFunc.isPx(realW)) {
-            realW = ExtraFunc.getNumber(realW); //转成 数字类型
+        opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
+        maxW=ExtraFunc.isPx(opts.maxWidth) ?  ExtraFunc.getNumber(opts.maxWidth) : winW*ExtraFunc.getNumber(opts.maxWidth)/100;
+
+
+        if(opts.width=="auto" || !opts.width){
+            realW=(elemW > maxW) ? maxW : elemW;
+            if(dpr==1 && winW > 540){
+                standardRatio=540; // 考虑到plus  
+            }else{
+                standardRatio=winW;
+            }
+        }else if(ExtraFunc.isPercent(opts.width)){
+            //如果规定了
+            realW=winW*ExtraFunc.getNumber(opts.width)/100;
+            if(realW > maxW){  
+                realW=maxW;
+            }
+            if(dpr==1 && winW > 540){
+                standardRatio=540; // 考虑到plus  
+            }else{
+                standardRatio=winW;
+            }
+
+        }else if(ExtraFunc.isPx(opts.width)){
+            standardRatio=opts.baseViewWidth;
+            realW=ExtraFunc.getNumber(opts.width);
+            if(realW > opts.baseViewWidth){
+                realW=maxW;
+            }
+           
         }
 
-        if (ExtraFunc.isPercent(maxW)) {
-            maxW = winW * ExtraFunc.getNumber(maxW) / 100; //转成px
-        } else if (ExtraFunc.isPx(maxW)) {
-            maxW = ExtraFunc.getNumber(maxW); //转成px
-        }
+        console.dir("winW的px:  "+winW);
+        console.dir("maxW的px:  "+maxW);
+        console.dir("elemW(传进来的宽度)的px:  "+elemW);
+        console.dir("standardRatio:  "+standardRatio)
+       
+        console.dir("realW(最终的宽度)的px:  "+realW);
+        
+       
+        
+       
 
-        //宽高都是100%，那么默认的忽略\
-        realW = (realW >= maxW) ? maxW : realW;
-        if (isFlexible) { //转rem
-            realW = realW / standardRatio * 10;
+
+        if(isFlexible){
+           realW=realW/standardRatio*10;
         }
+         console.dir("realW从px转化成rem:  "+realW);
         $elem.css({
             left: "50%",
             width: realW + unitRemPx,
@@ -269,46 +305,80 @@ var test = "window";
         })
 
 
+
+
+       
+       
+       
+       
+        
+
+
         elemH = $elem.outerHeight();
-        realH = !!opts.height ? ((opts.height == "auto") ? elemH : opts.height) : elemH;
-        maxH = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
-        if (ExtraFunc.isPercent(realH)) {
-            realH = winH * ExtraFunc.getNumber(realH) / 100; //转成px
-        } else if (ExtraFunc.isPx(realH)) {
-            realH = ExtraFunc.getNumber(realH); //转成px
-        }
-        if (ExtraFunc.isPercent(maxH)) {
-            maxH = winH * ExtraFunc.getNumber(maxH) / 100; //转成px number 类型
-        } else if (ExtraFunc.isPx(maxH)) {
-            maxH = ExtraFunc.getNumber(maxH); //转成px
+
+        opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
+
+        maxH=ExtraFunc.isPx(opts.maxHeight) ?  ExtraFunc.getNumber(opts.maxHeight) : winH*ExtraFunc.getNumber(opts.maxHeight)/100;
+        
+        console.dir("winH的px:  "+winH);
+        console.dir("elemH的px:  "+elemH);
+        console.dir("maxH的px:  "+maxH);
+        
+       
+        
+        if(opts.height=="auto" || !opts.height){
+            realH=(elemH > maxH) ? maxH : elemH;
+
+        }else if(ExtraFunc.isPercent(opts.height)){
+            realH=winH*ExtraFunc.getNumber(opts.height)/100;
+            if(realH > maxH){
+                standardRatio=winW; 
+                realH=maxH;
+            }
+            
+        }else if(ExtraFunc.isPx(opts.height)){
+            realH=ExtraFunc.getNumber(opts.height);
+            if(realH > maxH){
+                standardRatio=opts.baseViewWidth;
+                realH=maxH;
+            }
         }
 
-        // elemH 大于规定的高度 heiht 那么也要启动 限制
+        console.dir("standardRatio:  "+standardRatio);
+        console.dir("realH(最终的宽度)的px:  "+realH);
+
+
       
 
-        if (realH >= maxH) {
-            realH = maxH;
-            $main.addClass(fullClassName);
-        }
-        if (realH < elemH || realH == winH) {
-            $main.addClass(fullClassName);
-        }
-       
+
+
+
+
+      
         !!$title && !!$title.length && (titleH = $title.outerHeight());
         !!$footer && !!$footer.length  && (footerH = $footer.outerHeight());
-            
-
-
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
-
-        $main.css({ height: (isFlexible ? (mainH / standardRatio * 10) : mainH) + unitRemPx })
-
-        if (isFlexible) { //转rem
-            realH = realH / standardRatio * 10;
+        if(isFlexible){
+           realH=realH/standardRatio*10;
+           mainH=mainH/standardRatio*10;
         }
+
+        console.dir("realH(最终的)的rem:  "+realH);
+
+        if((realH > maxH) || elemH > realH){
+            $main.addClass(fullClassName);
+        }
+
+        
+       
+        $main.css({ 
+            height: mainH + unitRemPx 
+        });
         $elem.css({
             height: realH + unitRemPx
         });
+
+        
 
         if (opts.top || parseInt(opts.top) == 0) {
             $elem.css({
@@ -568,7 +638,7 @@ var test = "window";
         var _this = this;
         sindex = !!index ? index : this.opts.uid;
         $.each(mDialog.stack[sindex], function(index, obj) {
-            obj.removeSelf.call();
+            obj.removeSelf();
             if (index == mDialog.stack[sindex].length - 1) {
                 delete mDialog.stack[sindex];
             }
@@ -616,7 +686,7 @@ var test = "window";
             }
         ]
         mDialog.open(options, "comfirm")
-    }
+    };
 
 
     mDialog.msg = function(opts) {
@@ -625,11 +695,22 @@ var test = "window";
         options.shade = !!opts.shade ? opts.shade : false;
         options.pause = !!opts.pause ? opts.pause : 2000;
         mDialog.open(options, "msg")
-    }
+    };
 
     mDialog.close = function(obj) {
         obj.close();
-    }
+    };
+
+    mDialog.closeAll=function(){    
+        $.each(mDialog.stack, function(index1, obj1) {
+            $.each(obj1,function(index2,obj2){
+                obj2.removeSelf();
+                if (index2 == mDialog.stack[index1].length - 1) {
+                    delete mDialog.stack[index1];
+                }
+            })   
+        }); 
+    };
     window.mDialog = mDialog;
 })(window.jQuery || window.Zepto, window, document);
 
