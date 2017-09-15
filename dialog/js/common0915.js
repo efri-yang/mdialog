@@ -14,7 +14,7 @@
             shade: true,
             width: "auto",
             height: "auto",
-            maxWidth: "90%",
+            maxWidth: "85%",
             maxHeight: "80%",
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
@@ -22,6 +22,8 @@
             content: "",
             closeBtn: true,
             buttons: {},
+            baseViewWidth:750,
+            baseViewHeight:1344,
             onBeforeShow: function() {},
             onShow: function() {},
             onBeforeClose: function() {},
@@ -118,13 +120,15 @@
     };
 
     var deviceUtil=(function(){
-        var UA = window.navigator.userAgent,
+        var UA = window.navigator.userAgent,win=window,
             isAndroid = /android|adr/gi.test(UA),
             isIOS = /iphone|ipod|ipad/gi.test(UA) && !isAndroid,
+            isIPhone=win.navigator.appVersion.match(/iphone/gi),
             isMobile = isAndroid || isIOS,
             isSupportTouch = "ontouchend" in document ? true : false;
         return {
-            tapEvent: isMobile && isSupportTouch ? 'touchstart' : 'click'
+            tapEvent: isMobile && isSupportTouch ? 'touchstart' : 'click',
+            isIPhone:isIPhone
         }
     })();
 
@@ -213,7 +217,7 @@
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
         //width、height  传递进来的值可能是  auto  80%  400px  8rem;
 
-        var elemW, elemH, winW, winH, realW, realH, titleH = 0,
+        var elemW, elemH, winW, winH, realW, realH, maxW,maxH,titleH = 0,
             contentH = 0,
             footerH = 0,
             fullClassName = "mDialog-layer-main-full",
@@ -225,47 +229,66 @@
         winW = $(window).width();
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
+  
 
+        /**
+         * 在flexible1 中 当宽度大于540 且dpr=1 的时候 默认的font-size 就是54;
+         *
+         * dpr 影响的是   winW   elemW
+         */
+      
 
-        if (dpr) {
-            if (winW > 540 && dpr == 1) {
-                standardRatio = 540;
-            }else if(dpr == 2){
-                standardRatio=750;
-            }else {
-                standardRatio = winW;
-            }
-        } else {
-
-            standardRatio = winW;
-        }
 
 
         elemW = $elem.outerWidth();
-        realW = !!opts.width ? ((opts.width == "auto") ? elemW : opts.width) : elemW;
-        maxW = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "90%" : opts.maxWidth) : "90%";
 
-        if (ExtraFunc.isPercent(realW)) {
-            realW = winW * ExtraFunc.getNumber(realW) / 100; //转成 数字类型
-        } else if (ExtraFunc.isPx(realW)) {
-            realW = ExtraFunc.getNumber(realW); //转成 数字类型
+        opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
+
+        maxW=ExtraFunc.isPx(opts.maxWidth) ?  ExtraFunc.getNumber(opts.maxWidth) : winW*ExtraFunc.getNumber(opts.maxWidth)/100;
+
+
+        if(opts.width=="auto" || !opts.width){
+            realW=(elemW > maxW) ? maxW : elemW;
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+        }else if(ExtraFunc.isPercent(opts.width)){
+            //如果规定了
+            realW=winW*ExtraFunc.getNumber(opts.width)/100;
+            if(realW > maxW){  
+                realW=maxW;
+            }
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+
+        }else if(ExtraFunc.isPx(opts.width)){  
+            realW=ExtraFunc.getNumber(opts.width);
+            if(realW > opts.baseViewWidth*ExtraFunc.getNumber(opts.maxWidth)/100 && isFlexible){
+                //传进来的宽度 要和  baseViewWidth*opts.maxWidth 比较，如果比较大,
+                    realW=maxW;
+                    standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+            }else if(!isFlexible && realW >winW){
+                    realW=maxW;
+            }else{
+                standardRatio=opts.baseViewWidth;
+            }
+            
+           
         }
 
-
-        if (ExtraFunc.isPercent(maxW)) {
-            maxW = winW * ExtraFunc.getNumber(maxW) / 100; //转成px
-        } else if (ExtraFunc.isPx(maxW)) {
-            maxW = ExtraFunc.getNumber(maxW); //转成px
-        }
-        console.dir("realW的px:  "+realW);
+        console.dir("winW的px:  "+winW);
+        console.dir("maxW的px:  "+maxW);
+        console.dir("elemW(传进来的宽度)的px:  "+elemW);
         console.dir("standardRatio:  "+standardRatio)
-        //宽高都是100%，那么默认的忽略
-        realW = (realW >= maxW) ? maxW : realW;
-        if (isFlexible) { //转rem
-            realW = realW / standardRatio * 10;
-        }
+       
+        console.dir("realW(最终的宽度)的px:  "+realW);
+        
+       
+        
+       
 
-        console.dir("realW从px转化成rem:  "+realW);
+
+        if(isFlexible){
+           realW=realW/standardRatio*10;
+        }
+         console.dir("realW从px转化成rem:  "+realW);
         $elem.css({
             left: "50%",
             width: realW + unitRemPx,
@@ -273,50 +296,92 @@
         })
 
 
+
+
+       
+       
+       
+       
+        
+
+
         elemH = $elem.outerHeight();
-        realH = !!opts.height ? ((opts.height == "auto") ? elemH : opts.height) : elemH;
-        maxH = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
-        if (ExtraFunc.isPercent(realH)) {
-            realH = winH * ExtraFunc.getNumber(realH) / 100; //转成px
-        } else if (ExtraFunc.isPx(realH)) {
-            realH = ExtraFunc.getNumber(realH); //转成px
-        }
-        if (ExtraFunc.isPercent(maxH)) {
-            maxH = winH * ExtraFunc.getNumber(maxH) / 100; //转成px number 类型
-        } else if (ExtraFunc.isPx(maxH)) {
-            maxH = ExtraFunc.getNumber(maxH); //转成px
+
+        opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
+
+        maxH=ExtraFunc.isPx(opts.maxHeight) ?  ExtraFunc.getNumber(opts.maxHeight) : winH*ExtraFunc.getNumber(opts.maxHeight)/100;
+        
+        console.dir("winH的px:  "+winH);
+        console.dir("elemH的px:  "+elemH);
+        console.dir("maxH的px:  "+maxH);
+        
+       
+        
+        if(opts.height=="auto" || !opts.height){
+            realH=(elemH > maxH) ? maxH : elemH;
+
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+
+        }else if(ExtraFunc.isPercent(opts.height)){
+            realH=winH*ExtraFunc.getNumber(opts.height)/100;
+            if(realH > maxH){
+                realH=maxH;
+            }
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+        }else if(ExtraFunc.isPx(opts.height)){
+            realH=ExtraFunc.getNumber(opts.height);
+            if(realH > opts.baseViewHeight*ExtraFunc.getNumber(opts.maxHeight)/100 && isFlexible){
+
+                    realH=maxH;
+                    standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+            }else if(realH > maxW & !isFlexible){
+                    realH=maxH;
+            }else{
+                    
+                    standardRatio=opts.baseViewWidth;
+            }
         }
 
-        // elemH 大于规定的高度 heiht 那么也要启动 限制
+        console.dir("standardRatio:  "+standardRatio);
+        console.dir("realH(最终的宽度)的px:  "+realH);
+
+
       
-        console.dir("maxH的px："+maxH);
-        console.dir("realH的px："+realH);
-        console.dir("winH的px："+winH);
-        if (realH >= maxH) {
-            realH = maxH;
-            $main.addClass(fullClassName);
-        }
-        if (realH < elemH || realH == winH) {
-            $main.addClass(fullClassName);
-        }
-         
+
+
+
+
+
+      
         !!$title && !!$title.length && (titleH = $title.outerHeight());
         !!$footer && !!$footer.length  && (footerH = $footer.outerHeight());
-            
-
-
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
 
-        $main.css({ height: (isFlexible ? (mainH / standardRatio * 10) : mainH) + unitRemPx })
-        console.dir("realH的px："+realH);
-        if (isFlexible) { //转rem
-            realH = realH / standardRatio * 10;
+        console.dir("titleH:"+titleH);
+        console.dir("mainH:"+mainH);
+        console.dir("footerH:"+footerH);
+        if(isFlexible){
+           realH=realH/standardRatio*10;
+           mainH=mainH/standardRatio*10;
         }
+        console.dir("mainH:"+mainH)
+
+        console.dir("realH(最终的)的rem:  "+realH);
+
+        if((realH > maxH) || elemH > realH){
+            $main.addClass(fullClassName);
+        }
+
+        
+       
+        $main.css({ 
+            height: mainH + unitRemPx 
+        });
         $elem.css({
             height: realH + unitRemPx
         });
 
-        console.dir("realH的px转rem："+realH);
+        
 
         if (opts.top || parseInt(opts.top) == 0) {
             $elem.css({

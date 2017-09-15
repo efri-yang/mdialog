@@ -288,7 +288,8 @@ body {
 .bm-dia-box1{
     background:#f60;
     display: block;
- 
+    position: absolute;
+    // visibility: hidden;
     .tip-pic {
         width: px2rem(133px);
         height: px2rem(133px);
@@ -545,7 +546,10 @@ body {
     background:#F5f5f5;
     clear:both; 
     border-bottom:1px solid #d5d5d5;
-    padding:px2rem(20px);
+    padding:0 px2rem(20px);
+    height:px2rem(80px);
+    line-height: px2rem(80px);
+    overflow: hidden; 
     @include font-dpr(18px);
 }
 

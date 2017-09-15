@@ -23,6 +23,7 @@
             closeBtn: true,
             buttons: {},
             baseViewWidth:750,
+            baseViewHeight:1344,
             onBeforeShow: function() {},
             onShow: function() {},
             onBeforeClose: function() {},
@@ -228,58 +229,32 @@
         winW = $(window).width();
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
-        dpFontSize=ExtraFunc.getNumber(document.documentElement.style.fontSize);
-
-        /**
-         * 在flexible1 中 当宽度大于540 且dpr=1 的时候 默认的font-size 就是54;
-         *
-         * dpr 影响的是   winW   elemW
-         */
-        if (isFlexible && dpr) { 
-            // flexible1 版本 只对iphone 进行缩放
-            if(winW > 540 && dpr == 1){
-                standardRatio=540;
-            }else if(deviceUtil.isIPhone){
-                standardRatio =opts.baseViewWidth;
-            }else{
-                standardRatio=winW;
-            }
-        } 
-
+  
 
 
         elemW = $elem.outerWidth();
-
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
         maxW=ExtraFunc.isPx(opts.maxWidth) ?  ExtraFunc.getNumber(opts.maxWidth) : winW*ExtraFunc.getNumber(opts.maxWidth)/100;
-
-
         if(opts.width=="auto" || !opts.width){
             realW=(elemW > maxW) ? maxW : elemW;
-            if(dpr==1 && winW > 540){
-                standardRatio=540; // 考虑到plus  
-            }else{
-                standardRatio=winW;
-            }
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
         }else if(ExtraFunc.isPercent(opts.width)){
-            //如果规定了
             realW=winW*ExtraFunc.getNumber(opts.width)/100;
             if(realW > maxW){  
                 realW=maxW;
             }
-            if(dpr==1 && winW > 540){
-                standardRatio=540; // 考虑到plus  
-            }else{
-                standardRatio=winW;
-            }
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
 
-        }else if(ExtraFunc.isPx(opts.width)){
-            standardRatio=opts.baseViewWidth;
+        }else if(ExtraFunc.isPx(opts.width)){  
             realW=ExtraFunc.getNumber(opts.width);
-            if(realW > opts.baseViewWidth){
-                realW=maxW;
-            }
-           
+            if(isFlexible){
+                if(realW > opts.baseViewWidth*ExtraFunc.getNumber(opts.maxWidth)/100){
+                    realW=maxW;
+                    standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+                }
+            }else{
+                realW=(realW >winW) ? maxW : realW;
+            } 
         }
 
         console.dir("winW的px:  "+winW);
@@ -297,7 +272,7 @@
         if(isFlexible){
            realW=realW/standardRatio*10;
         }
-         console.dir("realW从px转化成rem:  "+realW);
+        console.dir("realW从px转化成rem:  "+realW);
         $elem.css({
             left: "50%",
             width: realW + unitRemPx,
@@ -315,9 +290,7 @@
 
 
         elemH = $elem.outerHeight();
-
         opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
-
         maxH=ExtraFunc.isPx(opts.maxHeight) ?  ExtraFunc.getNumber(opts.maxHeight) : winH*ExtraFunc.getNumber(opts.maxHeight)/100;
         
         console.dir("winH的px:  "+winH);
@@ -328,19 +301,24 @@
         
         if(opts.height=="auto" || !opts.height){
             realH=(elemH > maxH) ? maxH : elemH;
-
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
         }else if(ExtraFunc.isPercent(opts.height)){
             realH=winH*ExtraFunc.getNumber(opts.height)/100;
             if(realH > maxH){
-                standardRatio=winW; 
                 realH=maxH;
             }
-            
+            standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
         }else if(ExtraFunc.isPx(opts.height)){
             realH=ExtraFunc.getNumber(opts.height);
-            if(realH > maxH){
-                standardRatio=opts.baseViewWidth;
-                realH=maxH;
+            if(isFlexible){
+                if(realH > opts.baseViewHeight*ExtraFunc.getNumber(opts.maxHeight)/100){
+                    realH=maxH;
+                    standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+                }else{
+                    standardRatio=opts.baseViewWidth;
+                }
+            }else{
+                realH=(realH > maxH) ? maxH : realH;
             }
         }
 
@@ -358,10 +336,15 @@
         !!$title && !!$title.length && (titleH = $title.outerHeight());
         !!$footer && !!$footer.length  && (footerH = $footer.outerHeight());
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
+
+        console.dir("titleH:"+titleH);
+        console.dir("mainH:"+mainH);
+        console.dir("footerH:"+footerH);
         if(isFlexible){
            realH=realH/standardRatio*10;
            mainH=mainH/standardRatio*10;
         }
+        console.dir("mainH:"+mainH)
 
         console.dir("realH(最终的)的rem:  "+realH);
 

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>首页</title>
     <script type="text/javascript" src="js/zepto.js"></script>
     <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
@@ -78,14 +78,14 @@
             <button id="x2">单机</button>
 
             <button id="x3">关闭</button>
-            <p >幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000幸福幸福幸福幸福幸福福幸000</p>
+            <p >幸福幸福000</p>
             <p>幸福</p>
             <p>幸福</p>
             <p>幸福</p>
             <p>-2-2-2</p>
             <p>-1-1-1</p>
             <p>0000</p>
-            <p>111幸福</p>
+            <!-- <p>111幸福</p>
             <p>222福</p>
             <p>333福</p>
             <p>444</p>
@@ -100,8 +100,8 @@
             <p>幸福</p>
             <p>幸福</p>
             <p>幸福</p>
-            <p>幸福</p>
-            <div style="height: 200px; width:200px; background:#f60;display: none;" id="boxxxx"></div>
+            <p>幸福</p> -->
+            <div style="height: 200px; width:200px; background:#000;display: none;" id="boxxxx"></div>
           
        
     </div>
@@ -121,11 +121,12 @@
             dia = mDialog.open({
                 // duration:0,
                 title: { text: "mDialog弹框标题111", className: "tit-1",style:""},
-                width:"375px",
-                // height:"110%",
+                width:"600px",
+                height:"900px",
                 content: $("#J_bm-dia-box1"),
                 animIn: "mDialogZoomIn",
                 animOut: "fadeOutDown",
+
                 buttons: [{
                         text: "取消",
                         className: "btn11111",
@@ -181,7 +182,7 @@
 
         $("#x1").on("click", function() {
             $("#boxxxx").show();
-            myScroll.refresh();
+            // myScroll.refresh();
         })
 
 
