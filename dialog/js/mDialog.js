@@ -235,6 +235,8 @@
         elemW = $elem.outerWidth();
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
         maxW=ExtraFunc.isPx(opts.maxWidth) ?  ExtraFunc.getNumber(opts.maxWidth) : winW*ExtraFunc.getNumber(opts.maxWidth)/100;
+        
+
         if(opts.width=="auto" || !opts.width){
             realW=(elemW > maxW) ? maxW : elemW;
             standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
@@ -251,6 +253,8 @@
                 if(realW > opts.baseViewWidth*ExtraFunc.getNumber(opts.maxWidth)/100){
                     realW=maxW;
                     standardRatio=(dpr==1 && winW > 540) ? 540 : winW;
+                }else{
+                    standardRatio=opts.baseViewWidth;
                 }
             }else{
                 realW=(realW >winW) ? maxW : realW;
@@ -350,6 +354,9 @@
 
         if((realH > maxH) || elemH > realH){
             $main.addClass(fullClassName);
+        }
+        if(opts.width==opts.height &&  opts.width=="100%"){
+           $elem.addClass('mDialog-layer-container-full')
         }
 
         
@@ -697,6 +704,3 @@
     window.mDialog = mDialog;
 })(window.jQuery || window.Zepto, window, document);
 
-/**
- * 
- */

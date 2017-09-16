@@ -6,11 +6,13 @@
     <title>首页</title>
     <script type="text/javascript" src="js/zepto.js"></script>
     <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
-    <script type="text/javascript" src="js/flexible.js"></script>
-    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/flexible2.js"></script>
     <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <script type="text/javascript" src="js/mDialog.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
     <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/mDialogRem.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
     <style type="text/css">
     #wrapper {
         position: relative;
@@ -85,7 +87,7 @@
             <p>-2-2-2</p>
             <p>-1-1-1</p>
             <p>0000</p>
-            <!-- <p>111幸福</p>
+            <p>111幸福</p>
             <p>222福</p>
             <p>333福</p>
             <p>444</p>
@@ -100,7 +102,7 @@
             <p>幸福</p>
             <p>幸福</p>
             <p>幸福</p>
-            <p>幸福</p> -->
+            <p>幸福</p>
             <div style="height: 200px; width:200px; background:#000;display: none;" id="boxxxx"></div>
           
        
@@ -121,11 +123,15 @@
             dia = mDialog.open({
                 // duration:0,
                 title: { text: "mDialog弹框标题111", className: "tit-1",style:""},
-                width:"600px",
-                height:"900px",
+                width:"80%",
+                height:"80%",
+                maxHeight:"100%",
+                maxWidth:"100%",
                 content: $("#J_bm-dia-box1"),
                 animIn: "mDialogZoomIn",
                 animOut: "fadeOutDown",
+                baseViewWidth:640,
+                baseViewHeight:960,
 
                 buttons: [{
                         text: "取消",

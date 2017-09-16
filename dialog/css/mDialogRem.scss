@@ -1,404 +1,23 @@
-/*! yyh  email:948061564*/
-@import "./scss/_normalize.scss";
-@import "./scss/_base.scss";
-@import "./scss/_funvar.scss";
-@import "./iconfont.css";
-
-.mtr10 {
-    margin-top: px2rem(10px);
+@function px2rem($px, $base-font-size:75px) {
+    @if (unitless($px)) {
+        @warn "Assuming #{$px} to be in pixels, attempting to convert it into pixels for you";
+        @return px2rem($px + 0px); // That may fail.
+    }
+    @else if (unit($px)==rem) {
+        @return $px;
+    }
+    @return ($px / $base-font-size) * 1rem;
 }
 
-.mtr20 {
-    margin-top: px2rem(20px);
-}
-
-.mtr30 {
-    margin-top: px2rem(30px);
-}
-
-.mtr40 {
-    margin-top: px2rem(40px);
-}
-
-.mtr50 {
-    margin-top: px2rem(50px);
-}
-
-
-.mbr30 {
-    margin-bottom: px2rem(30px);
-}
-
-.plr20 {
-    padding-left: px2rem(20px);
-}
-
-.prr20 {
-    padding-right: px2rem(20px);
-}
-
-.plr30 {
-    padding-left: px2rem(30px);
-}
-
-.prr30 {
-    padding-right: px2rem(30px);
-}
-
-.pbr155 {
-    padding-bottom: px2rem(155px);
-}
-
-.pbr40 {
-    padding-bottom: px2rem(40px);
-}
-
-body {
-    // background: #f60;
-}
-
-.iconfont {
-    @include font-dpr(40px);
-}
-
-.container {
-    width: px2rem(750px);
-    margin: 0 auto;
-    padding-top: px2rem(254px);
-    padding-bottom: px2rem(30px);
-    overflow: hidden;
-    background: url("../images/body_bg.jpg") no-repeat top center;
-    background-size: 100% auto;
-}
-
-.coms-field-text {
-    display: inline-block;
-    width: 100%;
-    height: px2rem(88px);
-    padding: px2rem(8px) px2rem(25px);
-    background-image: none;
-    border: 1px solid #ccc;
-    @include font-dpr(16px);
-    color: #323232;
-    border-radius: 0;
-    background-color: #fbfbfb;
-    -webkit-appearance: none;
-    &:disabled {
-        background-color: #eee;
+@mixin font-dpr($font-size) {
+    font-size: $font-size;
+    [data-dpr="2"] & {
+        font-size: $font-size * 2;
+    }
+    [data-dpr="3"] & {
+        font-size: $font-size * 3;
     }
 }
-
-.caption-1 {
-    height: px2rem(90px);
-    line-height: px2rem(65px);
-    background: url("../images/caption_1.png") no-repeat top right;
-    background-size: auto 100%;
-    font-size: px2rem(32px);
-    text-align: center;
-    color: #ffffff;
-    strong {
-        font-size: px2rem(42px);
-        display: inline-block;
-        position: relative;
-        vertical-align: top;
-    }
-}
-
-.jd-forms-box {
-    margin: 0 px2rem(30px);
-    background: #f7f3fa;
-    border-radius: px2rem(20px);
-    padding: px2rem(20px) 0;
-    .item {
-        margin-bottom: px2rem(25px);
-        .tit {
-            color: #4f19b6;
-            @include font-dpr(18px);
-            line-height: px2rem(35px);
-            padding-left: px2rem(30px);
-            margin-bottom: px2rem(10px);
-        }
-        &.item-sel {
-            .btn-add {
-                width: px2rem(35px);
-                height: px2rem(35px);
-                overflow: hidden;
-                background: url("../images/add_icon.png") no-repeat top center;
-                background-size: 100% 100%;
-                display: inline-block;
-                vertical-align: top;
-            }
-        }
-        &.item-text {
-            padding: 0 px2rem(30px);
-        }
-        &.item-radio {
-            .para-radio-list {
-                padding: 0 px2rem(30px);
-                @include font-dpr(16px);
-                color: #323232;
-                >label {
-                    margin-right: px2rem(20px);
-                }
-            }
-        }
-    }
-}
-
-.ipt-submit {
-    width: px2rem(570px);
-    height: px2rem(88px);
-    overflow: hidden;
-    background: #a922e2;
-    margin: px2rem(20px) auto 0;
-    border-radius: px2rem(50px);
-    color: #fff;
-    @include font-dpr(20px);
-    display: block;
-    border: none;
-    &:active {
-        background-color: darken(#a922e2, 5%);
-    }
-}
-
-.coms-field-radio {
-    -webkit-appearance: none;
-    width: px2rem(35px);
-    height: px2rem(35px);
-    border: 1px solid #d6d6d6;
-    border-radius: 50%;
-    vertical-align: middle;
-    margin-top: px2rem(-4px);
-    outline: 0;
-    -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, .125);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .125);
-    margin-right: px2rem(10px);
-    background: #eeeeee;
-    &:checked {
-        border-color: #ffa73d;
-        background: #ffa73d;
-
-        &:before {
-            color: #fff;
-            content: "\e62d";
-            font-size: px2rem(48px);
-            line-height: px2rem(35px);
-            left: px2rem(-7px);
-            display: inline-block;
-            position: relative;
-            vertical-align: top;
-            text-align: center;
-        }
-    }
-}
-
-
-.coms-field-select {
-    -webkit-appearance: none !important;
-    -webkit-border-radius: 0;
-    border-radius: 0;
-    border: 1px solid #ececec;
-    padding: px2rem(20px) px2rem(60px) px2rem(20px) px2rem(10px);
-    width: 100%;
-    color: #323232;
-    @include font-dpr(16px);
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    background: #fff url(../images/coms_field_select_arrow.png) no-repeat 100% center;
-    @extend %text-overflow;
-}
-
-.para-list {
-    display: flex;
-    padding: 0 px2rem(15px);
-    margin-top: px2rem(10px);
-    li {
-        flex: 1;
-        padding: 0 px2rem(15px);
-    }
-}
-
-
-
-/**
- * 表单验证样式
- */
-
-.field-invalid {
-    border-color: #a94442;
-}
-
-.field-invalidmsg {
-    color: #a94442;
-}
-
-.field-validmsg {
-    color: #3c763d;
-}
-
-.field-tooltipWrap {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: 9999999999999;
-}
-
-.field-tooltipInner {
-    pointer-events: none;
-    display: table;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.field-tooltip {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-
-.field-tooltip .field-invalidmsg,
-.field-tooltip .field-validmsg {
-    color: #fff;
-}
-
-.field-tooltip .zvalid-resultformat {
-    display: inline-block;
-    position: relative;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: px2rem(30px) px2rem(50px);
-    @include font-dpr(18px);
-    border-radius: px2rem(20px);
-    box-shadow: 0 0 8px rgba(0, 0, 0, .1);
-    pointer-events: auto;
-    animation-name: fieldTipBounceIn;
-    -webkit-animation-name: fieldTipBounceIn;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-duration: .18s;
-    animation-duration: .18s;
-}
-
-
-
-.bm-dia-box1{
-    background:#f60;
-    display: block;
-    position: absolute;
-    // visibility: hidden;
-    .tip-pic {
-        width: px2rem(133px);
-        height: px2rem(133px);
-        overflow: hidden;
-        background: url("../images/dia_success_tip.png") no-repeat top center;
-        background-size: 100% 100%;
-        margin: 0 auto;
-    }
-    .txt-1 {
-        text-align: center;
-        @include font-dpr(20px);
-        color: #333333;
-        margin-top: px2rem(50px);
-    }
-    .txt-2 {
-        text-align: center;
-        @include font-dpr(16px);
-        color: #666666;
-        margin-top: px2rem(20px);
-    }
-    .close {
-        width: px2rem(380px);
-        height: px2rem(88px);
-        line-height: px2rem(88px);
-        overflow: hidden;
-        background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, from(#A622E3), to(#D922BA), color-stop(0.5, #D922BA));
-        border-radius: px2rem(50px);
-        display: block;
-        margin: px2rem(30px) auto 0;
-        text-align: center;
-        @include font-dpr(20px);
-        color: #fff;
-    }
-}
-
-.bm-dia-box2{
-    background-color:rgba(0,0,0,0.8);
-    border-radius: px2rem(20px);
-    width:px2rem(400px);
-    height: px2rem(600px); 
-    .tip-pic {
-        width: px2rem(133px);
-        height: px2rem(133px);
-        overflow: hidden;
-        background: url("../images/dia_success_tip.png") no-repeat top center;
-        background-size: 100% 100%;
-        margin: 0 auto;
-    }
-    .txt-1 {
-        text-align: center;
-        @include font-dpr(20px);
-        color: #333333;
-        margin-top: px2rem(50px);
-    }
-    .txt-2 {
-        text-align: center;
-        @include font-dpr(16px);
-        color: #666666;
-        margin-top: px2rem(20px);
-    }
-    .close {
-        width: px2rem(380px);
-        height: px2rem(88px);
-        line-height: px2rem(88px);
-        overflow: hidden;
-        background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, from(#A622E3), to(#D922BA), color-stop(0.5, #D922BA));
-        border-radius: px2rem(50px);
-        display: block;
-        margin: px2rem(30px) auto 0;
-        text-align: center;
-        @include font-dpr(20px);
-        color: #fff;
-    }
-}
-
-
-
-.classFixed {
-    position: fixed;
-    top: 10%;
-    left: 30%;
-}
-
-.txt11{
-    font-size:px2rem(40px);
-}
-.box1 {
-    background: #fff;
-    width: 400px;
-    height: px2rem(600px);
-    padding: px2rem(15px);
-    border: px2rem(10px) solid #000;
-    box-sizing: border-box;
-    margin: 30px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /******************************************************************
@@ -407,7 +26,6 @@ body {
 
 /**
  * 淡入效果
- * shade 默认的样式
  */
 @keyframes mDialogFadeIn {
     from {
@@ -425,7 +43,6 @@ body {
 
 /**
  * 淡出效果
- * shade 默认的样式
  */
 @keyframes mDialogFadeOut {
     from {
@@ -441,6 +58,9 @@ body {
     animation-name: mDialogFadeOut;
 }
 
+/**
+ * 类似zoomIn
+ */
 @keyframes mDialogZoomIn {
     from {
         opacity: 0;
@@ -456,6 +76,9 @@ body {
     animation-name: mDialogZoomIn;
 }
 
+/**
+ * 类似zoomOut
+ */
 @keyframes mDialogZoomOut {
     from {
         opacity: 1;
@@ -475,7 +98,9 @@ body {
     animation-name: mDialogZoomOut;
 }
 
-
+/**
+ * 类似苹果确认提示框效果，也是comfirm的默认的效果
+ */
 @keyframes mDialogBigIn {
     0% {
         opacity: 0;
@@ -490,7 +115,9 @@ body {
 .mDialogBigIn{
     animation-name: mDialogBigIn;
 }
-
+/**
+ * 类似苹果确认提示框效果，也是comfirm的默认的效果
+ */
 @keyframes mDialogBigOut {
     0% {
         opacity: 1;
@@ -504,11 +131,6 @@ body {
 .mDialogBigOut{
     animation-name: mDialogBigOut;
 }
-
-
-
-
-
 
 
 
@@ -546,9 +168,7 @@ body {
     background:#F5f5f5;
     clear:both; 
     border-bottom:1px solid #d5d5d5;
-    padding:0 px2rem(20px);
-    height:px2rem(80px);
-    line-height: px2rem(80px);
+    padding:px2rem(20px);
     overflow: hidden; 
     @include font-dpr(18px);
 }
@@ -568,11 +188,7 @@ body {
         clear:both;
     }
     &.mDialog-layer-main-full{
-      
-       
         >div{
-           
-
             height: 100%;
             overflow: hidden;
         }  
@@ -588,8 +204,6 @@ body {
  */
 .mDialog-layer-btns{
     clear:both; 
-    height:px2rem(80px);
-    line-height:px2rem(80px);
     border-top:1px solid #e8e8e8;
     display: flex;
     background:#fff;
@@ -600,6 +214,7 @@ body {
         position:relative;
         color:#007aff;  
         @include font-dpr(18px);
+        padding:px2rem(20px) 0;
         &:after{
             content: "";
             position: absolute;
@@ -851,9 +466,10 @@ body {
 
 
 
-/**
- * mDialog iscroll
+/******************************************************************
+ * mDialog iscroll 可添加的样式
  */
+
 .mDialog-iscroll-wrapper{
     position: relative;
     height: 100%;
@@ -870,48 +486,3 @@ body {
     }
 }
 
-
-
-
-
-    
-
-
-/**
- * 垂直水平居中
- */
-.mDialog-cc{
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    -moz-transform: translate(-50%,-50%);
-}
-
-.mDialog-tc{
-    left: 50%;
-    top:px2rem(50px);
-    -webkit-transform: translate(-50%,0);
-    -ms-transform: translate(-50%,0);
-    -moz-transform: translate(-50%,0);
-}
-
-
-.mDialog-bc{
-    left: 50%;
-    bottom:px2rem(20px);
-    -webkit-transform: translate(-50%,0);
-    -ms-transform: translate(-50%,0);
-    -moz-transform: translate(-50%,0);
-}
-
-/**
- * confirm确认框
- */
-
-
-
-
-/**
- * msg 提示框
- */
