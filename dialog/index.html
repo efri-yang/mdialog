@@ -4,8 +4,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>首页</title>
-    <!-- <script type="text/javascript" src="js/zepto.js"></script> -->
-    <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script>
+    <script type="text/javascript" src="js/zepto.js"></script>
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
     <script type="text/javascript" src="js/flexible2.js"></script>
     <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
     <script type="text/javascript" src="js/mDialog.js"></script>
@@ -238,16 +238,19 @@
         $("#J_btn4").on("click", function() {
             mDialog.msg({
                 duration: 0,
-
                 content: "asdfsad啊是的发生大"
             })
         })
 
 
         $("#J_btn5").on("click", function() {
-            mDialog.load({
-                pause: 3000
-            })
+            var dia=mDialog.load({
+                    shadeClose:false
+            });
+            console.dir(dia);
+            setTimeout(function(){
+                dia.close();
+            },3000)
         })
 
 
