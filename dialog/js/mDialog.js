@@ -463,16 +463,25 @@
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
 
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-                $container = $('<div class="' + containerClassName + '"></div>');
+               
                 $title = $(title);
-                opts.content.css(stylesContentShow);
-                opts.content.wrap('<div class="mDialog-layer-main"></div>');
+                opts.content.css({
+                    visibility: "visible",
+                    display: "block",
+                    clear: "both"
+                });
+                opts.content.wrap('<div class="' + containerClassName + '"><div class="mDialog-layer-main"></div></div>');
                 $main = opts.content.parent();
                 $main.wrap($container);
+                $container=$main.parent();
                 !!title && $container.prepend($title);
                 contentCloseHandle = function() {
                     $main.siblings().remove();
-                    opts.content.css(styleContentsHide);
+                    opts.content.css({
+                        visibility: "hidden",
+                        display: "none",
+                        float: "none"
+                    });
                     for (var i = 0; i < 2; i++) {
                         opts.content.unwrap();
                     }
@@ -521,6 +530,8 @@
 
         !!$closeBtn && $closeBtn.appendTo($container);
         !!$footerButton && $footerButton.appendTo($container);
+        console.dir($container)
+        $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         containerCloseHandle = function() {
             !!opts.onBeforeClose && opts.onBeforeClose();
             if (opts.animOut) {
@@ -544,7 +555,7 @@
 
         !!opts.onBeforeShow && opts.onBeforeShow();
 
-        $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
+        // $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
             setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", function() {
                 opts.onShow();
