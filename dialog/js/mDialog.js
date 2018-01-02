@@ -232,10 +232,10 @@
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
 
-            alert($elem.width())
 
-        elemW = $elem.outerWidth();
 
+        elemW = $elem.width();
+   
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
         maxW = ExtraFunc.isPx(opts.maxWidth) ? ExtraFunc.getNumber(opts.maxWidth) : winW * ExtraFunc.getNumber(opts.maxWidth) / 100;
 
@@ -297,6 +297,8 @@
 
 
         elemH = $elem.outerHeight();
+
+
         opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
         maxH = ExtraFunc.isPx(opts.maxHeight) ? ExtraFunc.getNumber(opts.maxHeight) : winH * ExtraFunc.getNumber(opts.maxHeight) / 100;
 
@@ -392,7 +394,7 @@
     };
 
     function setAnim($elem, animInClass, animOutClass, duration, type, callback) {
-      
+
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";
         switch (type) {
@@ -456,6 +458,7 @@
         $closeBtn = closeBtnRender(opts, this);
         $footerButton = buttonRender(opts, this.opts, this);
 
+
         if (!opts._type) {
 
             //如果没有type参数,那么说明 调用的方式是open() 
@@ -510,6 +513,8 @@
 
             $title = $container.children('.' + titleClassName);
             $main = $container.children('.' + mainClassName);
+
+
         }
 
         if (!!opts.isPreventMove) {
@@ -539,10 +544,12 @@
             }
 
         }
-
+    
         setElemPos($container, opts, $title, $main, $footerButton);
 
+
         !!opts.onBeforeShow && opts.onBeforeShow();
+        // alert("xxx");
 
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
@@ -584,7 +591,7 @@
             },
             $shade = $('<div class="mDialog-shade in"></div>');
         //如果是{color:"",opacity:""} 传入的是颜色和透明值
-        ropacity = (!!opts.shade.opacity || opts.shade.opacity==0) ? opts.shade.opacity : defaultOpacity;
+        ropacity = (!!opts.shade.opacity || opts.shade.opacity == 0) ? opts.shade.opacity : defaultOpacity;
         rcolor = !!opts.shade.bgColor ? opts.shade.bgColor : defaultColor;
         styles["background-color"] = ExtraFunc.colorToRgba(rcolor, ropacity);
 
@@ -614,9 +621,9 @@
             })
         }
         $shade.css(styles);
-        
+
         if (opts._type == "load") {
-            
+
             $shade.removeSelfOnlyFinal = shadeCloseHandle;
         }
         $shade.appendTo($("body"));
