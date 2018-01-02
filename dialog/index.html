@@ -4,8 +4,11 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <title>首页</title>
-    <script type="text/javascript" src="js/zepto.js"></script>
-    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script> -->
+    <!-- <script type="text/javascript" src="js/zepto.js"></script> -->
+    <script src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-1.12.4.js"
+integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script> -->
     <script type="text/javascript" src="js/flexible2.js"></script>
     <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
     <script type="text/javascript" src="js/mDialog.js"></script>
@@ -236,15 +239,21 @@
         })
 
         $("#J_btn4").on("click", function() {
-            mDialog.msg({
-                duration: 0,
+            var msgDia=mDialog.msg({
+                duration:250,
+                pause:4000,
                 content: "asdfsad啊是的发生大"
-            })
+            });
+
+            setTimeout(function(){
+                msgDia.close();
+            },2000)
         })
 
 
         $("#J_btn5").on("click", function() {
             var dia=mDialog.load({
+                    shade:{opacity:0.8,bgColor:"#f60"},
                     shadeClose:false
             });
             console.dir(dia);

@@ -232,9 +232,10 @@
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
 
-
+            alert($elem.width())
 
         elemW = $elem.outerWidth();
+
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
         maxW = ExtraFunc.isPx(opts.maxWidth) ? ExtraFunc.getNumber(opts.maxWidth) : winW * ExtraFunc.getNumber(opts.maxWidth) / 100;
 
@@ -391,6 +392,7 @@
     };
 
     function setAnim($elem, animInClass, animOutClass, duration, type, callback) {
+      
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";
         switch (type) {
@@ -455,6 +457,7 @@
         $footerButton = buttonRender(opts, this.opts, this);
 
         if (!opts._type) {
+
             //如果没有type参数,那么说明 调用的方式是open() 
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
@@ -462,8 +465,8 @@
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
                 $container = $('<div class="' + containerClassName + '"></div>');
                 $title = $(title);
-                opts.content.css(stylesContentShow)
-                opts.content.wrap('<div class="mDialog-layer-main"></div>')
+                opts.content.css(stylesContentShow);
+                opts.content.wrap('<div class="mDialog-layer-main"></div>');
                 $main = opts.content.parent();
                 $main.wrap($container);
                 !!title && $container.prepend($title);
@@ -581,8 +584,8 @@
             },
             $shade = $('<div class="mDialog-shade in"></div>');
         //如果是{color:"",opacity:""} 传入的是颜色和透明值
-        ropacity = !!opts.shade.opacity ? opts.shade.opacity : defaultOpacity;
-        rcolor = !!opts.shade.defaultColor ? opts.shade.defaultColor : defaultColor;
+        ropacity = (!!opts.shade.opacity || opts.shade.opacity==0) ? opts.shade.opacity : defaultOpacity;
+        rcolor = !!opts.shade.bgColor ? opts.shade.bgColor : defaultColor;
         styles["background-color"] = ExtraFunc.colorToRgba(rcolor, ropacity);
 
 
@@ -682,7 +685,7 @@
                 callback: !!opts.yes ? opts.yes : function() {}
             }
         ]
-        mDialog.open(options, "comfirm")
+        return mDialog.open(options, "comfirm")
     };
 
 
@@ -691,7 +694,7 @@
         options.closeBtn = false;
         options.shade = !!opts.shade ? opts.shade : false;
         options.pause = !!opts.pause ? opts.pause : 2000;
-        mDialog.open(options, "msg")
+        return mDialog.open(options, "msg")
     };
 
     mDialog.close = function(obj) {

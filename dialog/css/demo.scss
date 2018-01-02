@@ -311,9 +311,9 @@ body {
 
 .bm-dia-box1{
     background:#f60;
-    display: block;
+    display:none; 
     position: absolute;
-    // visibility: hidden;
+    visibility: hidden;
     .tip-pic {
         width: px2rem(133px);
         height: px2rem(133px);
