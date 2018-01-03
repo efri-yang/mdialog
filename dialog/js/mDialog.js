@@ -31,21 +31,6 @@
             onClose: function() {}
         }
     }
-
-
-    var stylesContentShow = {
-        visibility: "visible",
-        display: "block",
-        clear: "both"
-
-    };
-    var styleContentsHide = {
-        visibility: "hidden",
-        display: "none",
-        float: "none"
-    };
-
-
     var ExtraFunc = {
         colorToRgba: function(colorStr, opacity) {
             colorStr = !!colorStr ? colorStr : "#000";
@@ -216,8 +201,8 @@
     };
 
     function setElemPos($elem, opts, $title, $main, $footer) {
-        //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px  8rem;
-        //width、height  传递进来的值可能是  auto  80%  400px  8rem;
+        //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px;
+        //width、height  传递进来的值可能是  auto  80%  400px;
 
         var elemW, elemH, winW, winH, realW, realH, maxW, maxH, titleH = 0,
             contentH = 0,
@@ -234,11 +219,13 @@
 
 
 
-        elemW = $elem.width();
-   
+        elemW = $elem.outerWidth();
+
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
+        //获取传进来maxW:对于百分数进行转化成px
         maxW = ExtraFunc.isPx(opts.maxWidth) ? ExtraFunc.getNumber(opts.maxWidth) : winW * ExtraFunc.getNumber(opts.maxWidth) / 100;
 
+        //对于百分比(%) auto px 的时候进行宽度的计算，
 
         if (opts.width == "auto" || !opts.width) {
             realW = (elemW > maxW) ? maxW : elemW;
@@ -268,7 +255,6 @@
         console.dir("maxW的px:  " + maxW);
         console.dir("elemW(传进来的宽度)的px:  " + elemW);
         console.dir("standardRatio:  " + standardRatio)
-
         console.dir("realW(最终的宽度)的px:  " + realW);
 
 
@@ -297,8 +283,6 @@
 
 
         elemH = $elem.outerHeight();
-
-
         opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
         maxH = ExtraFunc.isPx(opts.maxHeight) ? ExtraFunc.getNumber(opts.maxHeight) : winH * ExtraFunc.getNumber(opts.maxHeight) / 100;
 
@@ -349,12 +333,14 @@
         console.dir("titleH:" + titleH);
         console.dir("mainH:" + mainH);
         console.dir("footerH:" + footerH);
+
+
+
         if (isFlexible) {
             realH = realH / standardRatio * 10;
             mainH = mainH / standardRatio * 10;
         }
         console.dir("mainH:" + mainH)
-
         console.dir("realH(最终的)的rem:  " + realH);
 
         if ((realH > maxH) || elemH > realH) {
@@ -466,7 +452,7 @@
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
 
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-               
+
                 $title = $(title);
                 opts.content.css({
                     visibility: "visible",
@@ -476,7 +462,7 @@
                 opts.content.wrap('<div class="' + containerClassName + '"><div class="mDialog-layer-main"></div></div>');
                 $main = opts.content.parent();
                 $main.wrap($container);
-                $container=$main.parent();
+                $container = $main.parent();
                 !!title && $container.prepend($title);
                 contentCloseHandle = function() {
                     $main.siblings().remove();
@@ -509,14 +495,15 @@
         }
 
 
-        containerStr = '<div class="' + containerClassName + '">' +
-            title +
-            '<div class="' + mainClassName + '">' +
-            content +
-            '</div>' +
-            '</div>';
+
 
         if (!$container) {
+            containerStr = '<div class="' + containerClassName + '">' +
+                title +
+                '<div class="' + mainClassName + '">' +
+                content +
+                '</div>' +
+                '</div>';
             $container = $(containerStr);
             $container.appendTo($('body'));
 
@@ -555,14 +542,12 @@
             }
 
         }
-    
+
         setElemPos($container, opts, $title, $main, $footerButton);
 
 
         !!opts.onBeforeShow && opts.onBeforeShow();
-        // alert("xxx");
-
-        // $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
+        $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
             setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", function() {
                 opts.onShow();
@@ -694,7 +679,6 @@
         options.buttons = ($.isArray(opts.buttons) && !!opts.buttons.length) ? opts.buttons : [{
                 text: "取消",
                 callback: function() {
-
                     this.close();
                 }
             },
