@@ -419,7 +419,6 @@
         }
 
     }
-    createClass.prototype.test = 100;
     createClass.prototype._renderContainer = function() {
         var _this = this,
             opts = this.opts,
@@ -446,13 +445,10 @@
 
 
         if (!opts._type) {
-
             //如果没有type参数,那么说明 调用的方式是open() 
             //判断 content的内容是不是页面的元素内容
             if (opts.content instanceof $ || $.zepto.isZ(opts.content)) {
-
                 //如果内容是jquery 或者zepto 对象，实行把容器包起来
-
                 $title = $(title);
                 opts.content.css({
                     visibility: "visible",
@@ -461,7 +457,6 @@
                 });
                 opts.content.wrap('<div class="' + containerClassName + '"><div class="mDialog-layer-main"></div></div>');
                 $main = opts.content.parent();
-                $main.wrap($container);
                 $container = $main.parent();
                 !!title && $container.prepend($title);
                 contentCloseHandle = function() {
