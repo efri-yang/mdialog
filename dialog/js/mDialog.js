@@ -257,11 +257,6 @@
         console.dir("standardRatio:  " + standardRatio)
         console.dir("realW(最终的宽度)的px:  " + realW);
 
-
-
-
-
-
         if (isFlexible) {
             realW = realW / standardRatio * 10;
         }
@@ -271,15 +266,6 @@
             width: realW + unitRemPx,
             "marginLeft": -realW / 2 + unitRemPx
         })
-
-
-
-
-
-
-
-
-
 
 
         elemH = $elem.outerHeight();
@@ -319,13 +305,6 @@
         console.dir("realH(最终的宽度)的px:  " + realH);
 
 
-
-
-
-
-
-
-
         !!$title && !!$title.length && (titleH = $title.outerHeight());
         !!$footer && !!$footer.length && (footerH = $footer.outerHeight());
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
@@ -333,8 +312,6 @@
         console.dir("titleH:" + titleH);
         console.dir("mainH:" + mainH);
         console.dir("footerH:" + footerH);
-
-
 
         if (isFlexible) {
             realH = realH / standardRatio * 10;
@@ -350,16 +327,12 @@
             $elem.addClass('mDialog-layer-container-full')
         }
 
-
-
         $main.css({
             height: mainH + unitRemPx
         });
         $elem.css({
             height: realH + unitRemPx
         });
-
-
 
         if (opts.top || parseInt(opts.top) == 0) {
             $elem.css({
@@ -375,12 +348,9 @@
                 "marginTop": -realH / 2 + unitRemPx
             })
         }
-
-
     };
 
     function setAnim($elem, animInClass, animOutClass, duration, type, callback) {
-
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";
         switch (type) {
@@ -397,8 +367,6 @@
             !!callback && callback.call();
         })
     }
-
-
 
     var createClass = function(options, type) {
         this.opts = $.extend({}, mDialog.defaults, options);
@@ -442,7 +410,6 @@
         title = titleRender(opts);
         $closeBtn = closeBtnRender(opts, this);
         $footerButton = buttonRender(opts, this.opts, this);
-
 
         if (!opts._type) {
             //如果没有type参数,那么说明 调用的方式是open() 
@@ -489,9 +456,6 @@
 
         }
 
-
-
-
         if (!$container) {
             containerStr = '<div class="' + containerClassName + '">' +
                 title +
@@ -513,7 +477,6 @@
                 event.preventDefault();
             })
         }
-
 
         !!$closeBtn && $closeBtn.appendTo($container);
         !!$footerButton && $footerButton.appendTo($container);
@@ -540,7 +503,6 @@
 
         setElemPos($container, opts, $title, $main, $footerButton);
 
-
         !!opts.onBeforeShow && opts.onBeforeShow();
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
@@ -562,12 +524,6 @@
         $container.removeSelf = containerCloseHandle;
         mDialog.stack[this.opts.uid].push($container);
     };
-
-
-
-
-
-
 
     createClass.prototype._renderShade = function() {
         //opts.shade=true 如果需要遮罩
@@ -624,10 +580,6 @@
 
 
     /******************************************************************/
-
-
-
-
     /**
      * *
      * 通过调用 mDialog.close() 来关闭
@@ -643,10 +595,6 @@
         });
 
     };
-
-
-
-
 
     mDialog.open = function(options, type) {
         mDialog.zIndex++;
@@ -684,8 +632,6 @@
         ]
         return mDialog.open(options, "comfirm")
     };
-
-
     mDialog.msg = function(opts) {
         var options = !!$.isPlainObject(opts) ? opts : {};
         options.closeBtn = false;
@@ -693,11 +639,9 @@
         options.pause = !!opts.pause ? opts.pause : 2000;
         return mDialog.open(options, "msg")
     };
-
     mDialog.close = function(obj) {
         obj.close();
     };
-
     mDialog.closeAll = function() {
         $.each(mDialog.stack, function(index1, obj1) {
             $.each(obj1, function(index2, obj2) {
