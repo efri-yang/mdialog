@@ -170,7 +170,8 @@
     border-bottom:1px solid #d5d5d5;
     padding:px2rem(20px);
     overflow: hidden; 
-    @include font-dpr(18px);
+    // @include font-dpr(18px);
+    font-size:px2rem(36px);
 }
 
 
@@ -181,7 +182,8 @@
     word-break:break-all;
     word-wrap:break-word;
     overflow:hidden;
-    @include font-dpr(16px);
+    // @include font-dpr(16px);
+    font-size:px2rem(32px);
     &:after{
         content:"";
         display:table;
@@ -213,7 +215,8 @@
         text-align: center;
         position:relative;
         color:#007aff;  
-        @include font-dpr(18px);
+        // @include font-dpr(18px);
+        font-size:px2rem(36px);
         padding:px2rem(20px) 0;
         &:after{
             content: "";
@@ -310,7 +313,8 @@
 
 .mDialog-default-section{
     background:#fff;
-    @include font-dpr(16px);
+    // @include font-dpr(16px);
+    font-size:px2rem(32px);
     padding:px2rem(20px);
 }
 
@@ -356,8 +360,9 @@
     padding:px2rem(30px) px2rem(60px);
     overflow:hidden;
     .loading-txt{
-        @include font-dpr(16px);
-        color:#fff;
+        // @include font-dpr(16px);
+        font-size:px2rem(32px);
+        color:#fff; 
         text-align:center;
         margin-top:px2rem(20px);
         white-space: nowrap;

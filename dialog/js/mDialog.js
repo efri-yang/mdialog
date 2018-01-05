@@ -17,6 +17,7 @@
             height: "auto",
             maxWidth: "85%",
             maxHeight: "80%",
+            offset:["auto","auto"],
             animIn: "mDialogZoomIn",
             animOut: "mDialogZoomOut",
             shadeClose: true,
@@ -204,7 +205,7 @@
         //maxWidth、maxHeight 传递进来的值可能是  auto  80%  400px;
         //width、height  传递进来的值可能是  auto  80%  400px;
 
-        var elemW, elemH, winW, winH, realW, realH, maxW, maxH, titleH = 0,
+        var elemW, elemH, winW, winH, realW, realH, maxW, maxH, offsetX, isOffsetX,offsetY,isOffsetY,titleH = 0,
             contentH = 0,
             footerH = 0,
             fullClassName = "mDialog-layer-main-full",
@@ -216,6 +217,18 @@
         winW = $(window).width();
         winH = $(window).height();
         dpr = document.documentElement.getAttribute('data-dpr');
+
+
+        opts.offset[0]=(opts.offset[0]=="auto" || opts.offset[0]=="center") ? "auto":((opts.offset[0]==0) ? "0px" :opts.offset[0].toLowerCase()); 
+        opts.offset[1]=(opts.offset[1]=="auto" || opts.offset[1]=="center") ? "auto":((opts.offset[1]==0) ? "0px" :opts.offset[1].toLowerCase());
+
+        isOffsetX=(opts.offset[0]=="auto") ? false : true;
+        isOffsetY=(opts.offset[1]=="auto") ? false : true;
+
+        
+
+        
+
 
 
 
@@ -259,13 +272,48 @@
 
         if (isFlexible) {
             realW = realW / standardRatio * 10;
+           
         }
         console.dir("realW从px转化成rem:  " + realW);
+       
+        if(isOffsetX){
+            if(ExtraFunc.isPx(opts.offset[0])){
+                offsetX=ExtraFunc.isPx(opts.offset[0]) ? ExtraFunc.getNumber(opts.offset[0]) : winW * ExtraFunc.getNumber(opts.offset[0]) / 100;
+                isFlexible && (offsetX=offsetX / standardRatio * 10);
+                $elem.css({
+                    left:offsetX+unitRemPx
+                })
+            }else if(ExtraFunc.isPercent(opts.offset[0])){
+
+                $elem.css({
+                    left:opts.offset[0],
+                })
+            }else if(opts.offset[0]=="left"){
+                $elem.css({
+                    left:0,
+                })
+            }else if(opts.offset[0]=="right"){
+                $elem.css({
+                    right:0,
+                })
+            }else{
+                $elem.css({
+                    left: "50%",
+                    "marginLeft": -realW / 2 + unitRemPx
+                })
+            }
+            
+        }else{
+            $elem.css({
+                left: "50%",
+                "marginLeft": -realW / 2 + unitRemPx
+            })
+        }
+
         $elem.css({
-            left: "50%",
             width: realW + unitRemPx,
-            "marginLeft": -realW / 2 + unitRemPx
         })
+        
 
 
         elemH = $elem.outerHeight();
@@ -334,15 +382,34 @@
             height: realH + unitRemPx
         });
 
-        if (opts.top || parseInt(opts.top) == 0) {
-            $elem.css({
-                top: opts.top,
-            })
-        } else if (opts.bottom || parseInt(opts.bottom) == 0) {
-            $elem.css({
-                bottom: opts.bottom,
-            })
-        } else {
+        if(isOffsetY){
+
+           if(ExtraFunc.isPx(opts.offset[1])){
+
+                offsetY=ExtraFunc.isPx(opts.offset[1]) ? ExtraFunc.getNumber(opts.offset[1]) : winH * ExtraFunc.getNumber(opts.offset[1]) / 100;
+                isFlexible && (offsetY=offsetY / standardRatio * 10);
+                $elem.css({
+                    top:offsetY+unitRemPx,
+                })
+            }else if(ExtraFunc.isPercent(opts.offset[1])){
+                $elem.css({
+                    top:opts.offset[1],
+                })
+            }else if(opts.offset[1]=="top"){
+                $elem.css({
+                    top:0
+                })
+            }else if(opts.offset[1]=="bottom"){
+                $elem.css({
+                    bottom:0
+                })
+            }else{
+                $elem.css({
+                    top: "50%",
+                    "marginTop": -realH / 2 + unitRemPx
+                })
+            }
+        }else {
             $elem.css({
                 top: "50%",
                 "marginTop": -realH / 2 + unitRemPx
@@ -561,7 +628,7 @@
             $shade.on(deviceUtil.tapEvent, function(event) {
                 event.stopPropagation();
                 _this.close();
-            })
+            });
         } else {
             $shade.on(deviceUtil.tapEvent, function(event) {
                 event.stopPropagation();

@@ -117,8 +117,10 @@
                 height: "80%",
                 maxHeight: "100%",
                 maxWidth: "100%",
+                duration: 250,
+                offset:["center","bottom"],
                 content: $("#J_bm-dia-box1"),
-                animIn: "mDialogZoomIn",
+                animIn: "fadeInUp",
                 animOut: "fadeOutDown",
                 baseViewWidth: 750,
                 baseViewHeight: 960,
@@ -139,15 +141,15 @@
                 ],
                 onShow: function() {
                     myScroll = new IScroll('#wrapper');
-                    mDialog.msg({
-                        content: "打开弹出框"
-                    });
+                    // mDialog.msg({
+                    //     content: "打开弹出框"
+                    // });
 
                 },
                 onClose: function() {
-                    mDialog.msg({
-                        content: "您点击的取消按钮，关闭弹出框"
-                    });
+                    // mDialog.msg({
+                    //     content: "您点击的取消按钮，关闭弹出框"
+                    // });
                 }
                 
             });
@@ -237,13 +239,12 @@
         $("#J_btn4").on("click", function() {
             var msgDia = mDialog.msg({
                 duration: 250,
-                pause: 4000,
+                pause: 2000,
+                offset:["10%","90%"],
                 content: "asdfsad啊是的发生大"
             });
 
-            setTimeout(function() {
-                msgDia.close();
-            }, 2000)
+            
         })
 
 
