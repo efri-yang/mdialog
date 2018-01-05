@@ -559,7 +559,7 @@
         //opts.shade=true 如果需要遮罩
         var _this = this,
             opts = this.opts,
-            defaultOpacity = 0.5,
+            defaultOpacity = 0.75,
             defaultColor = "#000",
             shadeCloseHandle = $.noop(),
             styles = {
@@ -594,6 +594,10 @@
             });
         } else {
             $shade.on(deviceUtil.tapEvent, function(event) {
+                event.stopPropagation();
+            });
+            $shade.on("touchmove",function(event){
+                event.preventDefault();
                 event.stopPropagation();
             })
         }
