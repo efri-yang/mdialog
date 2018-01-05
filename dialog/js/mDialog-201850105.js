@@ -225,12 +225,13 @@
         isOffsetX = (opts.offset[0] == "auto") ? false : true;
         isOffsetY = (opts.offset[1] == "auto") ? false : true;
 
-        //进行宽度计算
         elemW = $elem.outerWidth();
         opts.maxWidth = !!opts.maxWidth ? ((opts.maxWidth == "auto") ? "85%" : opts.maxWidth) : "85%";
+        //获取传进来maxW:对于百分数进行转化成px
         maxW = ExtraFunc.isPx(opts.maxWidth) ? ExtraFunc.getNumber(opts.maxWidth) : winW * ExtraFunc.getNumber(opts.maxWidth) / 100;
 
         //对于百分比(%) auto px 的时候进行宽度的计算，
+
         if (opts.width == "auto" || !opts.width) {
             realW = (elemW > maxW) ? maxW : elemW;
             standardRatio = (dpr == 1 && winW > 540) ? 540 : winW;
@@ -254,9 +255,19 @@
                 realW = (realW > winW) ? maxW : realW;
             }
         }
+
+        console.dir("winW的px:  " + winW);
+        console.dir("maxW的px:  " + maxW);
+        console.dir("elemW(传进来的宽度)的px:  " + elemW);
+        console.dir("standardRatio:  " + standardRatio)
+        console.dir("realW(最终的宽度)的px:  " + realW);
+
         if (isFlexible) {
             realW = realW / standardRatio * 10;
+
         }
+        console.dir("realW从px转化成rem:  " + realW);
+
         if (isOffsetX) {
             if (ExtraFunc.isPx(opts.offset[0])) {
                 offsetX = ExtraFunc.isPx(opts.offset[0]) ? ExtraFunc.getNumber(opts.offset[0]) : winW * ExtraFunc.getNumber(opts.offset[0]) / 100;
@@ -265,6 +276,7 @@
                     left: offsetX + unitRemPx
                 })
             } else if (ExtraFunc.isPercent(opts.offset[0])) {
+
                 $elem.css({
                     left: opts.offset[0],
                 })
@@ -300,6 +312,12 @@
         opts.maxHeight = !!opts.maxHeight ? ((opts.maxHeight == "auto") ? "80%" : opts.maxHeight) : "80%";
         maxH = ExtraFunc.isPx(opts.maxHeight) ? ExtraFunc.getNumber(opts.maxHeight) : winH * ExtraFunc.getNumber(opts.maxHeight) / 100;
 
+        console.dir("winH的px:  " + winH);
+        console.dir("elemH的px:  " + elemH);
+        console.dir("maxH的px:  " + maxH);
+
+
+
         if (opts.height == "auto" || !opts.height) {
             realH = (elemH > maxH) ? maxH : elemH;
             standardRatio = (dpr == 1 && winW > 540) ? 540 : winW;
@@ -323,17 +341,24 @@
             }
         }
 
+        console.dir("standardRatio:  " + standardRatio);
+        console.dir("realH(最终的宽度)的px:  " + realH);
+
+
         !!$title && !!$title.length && (titleH = $title.outerHeight());
         !!$footer && !!$footer.length && (footerH = $footer.outerHeight());
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
 
-       
+        console.dir("titleH:" + titleH);
+        console.dir("mainH:" + mainH);
+        console.dir("footerH:" + footerH);
 
         if (isFlexible) {
             realH = realH / standardRatio * 10;
             mainH = mainH / standardRatio * 10;
         }
-       
+        console.dir("mainH:" + mainH)
+        console.dir("realH(最终的)的rem:  " + realH);
 
         if ((realH > maxH) || elemH > realH) {
             $main.addClass(fullClassName);
@@ -350,8 +375,9 @@
         });
 
         if (isOffsetY) {
-            alert("xxx");
+
             if (ExtraFunc.isPx(opts.offset[1])) {
+
                 offsetY = ExtraFunc.isPx(opts.offset[1]) ? ExtraFunc.getNumber(opts.offset[1]) : winH * ExtraFunc.getNumber(opts.offset[1]) / 100;
                 isFlexible && (offsetY = offsetY / standardRatio * 10);
                 $elem.css({
@@ -513,6 +539,7 @@
 
         !!$closeBtn && $closeBtn.appendTo($container);
         !!$footerButton && $footerButton.appendTo($container);
+        console.dir($container)
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         containerCloseHandle = function() {
             !!opts.onBeforeClose && opts.onBeforeClose();
@@ -543,6 +570,7 @@
                 !!opts.pause && setTimeout(function() {
                     _this.close();
                 }, opts.pause)
+                // setTimeout(_this.close,opts.pause) 这里的调用的是偶close 中作用于就指向了window
             });
         } else {
             !!opts.onShow && opts.onShow();
