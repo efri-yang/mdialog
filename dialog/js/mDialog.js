@@ -350,7 +350,6 @@
         });
 
         if (isOffsetY) {
-            alert("xxx");
             if (ExtraFunc.isPx(opts.offset[1])) {
                 offsetY = ExtraFunc.isPx(opts.offset[1]) ? ExtraFunc.getNumber(opts.offset[1]) : winH * ExtraFunc.getNumber(opts.offset[1]) / 100;
                 isFlexible && (offsetY = offsetY / standardRatio * 10);
