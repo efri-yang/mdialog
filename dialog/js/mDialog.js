@@ -56,22 +56,24 @@
                 return sColor;
             }
         },
-        dealCssEvent:function(eventNameArr, callback) {
+        dealCssEvent: function(eventNameArr, callback) {
 
-            var events = eventNameArr,i, dom = this; 
+            var events = eventNameArr,
+                i, dom = this;
+
             function fireCallBack(e) {
-                 alert("fireCallBack")
-               
+                alert("fireCallBack")
 
-                
-               
+
+
+
             }
             if (callback) {
-               
-                dom.on("animationend",function(){
+
+                dom.on("animationend", function() {
                     alert("asdfasdfasd")
                 });
-                
+
             }
         },
         uuid: function() {
@@ -123,16 +125,25 @@
 
 
     if (!$.fn.AnimationEnd) {
-        $.fn.AnimationEnd = function(callback,duration) {
-           
-            var called = false
-            var $el = this
+        $.fn.AnimationEnd = function(callback, duration) {
+
+            // var called = false;
+            // var $el = this;
+
+            // $(this).one('webkitAnimationEnd animationend',function(){
+            //     !!callback && callback();
+            //     called=true;
+            // })
+            // setTimeout(function(){
+            //     !called && !!callback && callback();
+            // },duration)
+
             // $(this).one('bsTransitionEnd', function () { called = true })
             // var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
             // setTimeout(callback, duration)
 
             // ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
-            
+
             return this;
         };
     }
@@ -330,13 +341,13 @@
         !!$footer && !!$footer.length && (footerH = $footer.outerHeight());
         mainH = ((realH - titleH - footerH) > 0) ? (realH - titleH - footerH) : 0;
 
-       
+
 
         if (isFlexible) {
             realH = realH / standardRatio * 10;
             mainH = mainH / standardRatio * 10;
         }
-       
+
 
         if ((realH > maxH) || elemH > realH) {
             $main.addClass(fullClassName);
@@ -386,6 +397,7 @@
     };
 
     function setAnim($elem, animInClass, animOutClass, duration, type, callback) {
+        var called = false;
         animInClass = !!animInClass ? animInClass : "";
         animOutClass = !!animOutClass ? animOutClass : "";
         switch (type) {
@@ -398,12 +410,16 @@
             default:
                 $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
         }
-       
-        $elem.AnimationEnd(function() {
-            !!callback && callback();
-        });
-       
 
+        $elem.one('webkitAnimationEnd animationend', function() {
+            alert("setAnim——webkitAnimationEnd")
+            !!callback && callback();
+            called = true;
+        })
+
+        setTimeout(function() {
+            !called && !!callback && callback();
+        }, duration)
 
     }
 
@@ -524,9 +540,9 @@
 
             !!opts.onBeforeClose && opts.onBeforeClose();
             if (opts.animOut) {
-              
+
                 setAnim($container, opts.animIn, opts.animOut, opts.duration, "out", function() {
-                   
+
                     !!contentCloseHandle && contentCloseHandle();
                     $container.remove();
                     opts.onClose();
@@ -583,12 +599,19 @@
 
 
         shadeCloseHandle = function() {
+            var called=false;
             if (!!opts.duration) {
-
                 !!$shade && $shade.removeClass("in").addClass('out');
-                $shade.AnimationEnd(function() {
+
+                $shade.one('webkitAnimationEnd animationend', function() {
+                    alert("shade——webkitAnimationEnd");
                     $shade.remove();
+                    called = true;
                 })
+
+                setTimeout(function() {
+                    !called && $shade.remove();
+                }, opts.duration)
             } else {
                 $shade.remove();
             }
@@ -605,7 +628,7 @@
             $shade.on(deviceUtil.tapEvent, function(event) {
                 event.stopPropagation();
             });
-            $shade.on("touchmove",function(event){
+            $shade.on("touchmove", function(event) {
                 event.preventDefault();
                 event.stopPropagation();
             })
