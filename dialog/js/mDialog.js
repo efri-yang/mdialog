@@ -61,16 +61,16 @@
             var events = eventNameArr,i, dom = this; 
             function fireCallBack(e) {
                  alert("fireCallBack")
-                alert("xxx")
-                if (e.target !== this) return;
-                callback.call(this, e);
+               
 
                 
                
             }
             if (callback) {
-                
-                    dom.on("webkitAnimationEnd animationend", fireCallBack);
+               
+                dom.on("animationend",function(){
+                    alert("asdfasdfasd")
+                });
                 
             }
         },
@@ -123,15 +123,16 @@
 
 
     if (!$.fn.AnimationEnd) {
-        $.fn.AnimationEnd = function(callback) {
+        $.fn.AnimationEnd = function(callback,duration) {
+           
+            var called = false
+            var $el = this
+            // $(this).one('bsTransitionEnd', function () { called = true })
+            // var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+            // setTimeout(callback, duration)
 
-            ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
-            return this;
-        };
-    }
-    if (!$.fn.TransitionEnd) {
-        $.fn.TransitionEnd = function(callback) {
-            ExtraFunc.dealCssEvent.call(this, ['webkitTransitionEnd', 'transitionend'], callback);
+            // ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
+            
             return this;
         };
     }
