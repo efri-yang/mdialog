@@ -56,22 +56,22 @@
                 return sColor;
             }
         },
-        dealCssEvent(eventNameArr, callback) {
-            var events = eventNameArr,
-                i, dom = this; // jshint ignore:line
+        dealCssEvent:function(eventNameArr, callback) {
 
+            var events = eventNameArr,i, dom = this; 
             function fireCallBack(e) {
-                /*jshint validthis:true */
+                 alert("fireCallBack")
+                alert("xxx")
                 if (e.target !== this) return;
                 callback.call(this, e);
-                for (i = 0; i < events.length; i++) {
-                    dom.off(events[i], fireCallBack);
-                }
+
+                
+               
             }
             if (callback) {
-                for (i = 0; i < events.length; i++) {
-                    dom.on(events[i], fireCallBack);
-                }
+                
+                    dom.on("webkitAnimationEnd animationend", fireCallBack);
+                
             }
         },
         uuid: function() {
@@ -124,6 +124,7 @@
 
     if (!$.fn.AnimationEnd) {
         $.fn.AnimationEnd = function(callback) {
+
             ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
             return this;
         };
@@ -175,6 +176,7 @@
         if (!!opts.closeBtn) {
             $close = $('<span class="mDialog-close"></span>');
             $close.on(deviceUtil.tapEvent, function() {
+
                 indicator.close();
             })
         }
@@ -395,9 +397,13 @@
             default:
                 $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
         }
+       
         $elem.AnimationEnd(function() {
-            !!callback && callback.call();
-        })
+            !!callback && callback();
+        });
+       
+
+
     }
 
     var createClass = function(options, type) {
@@ -514,10 +520,12 @@
         !!$footerButton && $footerButton.appendTo($container);
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         containerCloseHandle = function() {
+
             !!opts.onBeforeClose && opts.onBeforeClose();
             if (opts.animOut) {
+              
                 setAnim($container, opts.animIn, opts.animOut, opts.duration, "out", function() {
-                    // this -》 window
+                   
                     !!contentCloseHandle && contentCloseHandle();
                     $container.remove();
                     opts.onClose();
@@ -619,6 +627,7 @@
      * 通过调用 mDialog.close() 来关闭
      */
     createClass.prototype.close = function(index) {
+
         var _this = this;
         sindex = !!index ? index : this.opts.uid;
         $.each(mDialog.stack[sindex], function(index, obj) {
