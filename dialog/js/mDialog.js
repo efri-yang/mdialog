@@ -56,25 +56,31 @@
                 return sColor;
             }
         },
-        dealCssEvent: function(eventNameArr, callback) {
-
+         dealCssEvent:function(eventNameArr, callback,duration) {
             var events = eventNameArr,
-                i, dom = this;
+                called=false,
+                Timer=null,
+                i, dom = this; // jshint ignore:line
 
             function fireCallBack(e) {
-                alert("fireCallBack")
-
-
-
-
+                /*jshint validthis:true */
+                called=true;
+                if (e.target !== this) return;
+                callback.call(this, e);
+                for (i = 0; i < events.length; i++) {
+                    dom.off(events[i], fireCallBack);
+                }
             }
             if (callback) {
-
-                dom.on("animationend", function() {
-                    alert("asdfasdfasd")
-                });
-
+                for (i = 0; i < events.length; i++) {
+                    dom.on(events[i], fireCallBack);
+                    Timer=setTimeout(function(){
+                       clearTimeout(Timer);
+                       !called &&callback();
+                    },duration)
+                }
             }
+           
         },
         uuid: function() {
             var s = [];
@@ -125,25 +131,8 @@
 
 
     if (!$.fn.AnimationEnd) {
-        $.fn.AnimationEnd = function(callback, duration) {
-
-            // var called = false;
-            // var $el = this;
-
-            // $(this).one('webkitAnimationEnd animationend',function(){
-            //     !!callback && callback();
-            //     called=true;
-            // })
-            // setTimeout(function(){
-            //     !called && !!callback && callback();
-            // },duration)
-
-            // $(this).one('bsTransitionEnd', function () { called = true })
-            // var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
-            // setTimeout(callback, duration)
-
-            // ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback);
-
+        $.fn.AnimationEnd = function(callback,duration) {
+            var called=ExtraFunc.dealCssEvent.call(this, ['webkitAnimationEnd', 'animationend'], callback,duration);
             return this;
         };
     }
@@ -411,15 +400,9 @@
                 $elem.css({ "animation-duration": duration + "ms" }).removeClass(animOutClass).addClass(animInClass);
         }
 
-        $elem.one('webkitAnimationEnd animationend', function() {
-            alert("setAnim——webkitAnimationEnd")
-            !!callback && callback();
-            called = true;
-        })
-
-        setTimeout(function() {
-            !called && !!callback && callback();
-        }, duration)
+        $elem.AnimationEnd(function() {
+            !!callback && callback.call();
+        },duration)
 
     }
 
@@ -599,19 +582,11 @@
 
 
         shadeCloseHandle = function() {
-            var called=false;
             if (!!opts.duration) {
                 !!$shade && $shade.removeClass("in").addClass('out');
-
-                $shade.one('webkitAnimationEnd animationend', function() {
-                    alert("shade——webkitAnimationEnd");
+                $shade.AnimationEnd(function() {
                     $shade.remove();
-                    called = true;
-                })
-
-                setTimeout(function() {
-                    !called && $shade.remove();
-                }, opts.duration)
+                },opts.duration)
             } else {
                 $shade.remove();
             }
