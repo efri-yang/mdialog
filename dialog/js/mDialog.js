@@ -193,7 +193,7 @@
         if ($.isArray(opts.buttons) && !!opts.buttons.length) {
             $.each(opts.buttons, function(index, obj) {
                 obj.class = !!obj.class ? obj.class : "";
-                var $btn = $('<a href="#" class="mDialog-btn ' + obj.className + '">' + obj.text + '</a>');
+                var $btn = $('<a href="javascript:void(0);" class="mDialog-btn ' + (obj.className ? obj.className : "") + '">' + obj.text + '</a>');
                 if (!!obj.callback) {
                     $btn.on(deviceUtil.tapEvent, function(event) {
                         event.preventDefault();
