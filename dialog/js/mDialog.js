@@ -604,7 +604,7 @@
 
         if (this.opts.shadeClose) {
             //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
-            $shade.removeSelf = shadeCloseHandle;
+            
             $shade.on(deviceUtil.tapEvent, function(event) {
                 event.stopPropagation();
                 _this.close();
@@ -619,7 +619,7 @@
             })
         }
         $shade.css(styles);
-
+        $shade.removeSelf = shadeCloseHandle;
         if (opts._type == "load") {
 
             $shade.removeSelfOnlyFinal = shadeCloseHandle;
