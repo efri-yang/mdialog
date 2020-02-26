@@ -1,5 +1,17 @@
-;
-(function($, window, document, undefined) {
+;(function (factory) {
+	if (typeof define === 'function' && define.amd ) {
+		define(['jquery'], function(jquery){
+			// 返回构造函数
+			factory(window.jQuery || window.Zepto, window, document); // 初始化插件	
+		});
+	}else if(typeof define === 'function' && define.cmd){
+		define(['jquery'], function(require,exports,moudles){
+			factory(require('jquery'),window, document); // 初始化插件
+		})
+	}else{
+		factory(jQuery,window, document);
+	}
+})(function($, window, document,undefined){
     var mDialog = {
         v: '0.0.1',
         stack: {},
@@ -706,4 +718,4 @@
         });
     };
     window.mDialog = mDialog;
-})(window.jQuery || window.Zepto, window, document);
+});

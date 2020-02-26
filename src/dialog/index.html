@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>首页</title>
+    <!--  <script type="text/javascript" src="js/zepto.js"></script> -->
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.0/jquery.js"></script>
+    <!--  <script type="text/javascript" src="js/zepto.js"></script> -->
+    <script type="text/javascript" src="js/flexible2.js"></script>
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+    <script type="text/javascript" src="js/mDialog.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/base.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/mDialogRem.css">
+    <link rel="stylesheet" type="text/css" href="css/demo.css">
+    <style type="text/css">
+        .demo-wrapper {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .ml30 {
+            margin-left: 30px;
+        }
+
+        .mr30 {
+            margin-right: 30px;
+        }
+
+        .demo-scroller {
+            position: relative;
+            shape-image-threshold: -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+
+        .cap-1 {
+            text-indent: 20px;
+            padding: 0.4rem 0;
+            font-weight: bold;
+            font-size: 0.6rem;
+        }
+
+        .cap-2 {
+            font-size: 0.4rem;
+            text-indent: 30px;
+            line-height: 1.5;
+            padding: 0.2rem 0.5rem;
+            font-weight: bold;
+        }
+
+        .demo-mDialog-section {
+            background: #fff;
+            padding: 5px 10px;
+        }
+
+        .demo11-detail {
+            line-height: 1.5;
+            padding: 0 0 25px;
+        }
+
+        .demo11-detail p {
+            text-indent: 2em;
+            margin: 0.4rem 0 0;
+        }
+
+        .demo-btn {
+            display: inline-block;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cap-1">一、弹出IScroll的内容弹出框</div>
+    <div class="cap-2">1、使用于活动说明、规则介绍等编辑器输出内容未知的弹框</div>
+    <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-11">点击弹框</button></div>
+    <div class="mDialog-section demo-mDialog-section" id="J_mDialog-section-11">
+        <div id="J_wrapper-11" class="mDialog-iscroll-wrapper">
+            <div class="mDialog-iscroll-scroller">
+                <div class="demo11-detail">
+                    <p>活动时间：2020年2月18日10:00-2月28日24:00。</p>
+
+                    <p>奖品领取时间：2020年2月18日-3月31日工作日9:00-17:30，逾期作废。</p>
+
+                    <p>每日登陆活动页面，签到完成后，默认获得3次扭蛋机会。</p>
+
+                    <p>活动上线期间，连续签到3天可获得额外1次扭蛋机会，最多由连续签到获取额外3次扭蛋机会，逾期不可补签。</p>
+
+                    <p>微信每日转发分享给好友，可额外获得1次扭蛋机会，每人每天仅可增加1次。</p>
+
+                    <p>扭到含有小红榜小程序码的道具卡（吃喝玩乐卡和时尚购卡），扫码进入小红榜小程序，可额外获得1次扭蛋机会，每人每天仅增加1次。</p>
+
+                    <p>在活动时间内集齐6张不同的道具卡片，可合成1张大礼包兑换卡。限量100份。</p>
+
+                    <p>礼包卡可线下兑换1份礼包。礼包内含：口罩4个，白葡萄酒1瓶，牙膏2盒，护手霜或护肤油1瓶，泡澡两件套1盒，小鱼迷你公仔1只。</p>
+
+                    <p>合成礼包后，请按系统提示登记获奖人姓名和联系方式以便核对领取，填写内容一经提交不予修改。</p>
+
+                    <p>奖品领取方式：自取或快递到付。请凭[我的道具]页中的获奖页面自行前往小鱼网公司核销领取，关键时期请自备手提袋哦；或者添加客服微信号xmfish_r登记邮寄信息。每个ID限领1次（同手机号或姓名视为同一ID）。
+
+                        如有疑问可添加客服微信号xmfish_r</p>
+
+                    <p>*领取地址：请在2020年2月18日-3月31日工作日9:00-17:30至厦门思明区软件园二期望海路59号之一501室厦门小鱼网领取奖品。需提供获奖信息截图。联系电话0592-2517171。
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var Dialog11, Scroll11;
+            $("#J_demo-btn-11").on("click", function () {
+                Dialog11 = mDialog.open({
+                    duration: 250,
+                    title: {
+                        text: "mDialog弹框标题"
+                    },
+                    width: "80%",
+                    maxWidth: "100%",
+                    duration: 250,
+                    content: $("#J_mDialog-section-11"),
+                    hasInput: true,
+                    baseViewWidth: 750,
+                    baseViewHeight: 960,
+                    buttons: [{
+                            text: "取消",
+                            className: "btn-11",
+                            callback: function () {
+                                this.close();
+                            }
+                        },
+                        {
+                            text: "确认",
+                            className: "btn-11",
+                            callback: function () {
+                                mDialog.confirm({
+                                    content: "您确定关闭这个弹出框！",
+                                    yes: function () {
+                                        this.close();
+                                        Dialog11.close();
+                                    }
+                                })
+                            }
+                        }
+                    ],
+                    onShow: function () {
+                        if (!Scroll11) {
+                            Scroll11 = new IScroll('#J_wrapper-11');
+                        }
+                    },
+                    onClose: function () {}
+                });
+            });
+
+            $("#x1").on("click", function () {
+                if ($("#demo-scoller-toggle").is(":visible")) {
+                    $("#demo-scoller-toggle").hide();
+                } else {
+                    $("#demo-scoller-toggle").show();
+                }
+                myScroll.refresh();
+            });
+
+            $("#x2").on("click", function () {
+                mDialog.open({
+                    shade: false,
+                    content: $("#box1")
+                })
+            });
+
+
+            $("#x3").on("click", function () {
+                dia.close();
+            })
+
+
+
+
+
+
+            $("#J_btn6").on("click", function () {
+                mDialog.open({
+                    closeBtn: false,
+
+                    duration: 200,
+                    width: "100%",
+                    height: "100px",
+                    bottom: 0,
+                    maxHeight: "100%",
+                    maxWidth: "100%",
+                    animIn: "slideInUp",
+                    shade: {
+                        color: "#000",
+                        opacity: 0.6
+                    },
+                    content: $(".textarea-box")
+                })
+            })
+            $("#J_btn2").on("click", function () {
+                mDialog.load({
+                    duration: 250,
+                    animIn: "flipInY"
+                });
+
+
+            })
+
+
+            $("#J_btn3").on("click", function () {
+                mDialog.confirm({
+                    content: "asdfsad啊是的发生大",
+                    yes: function () {
+                        mDialog.msg({
+                            duration: 250,
+                            pause: 2000,
+                            content: "asdfsad啊是的发生大"
+                        });
+                    }
+                })
+            })
+
+            $("#J_btn4").on("click", function () {
+                var msgDia = mDialog.msg({
+                    duration: 250,
+                    pause: 2000,
+                    offset: ["center", "20%"],
+                    content: "asdfsad啊是的发生大"
+                });
+
+
+            })
+
+
+            $("#J_btn5").on("click", function () {
+                var dia = mDialog.load({
+                    shade: {
+                        opacity: 0.8,
+                        bgColor: "#f60"
+                    },
+                    shadeClose: false
+                });
+                console.dir(dia);
+                setTimeout(function () {
+                    dia.close();
+                }, 3000)
+            })
+        })
+    </script>
+
+    <div class="cap-2">2、内容有输入库的表单</div>
+    <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-12">点击弹框</button></div>
+    <div class="mDialog-section demo-mDialog-section" id="J_mDialog-section-12">
+        <div id="J_wrapper-12" class="mDialog-iscroll-wrapper">
+            <div class="mDialog-iscroll-scroller">
+                <div class="demo11-detail">
+                    <p>活动时间：2020年2月18日10:00-2月28日24:00。</p>
+
+                    <p>奖品领取时间：2020年2月18日-3月31日工作日9:00-17:30，逾期作废。</p>
+
+                    <p>每日登陆活动页面，签到完成后，默认获得3次扭蛋机会。</p>
+
+                     <button class="open">展开信息</button>
+                     <button class="close">收起信息</button>
+                     <div class="sec-toggle" style="display: none;">
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                         <p>展开规则1-说明说明说明说明</p>
+                     </div>
+
+                    <p>活动上线期间，连续签到3天可获得额外1次扭蛋机会，最多由连续签到获取额外3次扭蛋机会，逾期不可补签。</p>
+
+                    <p>微信每日转发分享给好友，可额外获得1次扭蛋机会，每人每天仅可增加1次。</p>
+
+                    <p>扭到含有小红榜小程序码的道具卡（吃喝玩乐卡和时尚购卡），扫码进入小红榜小程序，可额外获得1次扭蛋机会，每人每天仅增加1次。</p>
+
+                    <p>在活动时间内集齐6张不同的道具卡片，可合成1张大礼包兑换卡。限量100份。</p>
+
+                    <p>礼包卡可线下兑换1份礼包。礼包内含：口罩4个，白葡萄酒1瓶，牙膏2盒，护手霜或护肤油1瓶，泡澡两件套1盒，小鱼迷你公仔1只。</p>
+
+                    <p>合成礼包后，请按系统提示登记获奖人姓名和联系方式以便核对领取，填写内容一经提交不予修改。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        (function ($) {
+            $(function () {
+                var Dialog12, Scroll12;
+                $("#J_demo-btn-12").on("click", function () {
+                    Dialog11 = mDialog.open({
+                        duration: 250,
+                        title: {
+                            text: "mDialog弹框标题"
+                        },
+                        width: "80%",
+                        maxWidth: "100%",
+                        duration: 250,
+                        content: $("#J_mDialog-section-12"),
+                        hasInput: true,
+                        baseViewWidth: 750,
+                        baseViewHeight: 960,
+                        buttons: [{
+                                text: "取消",
+                                className: "btn-11",
+                                callback: function () {
+                                    this.close();
+                                }
+                            },
+                            {
+                                text: "确认",
+                                className: "btn-11",
+                                callback: function () {
+                                    mDialog.confirm({
+                                        content: "您确定关闭这个弹出框！",
+                                        yes: function () {
+                                            this.close();
+                                            Dialog11.close();
+                                        }
+                                    })
+                                }
+                            }
+                        ],
+                        onShow: function () {
+                            if (!Scroll12) {
+                                Scroll12 = new IScroll('#J_wrapper-12');
+                            }
+                        },
+                        onClose: function () {}
+                    });
+                });
+
+                $("#J_wrapper-12 .")
+            })
+        })(jQuery)
+    </script>
+
+
+    <button id="J_btn2" style="margin:50px 0 0 150px;">按钮2(bm-dia-box2)</button>
+    <button id="J_btn3" style="margin:10px 0 0 150px;">confirm</button>
+    <button id="J_btn4" style="margin:10px 0 0 150px;">msg</button>
+    <button id="J_btn5" style="margin:10px 0 0 150px;">loading</button>
+
+
+
+    
+
+
+    <div class="bm-dia-box2 undis" id="J_bm-dia-box2">
+        <div class="tip-pic"></div>
+        <p class="txt-1">报名成功</p>
+        <p class="txt-2">请耐心等待工作人员与您联系</p>
+        <a href="#" class="close" data-roler='close' id="J_xxx">确 定</a>
+    </div>
+    
+</body>
+
+</html>
