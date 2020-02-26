@@ -273,7 +273,7 @@
         })
     </script>
 
-    <div class="cap-2">2、内容有输入库的表单</div>
+    <div class="cap-2">2、内容有动态显示展开</div>
     <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-12">点击弹框</button></div>
     <div class="mDialog-section demo-mDialog-section" id="J_mDialog-section-12">
         <div id="J_wrapper-12" class="mDialog-iscroll-wrapper">
@@ -285,18 +285,18 @@
 
                     <p>每日登陆活动页面，签到完成后，默认获得3次扭蛋机会。</p>
 
-                     <button class="open">展开信息</button>
-                     <button class="close">收起信息</button>
-                     <div class="sec-toggle" style="display: none;">
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                         <p>展开规则1-说明说明说明说明</p>
-                     </div>
+                    <button class="open">展开信息</button>
+                    <button class="close">收起信息</button>
+                    <div class="sec-toggle" style="display: none;">
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                        <p>展开规则1-说明说明说明说明</p>
+                    </div>
 
                     <p>活动上线期间，连续签到3天可获得额外1次扭蛋机会，最多由连续签到获取额外3次扭蛋机会，逾期不可补签。</p>
 
@@ -360,29 +360,264 @@
                     });
                 });
 
-                $("#J_wrapper-12 .")
+                $("#J_wrapper-12 .open").on("click", function () {
+                    var $this = $(this);
+                    $this.siblings(".sec-toggle").show();
+                    Scroll12.refresh();
+                });
+                $("#J_wrapper-12 .close").on("click", function () {
+                    var $this = $(this);
+                    $this.siblings(".sec-toggle").hide();
+                    Scroll12.refresh();
+                })
             })
         })(jQuery)
     </script>
 
 
-    <button id="J_btn2" style="margin:50px 0 0 150px;">按钮2(bm-dia-box2)</button>
-    <button id="J_btn3" style="margin:10px 0 0 150px;">confirm</button>
-    <button id="J_btn4" style="margin:10px 0 0 150px;">msg</button>
-    <button id="J_btn5" style="margin:10px 0 0 150px;">loading</button>
+    <div class="cap-2">3、内容有输入输入框(在ios中fixed的情况下，不会出现焦点错位而点击不到元素的情况)</div>
+    <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-13">点击弹框</button></div>
+    <div class="mDialog-section demo-mDialog-section" id="J_mDialog-section-13">
+        <div id="J_wrapper-13" class="mDialog-iscroll-wrapper">
+            <div class="mDialog-iscroll-scroller">
+                <div class="demo11-detail">
+                    <p>活动时间：2020年2月18日10:00-2月28日24:00。</p>
 
+                    <p>奖品领取时间：2020年2月18日-3月31日工作日9:00-17:30，逾期作废。</p>
 
+                    <p>每日登陆活动页面，签到完成后，默认获得3次扭蛋机会。</p>
 
-    
+                    <p><input type="text" /></p>
 
+                    <p><input type="text" /></p>
+                    <p><button class="btn-submit">提交</button></p>
 
-    <div class="bm-dia-box2 undis" id="J_bm-dia-box2">
-        <div class="tip-pic"></div>
-        <p class="txt-1">报名成功</p>
-        <p class="txt-2">请耐心等待工作人员与您联系</p>
-        <a href="#" class="close" data-roler='close' id="J_xxx">确 定</a>
+                    <p>活动上线期间，连续签到3天可获得额外1次扭蛋机会，最多由连续签到获取额外3次扭蛋机会，逾期不可补签。</p>
+
+                    <p>微信每日转发分享给好友，可额外获得1次扭蛋机会，每人每天仅可增加1次。</p>
+
+                    <p>扭到含有小红榜小程序码的道具卡（吃喝玩乐卡和时尚购卡），扫码进入小红榜小程序，可额外获得1次扭蛋机会，每人每天仅增加1次。</p>
+
+                    <p>在活动时间内集齐6张不同的道具卡片，可合成1张大礼包兑换卡。限量100份。</p>
+
+                    <p>礼包卡可线下兑换1份礼包。礼包内含：口罩4个，白葡萄酒1瓶，牙膏2盒，护手霜或护肤油1瓶，泡澡两件套1盒，小鱼迷你公仔1只。</p>
+
+                    <p>合成礼包后，请按系统提示登记获奖人姓名和联系方式以便核对领取，填写内容一经提交不予修改。</p>
+                </div>
+            </div>
+        </div>
     </div>
-    
+    <script>
+        (function ($) {
+            $(function () {
+                var Dialog, Scroll;
+                $("#J_demo-btn-13").on("click", function () {
+                    Dialog = mDialog.open({
+                        duration: 250,
+                        title: {
+                            text: "mDialog弹框标题"
+                        },
+                        width: "80%",
+                        maxWidth: "100%",
+                        duration: 250,
+                        content: $("#J_mDialog-section-13"),
+                        baseViewWidth: 750,
+                        baseViewHeight: 960,
+                        buttons: [{
+                                text: "取消",
+                                className: "btn-11",
+                                callback: function () {
+                                    this.close();
+                                }
+                            },
+                            {
+                                text: "确认",
+                                className: "btn-11",
+                                callback: function () {
+                                    mDialog.confirm({
+                                        content: "您确定关闭这个弹出框！",
+                                        yes: function () {
+                                            this.close();
+                                            Dialog11.close();
+                                        }
+                                    })
+                                }
+                            }
+                        ],
+                        onShow: function () {
+                            if (!Scroll) {
+                                Scroll = new IScroll('#J_wrapper-13');
+                            }
+                        },
+                        onClose: function () {}
+                    });
+                });
+
+                $("#J_wrapper-13 .btn-submit").on("click", function () {
+                    alert("按钮点击事件弹出！")
+                })
+            })
+        })(jQuery)
+    </script>
+
+    <!-- ************************************** -->
+    <div class="cap-1">二、捕获页面元素</div>
+    <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-21">点击弹框</button></div>
+    <div class="mDialog-section form-box" id="J_mDialog-section-21">
+        <div class="item-cell"><input type="text" class="coms-field-text" /></div>
+        <div class="item-cell mtr30"><input type="text" class="coms-field-text" /></div>
+        <div class="item-cell mtr30"><button type="submit" class="btn-submit demo-btn">提交表单</button></div>
+
+    </div>
+    <script>
+        (function ($) {
+            $(function () {
+                var Dialog, Scroll;
+                $("#J_demo-btn-21").on("click", function () {
+                    Dialog = mDialog.open({
+                        duration: 250,
+                        title: {
+                            text: "mDialog弹框标题"
+                        },
+                        width: "80%",
+                        maxWidth: "100%",
+                        duration: 250,
+                        content: $("#J_mDialog-section-21"),
+                        baseViewWidth: 750,
+                        baseViewHeight: 960,
+                        buttons: [{
+                                text: "取消",
+                                className: "btn-11",
+                                callback: function () {
+                                    this.close();
+                                }
+                            },
+                            {
+                                text: "确认",
+                                className: "btn-11",
+                                callback: function () {
+                                    mDialog.confirm({
+                                        content: "您确定关闭这个弹出框！",
+                                        yes: function () {
+                                            this.close();
+                                            Dialog11.close();
+                                        }
+                                    })
+                                }
+                            }
+                        ],
+                        onShow: function () {
+                            if (!Scroll) {
+                                Scroll = new IScroll('#J_wrapper-13');
+                            }
+                        },
+                        onClose: function () {}
+                    });
+                });
+
+                $("#J_mDialog-section-21 .btn-submit").on("click", function () {
+                    alert("触发按钮点击事件")
+                });
+
+
+            })
+        })(jQuery)
+    </script>
+
+    <div class="cap-1">三、确认弹出框</div>
+    <div class="ml30 mr30"><button class="demo-btn" id="J_demo-btn-31">点击弹框</button></div>
+    <script>
+        (function ($) {
+            $(function () {
+                var Dialog, Scroll;
+                $("#J_demo-btn-31").on("click", function () {
+                    mDialog.confirm({
+                        content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+                        yes: function () {
+                            this.close();
+                        },
+                        onClose: function () {
+                            mDialog.msg({
+                                content: "我被关闭，然后升天了！"
+                            })
+                        }
+                    })
+                });
+            })
+        })(jQuery);
+    </script>
+
+
+    <div class="cap-1">四、loading弹出框</div>
+    <div class="ml30 mr30">
+        <button class="demo-btn" id="J_demo-btn-41">有遮罩层</button>
+        <button class="demo-btn" id="J_demo-btn-42">没有遮罩层</button>
+        <button class="demo-btn mtr20" id="J_demo-btn-43">遮罩层透明,点击不可以关闭</button>
+    </div>
+    <script>
+        $(function () {
+            $("#J_demo-btn-41").on("click", function () {
+                mDialog.load({
+                    pause: 3000,
+                })
+            });
+            $("#J_demo-btn-42").on("click", function () {
+                mDialog.load({
+                    pause: 3000,
+                    shade: false
+                })
+            });
+            $("#J_demo-btn-43").on("click", function () {
+                mDialog.load({
+                    shadeClose: false,
+                    shade: {
+                        opacity: 0
+                    }
+                })
+            })
+        })
+    </script>
+
+    <div class="cap-1">五、信息提示弹出框</div>
+    <div class="ml30 mr30">
+        <button class="demo-btn" id="J_demo-btn-51">点击弹框</button>
+        <button class="demo-btn" id="J_demo-btn-52">信息提示逗留5秒</button>
+    </div>
+    <script>
+        $(function () {
+            $("#J_demo-btn-51").on("click", function () {
+                mDialog.msg({
+                    content: "诗和远方在哪里？"
+                })
+            })
+            $("#J_demo-btn-52").on("click", function () {
+                mDialog.msg({
+                    pause: 5000,
+                    content: "诗和远方在哪里？"
+                })
+            })
+        })
+    </script>
+
+    <div class="cap-1">五、animate.css各种进场，出场动画</div>
+    <div class="ml30 mr30">
+        <button class="demo-btn" id="J_demo-btn-51">bounceIn bounceOut</button>
+        <button class="demo-btn" id="J_demo-btn-52">信息提示逗留5秒</button>
+    </div>
+    <script>
+        $(function () {
+            $("#J_demo-btn-51").on("click", function () {
+                mDialog.confirm({
+                    content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+                    animIn:"bounceIn",
+                    animOut:"bounceOut",
+                    yes: function () {
+                        this.close();
+                    }
+                })
+            })
+        })
+    </script>
 </body>
 
 </html>
