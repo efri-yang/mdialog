@@ -66,31 +66,7 @@
 
         .demo11-detail p {
             text-indent: 2em;
-            margin: 0.4rem 0 0;
-        }
-
-        .demo-btn {
-            display: inline-block;
-            padding: 8px 12px;
-            font-size: 14px;
-            font-weight: normal;
-            line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -ms-touch-action: manipulation;
-            touch-action: manipulation;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            background-image: none;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            background-color: #5cb85c;
-            border-color: #4cae4c;
-            color: #fff;
+            margin: 0 .4rem 0 0;
         }
     </style>
 </head>
@@ -476,41 +452,13 @@
                 $("#J_demo-btn-21").on("click", function () {
                     Dialog = mDialog.open({
                         duration: 250,
-                        title: {
-                            text: "mDialog弹框标题"
-                        },
                         width: "80%",
                         maxWidth: "100%",
                         duration: 250,
                         content: $("#J_mDialog-section-21"),
                         baseViewWidth: 750,
                         baseViewHeight: 960,
-                        buttons: [{
-                                text: "取消",
-                                className: "btn-11",
-                                callback: function () {
-                                    this.close();
-                                }
-                            },
-                            {
-                                text: "确认",
-                                className: "btn-11",
-                                callback: function () {
-                                    mDialog.confirm({
-                                        content: "您确定关闭这个弹出框！",
-                                        yes: function () {
-                                            this.close();
-                                            Dialog11.close();
-                                        }
-                                    })
-                                }
-                            }
-                        ],
-                        onShow: function () {
-                            if (!Scroll) {
-                                Scroll = new IScroll('#J_wrapper-13');
-                            }
-                        },
+                        onShow: function () {},
                         onClose: function () {}
                     });
                 });
@@ -599,18 +547,43 @@
         })
     </script>
 
-    <div class="cap-1">五、animate.css各种进场，出场动画</div>
-    <div class="ml30 mr30">
-        <button class="demo-btn" id="J_demo-btn-51">bounceIn bounceOut</button>
-        <button class="demo-btn" id="J_demo-btn-52">信息提示逗留5秒</button>
+    <div class="cap-1">六、animate.css各种进场，出场动画</div>
+    
+    <div class="ml30 mr30 pbr40">
+        <p class="demo-btn" id="J_demo-btn-61">bounceIn bounceOut</p>
+        <p class="mtr20"><button class="demo-btn" id="J_demo-btn-62">lightSpeedIn  lightSpeedOut</button></p>
+        <p class="mtr20"><button class="demo-btn" id="J_demo-btn-63">rotateIn  rotateOut</button></p>
     </div>
     <script>
         $(function () {
-            $("#J_demo-btn-51").on("click", function () {
+            $("#J_demo-btn-61").on("click", function () {
                 mDialog.confirm({
+                    duration:750,
                     content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
                     animIn:"bounceIn",
                     animOut:"bounceOut",
+                    yes: function () {
+                        this.close();
+                    }
+                })
+            });
+            $("#J_demo-btn-62").on("click", function () {
+                mDialog.confirm({
+                    duration:750,
+                    content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+                    animIn:"lightSpeedIn",
+                    animOut:"lightSpeedOut",
+                    yes: function () {
+                        this.close();
+                    }
+                })
+            });
+            $("#J_demo-btn-63").on("click", function () {
+                mDialog.confirm({
+                    duration:750,
+                    content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+                    animIn:"rotateIn",
+                    animOut:"rotateOut",
                     yes: function () {
                         this.close();
                     }

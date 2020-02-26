@@ -415,6 +415,7 @@
         }
 
         $elem.AnimationEnd(function() {
+
             !!callback && callback.call();
         },duration)
 
@@ -427,6 +428,7 @@
     };
     createClass.prototype._init = function() {
         this.opts.uid = ExtraFunc.uuid();
+        this.opts.isAniming=false;
         mDialog.stack[this.opts.uid] = [];
 
         if (!this.opts.duration) {
@@ -563,8 +565,10 @@
         !!opts.onBeforeShow && opts.onBeforeShow();
         $container.css({ "zIndex": mDialog.zIndex + 1, "visibility": "visible" });
         if (opts.animIn) {
+            opts.isAniming=true;
             setAnim($container, opts.animIn, opts.animOut, opts.duration, "in", function() {
                 opts.onShow();
+                opts.isAniming=false;
                 !!opts.pause && setTimeout(function() {
                     _this.close();
                     
@@ -583,6 +587,7 @@
         }
         $container.removeSelf = containerCloseHandle;
         mDialog.stack[this.opts.uid].push($container);
+        
     };
 
     createClass.prototype._renderShade = function() {
@@ -618,6 +623,7 @@
             //如果需要点击关闭遮罩层, 遮罩要关闭，主体要关闭
             
             $shade.on(deviceUtil.tapEvent, function(event) {
+                if(opts.isAniming) return;
                 event.stopPropagation();
                 _this.close();
             });
