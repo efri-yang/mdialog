@@ -101,14 +101,14 @@ mDialog.confirm({
 title | String | 弹框标题 | ''
 pause | Number | 弹框显示的时间（load,msg等提示框需显示时间） | 2000
 duration | Number | 执行animation的时间 | 250
-shade | Boolean||Object | 是否显示遮罩层 | false
+shade | (Boolean||Object) | 是否显示遮罩层 | false
 width | String | 弹框宽度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 height | String | 弹框高度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 maxWidth | String | 弹框最大宽度（自适应或者是定义width不能大于maxWidth,大于maxWidth取值maxWidth） | "85%"
 maxHeight | String | 弹框最大高度（自适应或者是定义height不能大于maxHeight,大于maxHeight取值maxHeight）| "80%"
 animIn | String | 进场动画（animate.css的任何动画也可以） | mDialogZoomIn
 animOut | String | 出场动画（animate.css的任何动画也可以） | mDialogZoomOut
-shadeClose | Boolean | 点击“提交”按钮的时候，若表单通过验证，就触发该函数！ | $.noop
+shadeClose | Boolean | 点击遮罩层会不会触发关闭弹框 | true
 closeBtn | Function | 是否显示关闭按钮 | $.noop
 buttons | (Boolean||Object) | 弹框底部按钮 | false
 content | Function | 弹框的内容	 | 是一个容器element，一个文本文字
