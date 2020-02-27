@@ -96,12 +96,12 @@ mDialog.confirm({
 </pre>
 
 ##	参数
-参数 | 类型 | 描述 | 默认值
+参数 |  类型  | 描述 | 默认值
 ------------ | ------------- | ------------ | ------------
 title | String | 弹框标题 | ''
 pause | Number | 弹框显示的时间（load,msg等提示框需显示时间） | 2000
 duration | Number | 执行animation的时间 | 250
-shade | (Boolean||Object) | 是否显示遮罩层 | false
+shade | Boolean或者Object | 是否显示遮罩层 | false
 width | String | 弹框宽度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 height | String | 弹框高度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 maxWidth | String | 弹框最大宽度（自适应或者是定义width不能大于maxWidth,大于maxWidth取值maxWidth） | "85%"
