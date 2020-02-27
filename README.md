@@ -110,7 +110,7 @@ animIn | Function | 进场动画（animate.css的任何动画也可以） | mDia
 animOut | Function | 出场动画（animate.css的任何动画也可以） | mDialogZoomOut
 shadeClose | Function | 点击“提交”按钮的时候，若表单通过验证，就触发该函数！ | $.noop
 closeBtn | Function | 是否显示关闭按钮 | $.noop
-buttons | Bool||Object | 弹框底部按钮 | false
+buttons | (Bool||Object) | 弹框底部按钮 | false
 content | Function | 弹框的内容	 | 是一个容器element，一个文本文字
 offset | Function | 弹框的显示位置 | [“auto”, “auto”]
 hasInput | Function | 是否有表单输入（ios fixed的时候input出键盘后，输入框位置漂移了兼容方案） | false
