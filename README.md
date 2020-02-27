@@ -101,7 +101,7 @@ mDialog.confirm({
 title | String | 弹框标题 | ''
 pause | Number | 弹框显示的时间（load,msg等提示框需显示时间） | 2000
 duration | Number | 执行animation的时间 | 250
-shade | Boolean或者Object | 是否显示遮罩层 | false
+shade | Boolean或Object | 是否显示遮罩层 | false
 width | String | 弹框宽度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 height | String | 弹框高度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
 maxWidth | String | 弹框最大宽度（自适应或者是定义width不能大于maxWidth,大于maxWidth取值maxWidth） | "85%"
@@ -110,7 +110,7 @@ animIn | String | 进场动画（animate.css的任何动画也可以） | mDialo
 animOut | String | 出场动画（animate.css的任何动画也可以） | mDialogZoomOut
 shadeClose | Boolean | 点击遮罩层会不会触发关闭弹框 | true
 closeBtn | Function | 是否显示关闭按钮 | $.noop
-buttons | (Boolean||Object) | 弹框底部按钮 | false
+buttons | Boolean或Object | 弹框底部按钮 | false
 content | Function | 弹框的内容	 | 是一个容器element，一个文本文字
 offset | Function | 弹框的显示位置 | [“auto”, “auto”]
 hasInput | Function | 是否有表单输入（ios fixed的时候input出键盘后，输入框位置漂移了兼容方案） | false
