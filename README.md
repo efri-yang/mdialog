@@ -98,18 +98,26 @@ mDialog.confirm({
 ##	参数
 参数 | 类型 | 描述 | 默认值
 ------------ | ------------- | ------------ | ------------
-type | Number | 验证类型,类型1：弹出提示信息，类型2：未通过验证的表单下面显示提示文字 | 1
-validateInSubmit | Boolean | 点击"提交"按钮的时候是否要对表单进行验证 | true
-sendForm | Boolean | 表单通过验证的时候，是否需要提交表单 | true
-onKeyup | Boolean | 输入放开键盘的时候,是否需要验证 | false
-firstInvalidFocus | Boolean | 未通过验证的第一个表单元素，是否要获取焦点 | true
-conditional | Object | 输入域通过data-conditional="name"对应到conditional中属性等于name的函数 | {}
-descriptions | Object | 输入域通过data-descriptions="name"对应到descriptions中属性名等于name的函数 | {}
-eachField | Function | 输入域在执行验证之前触发该函数| {}
-eachInvalidField | Function | 所有未通过验证的表单输入域触发该函数 | $.noop
-eachValidField | Function | 所有的通过验证的表单输入域触发该函数 | $.noop
-valid | Function | 点击“提交”按钮的时候，若表单通过验证，就触发该函数！ | $.noop
-invalid | Function | 点击“提交”按钮的时候，若表单未通过验证，就触发该函数！ | $.noop
+title | String | 弹框标题 | ''
+pause | Number | 弹框显示的时间（load,msg等提示框需显示时间） | 2000
+duration | Number | 执行animation的时间 | 250
+shade | Boolean||Object | 是否显示遮罩层 | false
+width | String | 弹框宽度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
+height | String | 弹框高度（可以是"500px"或“80%“或“auto”，像素、百分比、自适应都可以） | auto
+maxWidth | String | 弹框最大宽度（自适应或者是定义width不能大于maxWidth,大于maxWidth取值maxWidth） | "85%"
+maxHeight | String | 弹框最大高度（自适应或者是定义height不能大于maxHeight,大于maxHeight取值maxHeight）| "80%"
+animIn | Function | 进场动画（animate.css的任何动画也可以） | mDialogZoomIn
+animOut | Function | 出场动画（animate.css的任何动画也可以） | mDialogZoomOut
+shadeClose | Function | 点击“提交”按钮的时候，若表单通过验证，就触发该函数！ | $.noop
+closeBtn | Function | 是否显示关闭按钮 | $.noop
+buttons | Bool||Object | 弹框底部按钮 | false
+content | Function | 弹框的内容	 | 是一个容器element，一个文本文字
+offset | Function | 弹框的显示位置 | [“auto”, “auto”]
+hasInput | Function | 是否有表单输入（ios fixed的时候input出键盘后，输入框位置漂移了兼容方案） | false
+onBeforeShow | Function | 弹框显示前触发函数 | $.noop
+onShow | Function | 弹框显示后触发函数 | $.noop
+onBeforeClose | Function | 弹框关闭前触发函数 | $.noop
+onClose | Function | 弹框关闭后触发函数 | $.noop
 
 ##	拓展方法
 方法| 描述 
