@@ -1,5 +1,7 @@
 # mDialog
-mDialog是一款针对移动端的表单验证控件，为了在移动端屏幕和空间大小的情况下,快速实现弹框的效果！<a href="https://wnworld.com/mdialog/index.html" target="_blank">查看demo<a/>
+mDialog是一款针对移动端的表单验证控件，为了在移动端屏幕和空间大小的情况下,快速实现弹框的效果！<a href="https://wnworld.com/mdialog/index.html" target="_blank">查看demo</a>
+<p>手机扫码浏览</p>
+<p><img src="https://wnworld.com/wp-content/uploads/2020/02/01.png" /></p>
 
 ##      	目录
 
