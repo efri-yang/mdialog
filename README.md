@@ -59,7 +59,7 @@ Dialog = mDialog.open({
 
 <pre>
 mDialog.confirm({
-    content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+    content: "您确定关闭这个弹出框！",
     yes: function () {
         this.close();
     },
@@ -86,7 +86,7 @@ mDialog.msg({
 <pre>
 mDialog.confirm({
     duration:750,
-    content: "<p style='text-align:center;'>您确定关闭这个弹出框！</p>",
+    content: "您确定关闭这个弹出框！",
     animIn:"rotateIn",
     animOut:"rotateOut",
     yes: function () {
