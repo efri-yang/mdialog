@@ -119,24 +119,17 @@ onShow | Function | 弹框显示后触发函数 | $.noop
 onBeforeClose | Function | 弹框关闭前触发函数 | $.noop
 onClose | Function | 弹框关闭后触发函数 | $.noop
 
-##	拓展方法
+##	方法
 方法| 描述 
 ------------ | -------------
-$.mvalidateExtend | 该方法用来拓展一些输入域的验证,例如:data-validate="phone"
+mDialog.open() | 捕获页面元素的调用形式
+mDialog.confirm() | 询问框调用方法
+mDialog.msg() | 提示框调用方法
+mDialog.close() | 关闭特定的弹框（mDialog.close(dialog1)）
+mDialog.closeAll() | 关闭所有的弹框
 <pre>
-$.mvalidateExtend({
-    phone:{
-        required : true,   
-        pattern : /^0?1[3|4|5|8][0-9]\d{8}$/,
-        each:function(){
-           
-        },
-        descriptions:{
-            required : '必填字段',
-            pattern : '请您输入正确的格式'
-        }
-    }
-});
+let dialog=mDialg.open();
+mDialog.close(dialog)
 </pre>
 
 
