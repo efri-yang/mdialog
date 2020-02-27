@@ -18,9 +18,6 @@
         zIndex: 100000,
         defaults: {
             title: "",
-            top: false,
-            bottom: false,
-            autoClose: false,
             pause: false,
             duration: 250,
             isPreventMove: true,
@@ -38,7 +35,6 @@
             buttons: {},
             baseViewWidth: 750,
             baseViewHeight: 1344,
-            scrollTop:0,
             hasInput:false,
             onBeforeShow: function() {},
             onShow: function() {},
@@ -429,6 +425,7 @@
     createClass.prototype._init = function() {
         this.opts.uid = ExtraFunc.uuid();
         this.opts.isAniming=false;
+        this.opts.scrollTop=0;
         mDialog.stack[this.opts.uid] = [];
 
         if (!this.opts.duration) {
