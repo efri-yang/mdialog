@@ -36,7 +36,7 @@
     "gulp4": "^4.0.2",
     "imagemin-jpegoptim": "^6.0.0",
     "imagemin-pngquant": "^7.0.0",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.3",
     "node-sass": "^4.11.0"
   },
   "dependencies": {}
